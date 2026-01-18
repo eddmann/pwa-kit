@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "app": {
+    "name": "My PWA",
+    "bundleId": "com.example.mypwa",
+    "startUrl": "https://app.example.com/"
+  },
+  "origins": {
+    "allowed": ["app.example.com", "*.example.com"],
+    "auth": ["accounts.google.com", "auth0.com"],
+    "external": ["example.com/external/*"]
+  },
+  "features": {
+    "notifications": true,
+    "haptics": true,
+    "biometrics": true,
+    "secureStorage": true,
+    "healthkit": false,
+    "iap": false,
+    "share": true,
+    "print": true,
+    "clipboard": true,
+    "cameraPermission": true,
+    "locationPermission": true
+  },
+  "appearance": {
+    "displayMode": "standalone",
+    "pullToRefresh": true,
+    "adaptiveStyle": true,
+    "statusBarStyle": "default",
+    "backgroundColor": "#FFFFFF",
+    "themeColor": "#007AFF"
+  },
+  "notifications": {
+    "provider": "apns"
+  }
+}

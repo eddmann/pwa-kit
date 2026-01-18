@@ -1,0 +1,97 @@
+# SwiftFormat configuration for PWAKit
+# Swift 6.0 with strict concurrency
+
+# Swift version
+--swiftversion 6.0
+
+# Indentation: 4 spaces
+--indent 4
+
+# Line width: 120 characters
+--maxwidth 120
+
+# Self insertion for strict concurrency
+--self insert
+
+# Organize declarations
+--organizetypes class,actor,struct,enum,extension,protocol
+--organizationmode visibility
+
+# Import organization
+--importgrouping alpha
+
+# Trailing commas
+--commas always
+
+# Braces style
+--allman false
+
+# Else on same line as closing brace
+--elseposition same-line
+
+# Guard else on same line
+--guardelse same-line
+
+# Extension access control
+--extensionacl on-declarations
+
+# Wrap parameters and arguments
+--wrapparameters before-first
+--wraparguments before-first
+--wrapcollections before-first
+--wrapreturntype preserve
+--wrapconditions preserve
+--wraptypealiases preserve
+
+# Redundant patterns
+--patternlet hoist
+
+# Blank lines
+--trimwhitespace always
+--linebreaks lf
+
+# Semicolons
+--semicolons never
+
+# Void style
+--voidtype void
+
+# Mark extensions
+--marktypes always
+--markextensions always
+--extensionmark "MARK: - %t + %c"
+--typemark "MARK: - %t"
+
+# Header stripping (remove auto-generated headers)
+--header strip
+
+# Explicit ACL
+--redundanttype inferred
+
+# Async/await
+--asynccapturing
+
+# Rules to enable
+--enable blankLineAfterImports
+--enable blockComments
+--enable docComments
+--enable isEmpty
+--enable markTypes
+--enable sortDeclarations
+--enable wrapEnumCases
+--enable wrapMultilineStatementBraces
+--enable wrapSwitchCases
+
+# Rules to disable (handled by SwiftLint or not desired)
+--disable acronyms
+--disable blankLinesAroundMark
+--disable organizeDeclarations
+--disable redundantSelf
+--disable sortedSwitchCases
+--disable trailingClosures
+
+# Excluded paths
+--exclude .build
+--exclude .swiftpm
+--exclude Package.swift
+--exclude **/Generated

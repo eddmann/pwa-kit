@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <title>PWAKit</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- iOS Navigation Bar -->
+  <nav class="ios-nav">
+    <div class="ios-nav-content">
+      <h1 class="ios-nav-large-title">PWAKit</h1>
+      <div class="ios-nav-status">
+        <span id="platform-badge" class="ios-status-pill web">Detecting...</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="ios-content">
+
+    <!-- Platform Section -->
+    <section class="ios-section">
+      <div class="ios-section-header">Platform & Detection</div>
+      <div class="ios-group">
+        <div class="ios-cell expanded" onclick="toggleModule(this)">
+          <div class="ios-cell-icon blue">
+            <svg width="17" height="17" fill="none" viewBox="0 0 24 24"><path fill="white" d="M17 2H7a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3Zm-5 18a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"/></svg>
+          </div>
+          <div class="ios-cell-content">
+            <div class="ios-cell-title">Device Info</div>
+            <div class="ios-cell-subtitle">Platform detection & native APIs</div>
+          </div>
+          <div class="ios-cell-chevron">
+            <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <div class="ios-cell-expand">
+          <div class="ios-cell-expand-inner">
+            <div class="ios-label-small">Detection Status</div>
+            <div id="platform-detection"></div>
+            <div class="ios-btn-group">
+              <button class="ios-btn ios-btn-primary" onclick="withLoading(this, testPlatformInfo)">Get Platform Info</button>
+            </div>
+            <div id="platform-result" class="ios-result hidden"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Haptics Section -->
+    <section class="ios-section">
+      <div class="ios-section-header">Feedback</div>
+      <div class="ios-group">
+        <div class="ios-cell" onclick="toggleModule(this)">
+          <div class="ios-cell-icon orange">
+            <svg width="17" height="17" fill="none" viewBox="0 0 24 24"><path fill="white" d="M12 2a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1Zm0 15a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-3a1 1 0 0 1 1-1Zm10-5a1 1 0 0 1-1 1h-3a1 1 0 1 1 0-2h3a1 1 0 0 1 1 1ZM6 12a1 1 0 0 1-1 1H2a1 1 0 1 1 0-2h3a1 1 0 0 1 1 1Zm12.364-5.364a1 1 0 0 1 0 1.414l-2.121 2.121a1 1 0 1 1-1.414-1.414l2.121-2.121a1 1 0 0 1 1.414 0ZM9.172 14.828a1 1 0 0 1 0 1.414l-2.121 2.122a1 1 0 0 1-1.415-1.415l2.122-2.12a1 1 0 0 1 1.414 0Zm9.192 4.536a1 1 0 0 1-1.414 0l-2.121-2.122a1 1 0 0 1 1.414-1.414l2.121 2.122a1 1 0 0 1 0 1.414ZM9.172 9.172a1 1 0 0 1-1.414 0L5.636 7.05A1 1 0 0 1 7.05 5.636l2.122 2.122a1 1 0 0 1 0 1.414Z"/></svg>
+          </div>
+          <div class="ios-cell-content">
+            <div class="ios-cell-title">Haptics</div>
+            <div class="ios-cell-subtitle">Tactile feedback patterns</div>
+          </div>
+          <div class="ios-cell-chevron">
+            <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <div class="ios-cell-expand">
+          <div class="ios-cell-expand-inner">
+            <div class="ios-label-small">Impact</div>
+            <div class="ios-segment-group mb-md">
+              <button class="ios-segment-btn" onclick="withLoading(this, () => testHapticsImpact('light'))">Light</button>
+              <button class="ios-segment-btn" onclick="withLoading(this, () => testHapticsImpact('medium'))">Medium</button>
+              <button class="ios-segment-btn" onclick="withLoading(this, () => testHapticsImpact('heavy'))">Heavy</button>
+              <button class="ios-segment-btn" onclick="withLoading(this, () => testHapticsImpact('rigid'))">Rigid</button>
+            </div>
+            <div class="ios-label-small">Notification</div>
+            <div class="ios-btn-row mb-md">
+              <button class="ios-btn ios-btn-success ios-btn-small" onclick="withLoading(this, () => testHapticsNotification('success'))">Success</button>
+              <button class="ios-btn ios-btn-warning ios-btn-small" onclick="withLoading(this, () => testHapticsNotification('warning'))">Warning</button>
+              <button class="ios-btn ios-btn-danger ios-btn-small" onclick="withLoading(this, () => testHapticsNotification('error'))">Error</button>
+            </div>
+            <div class="ios-label-small">Selection</div>
+            <div class="ios-btn-group">
+              <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, testHapticsSelection)">Selection Changed</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Notifications Section -->
+    <section class="ios-section">
+      <div class="ios-section-header">Notifications</div>
+      <div class="ios-group">
+        <div class="ios-cell" onclick="toggleModule(this)">
+          <div class="ios-cell-icon red">
+            <svg width="17" height="17" fill="none" viewBox="0 0 24 24"><path fill="white" d="M12 2a7 7 0 0 0-7 7v4.38l-1.71 1.7A1 1 0 0 0 4 17h16a1 1 0 0 0 .71-1.71L19 13.59V9a7 7 0 0 0-7-7Zm0 20a3 3 0 0 1-3-3h6a3 3 0 0 1-3 3Z"/></svg>
+          </div>
+          <div class="ios-cell-content">
+            <div class="ios-cell-title">Push Notifications</div>
+            <div class="ios-cell-subtitle">APNs registration & badges</div>
+          </div>
+          <div class="ios-cell-chevron">
+            <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <div class="ios-cell-expand">
+          <div class="ios-cell-expand-inner">
+            <div class="ios-btn-row mb-md">
+              <button class="ios-btn ios-btn-primary" onclick="withLoading(this, testNotificationsSubscribe)">Subscribe</button>
+              <button class="ios-btn ios-btn-secondary" onclick="withLoading(this, testNotificationsPermission)">Check</button>
+            </div>
+            <div class="ios-btn-group">
+              <button class="ios-btn ios-btn-tinted ios-btn-small" onclick="withLoading(this, testNotificationsGetToken)">Get Token</button>
+            </div>
+            <div class="ios-label-small">Badge</div>
+            <div class="ios-form-group">
+              <div class="ios-input-row">
+                <input type="number" id="badge-count" value="5" min="0" class="ios-input" style="max-width: 80px;">
+                <button class="ios-btn ios-btn-primary ios-btn-small" onclick="withLoading(this, testNotificationsSetBadge)">Set</button>
+                <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, testNotificationsClearBadge)">Clear</button>
+              </div>
+            </div>
+            <div class="ios-label-small">Push Events</div>
+            <div class="ios-btn-group">
+              <button class="ios-btn ios-btn-secondary ios-btn-small" id="push-listen-btn" onclick="togglePushListener()">Start Listening</button>
+            </div>
+            <div id="push-events" class="ios-result hidden"></div>
+            <div id="notifications-result" class="ios-result hidden"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Share Section -->
+    <section class="ios-section">
+      <div class="ios-section-header">Sharing</div>
+      <div class="ios-group">
+        <div class="ios-cell" onclick="toggleModule(this)">
+          <div class="ios-cell-icon green">
+            <svg width="17" height="17" fill="none" viewBox="0 0 24 24"><path fill="white" d="M12 2a1 1 0 0 1 1 1v9.59l2.29-2.3a1 1 0 1 1 1.42 1.42l-4 4a1 1 0 0 1-1.42 0l-4-4a1 1 0 0 1 1.42-1.42L11 12.59V3a1 1 0 0 1 1-1ZM5 17a1 1 0 0 1 1 1v2h12v-2a1 1 0 1 1 2 0v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2a1 1 0 0 1 1-1Z"/></svg>
+          </div>
+          <div class="ios-cell-content">
+            <div class="ios-cell-title">Share Sheet</div>
+            <div class="ios-cell-subtitle">Native sharing & files</div>
+          </div>
+          <div class="ios-cell-chevron">
+            <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <div class="ios-cell-expand">
+          <div class="ios-cell-expand-inner">
+            <div class="ios-btn-group">
+              <button class="ios-btn ios-btn-tinted ios-btn-small" onclick="withLoading(this, testShareCanShare)">Check Availability</button>
+            </div>
+            <div class="ios-label-small">Content</div>
+            <div class="ios-form-group">
+              <label class="ios-form-label">Title</label>
+              <input type="text" id="share-title" value="Check this out!" class="ios-input" placeholder="Share title">
+            </div>
+            <div class="ios-form-group">
+              <label class="ios-form-label">Message</label>
+              <textarea id="share-text" class="ios-input ios-textarea" placeholder="Share message">Testing PWAKit share functionality!</textarea>
+            </div>
+            <div class="ios-form-group">
+              <label class="ios-form-label">URL</label>
+              <input type="url" id="share-url" value="https://github.com" class="ios-input" placeholder="https://...">
+            </div>
+            <div class="ios-btn-group">
+              <button class="ios-btn ios-btn-primary" onclick="withLoading(this, testShare)">Share Content</button>
+            </div>
+            <div class="ios-label-small">Files</div>
+            <div class="ios-btn-row">
+              <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, testShareFile)">Share Image</button>
+              <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, testShareTextFile)">Share Text</button>
+            </div>
+            <div id="share-result" class="ios-result hidden"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Security Section -->
+    <section class="ios-section">
+      <div class="ios-section-header">Security</div>
+      <div class="ios-group">
+        <div class="ios-cell" onclick="toggleModule(this)">
+          <div class="ios-cell-icon purple">
+            <svg width="17" height="17" fill="none" viewBox="0 0 24 24"><path fill="white" d="M12 1a5 5 0 0 0-5 5v4H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5Zm3 9H9V6a3 3 0 1 1 6 0v4Z"/></svg>
+          </div>
+          <div class="ios-cell-content">
+            <div class="ios-cell-title">Biometrics</div>
+            <div class="ios-cell-subtitle">Face ID / Touch ID</div>
+          </div>
+          <div class="ios-cell-chevron">
+            <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <div class="ios-cell-expand">
+          <div class="ios-cell-expand-inner">
+            <div class="ios-btn-group">
+              <button class="ios-btn ios-btn-tinted ios-btn-small" onclick="withLoading(this, testBiometricsAvailable)">Check Availability</button>
+            </div>
+            <div class="ios-form-group">
+              <label class="ios-form-label">Reason</label>
+              <input type="text" id="biometrics-reason" value="Access your account" class="ios-input" placeholder="Authentication reason">
+            </div>
+            <div class="ios-btn-group">
+              <button class="ios-btn ios-btn-primary" onclick="withLoading(this, testBiometricsAuth)">Authenticate</button>
+            </div>
+            <div id="biometrics-result" class="ios-result hidden"></div>
+          </div>
+        </div>
+
+        <div class="ios-cell" onclick="toggleModule(this)">
+          <div class="ios-cell-icon teal">
+            <svg width="17" height="17" fill="none" viewBox="0 0 24 24"><path fill="white" d="M12.65 2.12a1 1 0 0 0-1.3 0l-9 7.5A1 1 0 0 0 3 11h1v9a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-9h1a1 1 0 0 0 .65-1.76l-9-7.62ZM12 15a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg>
+          </div>
+          <div class="ios-cell-content">
+            <div class="ios-cell-title">Secure Storage</div>
+            <div class="ios-cell-subtitle">Keychain access</div>
+          </div>
+          <div class="ios-cell-chevron">
+            <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <div class="ios-cell-expand">
+          <div class="ios-cell-expand-inner">
+            <div class="ios-form-group">
+              <label class="ios-form-label">Key</label>
+              <input type="text" id="storage-key" value="test_key" class="ios-input" placeholder="Storage key">
+            </div>
+            <div class="ios-form-group">
+              <label class="ios-form-label">Value</label>
+              <input type="text" id="storage-value" value="secret_value_123" class="ios-input" placeholder="Value to store">
+            </div>
+            <div class="ios-btn-row mb-md">
+              <button class="ios-btn ios-btn-primary ios-btn-small" onclick="withLoading(this, testStorageSet)">Save</button>
+              <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, testStorageGet)">Load</button>
+              <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, testStorageHas)">Exists?</button>
+            </div>
+            <div class="ios-btn-group">
+              <button class="ios-btn ios-btn-danger ios-btn-small" onclick="withLoading(this, testStorageDelete)">Delete</button>
+            </div>
+            <div id="storage-result" class="ios-result hidden"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- System Section -->
+    <section class="ios-section">
+      <div class="ios-section-header">System</div>
+      <div class="ios-group">
+        <div class="ios-cell" onclick="toggleModule(this)">
+          <div class="ios-cell-icon gray">
+            <svg width="17" height="17" fill="none" viewBox="0 0 24 24"><path fill="white" d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm9.66 3.12-1.53-.87a7.94 7.94 0 0 0 0-2.5l1.53-.87a1 1 0 0 0 .37-1.37l-2-3.46a1 1 0 0 0-1.37-.36l-1.53.87a8.1 8.1 0 0 0-2.16-1.25V.5a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v1.81a8.1 8.1 0 0 0-2.16 1.25l-1.53-.87a1 1 0 0 0-1.37.36l-2 3.46a1 1 0 0 0 .37 1.37l1.53.87a7.94 7.94 0 0 0 0 2.5l-1.53.87a1 1 0 0 0-.37 1.37l2 3.46a1 1 0 0 0 1.37.36l1.53-.87a8.1 8.1 0 0 0 2.16 1.25v1.81a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1.81a8.1 8.1 0 0 0 2.16-1.25l1.53.87a1 1 0 0 0 1.37-.36l2-3.46a1 1 0 0 0-.37-1.37Z"/></svg>
+          </div>
+          <div class="ios-cell-content">
+            <div class="ios-cell-title">App Settings</div>
+            <div class="ios-cell-subtitle">Version, settings & reviews</div>
+          </div>
+          <div class="ios-cell-chevron">
+            <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <div class="ios-cell-expand">
+          <div class="ios-cell-expand-inner">
+            <div class="ios-btn-row mb-md">
+              <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, testAppVersion)">Version</button>
+              <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, testAppOpenSettings)">Settings</button>
+            </div>
+            <div class="ios-btn-group">
+              <button class="ios-btn ios-btn-primary" onclick="withLoading(this, testAppReview)">Request Review</button>
+            </div>
+            <div id="app-result" class="ios-result hidden"></div>
+          </div>
+        </div>
+
+        <div class="ios-cell" onclick="toggleModule(this)">
+          <div class="ios-cell-icon blue">
+            <svg width="17" height="17" fill="none" viewBox="0 0 24 24"><path fill="white" d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2ZM9 17H7v-7h2v7Zm4 0h-2V7h2v10Zm4 0h-2v-4h2v4Z"/></svg>
+          </div>
+          <div class="ios-cell-content">
+            <div class="ios-cell-title">Clipboard</div>
+            <div class="ios-cell-subtitle">Copy & paste</div>
+          </div>
+          <div class="ios-cell-chevron">
+            <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <div class="ios-cell-expand">
+          <div class="ios-cell-expand-inner">
+            <div class="ios-form-group">
+              <label class="ios-form-label">Text</label>
+              <input type="text" id="clipboard-text" value="Hello from PWAKit!" class="ios-input" placeholder="Text to copy">
+            </div>
+            <div class="ios-btn-row">
+              <button class="ios-btn ios-btn-primary ios-btn-small" onclick="withLoading(this, testClipboardWrite)">Copy</button>
+              <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, testClipboardRead)">Paste</button>
+            </div>
+            <div id="clipboard-result" class="ios-result hidden"></div>
+          </div>
+        </div>
+
+        <div class="ios-cell" onclick="toggleModule(this)">
+          <div class="ios-cell-icon gray">
+            <svg width="17" height="17" fill="none" viewBox="0 0 24 24"><path fill="white" d="M19 8H5a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3ZM8 4h8a1 1 0 0 1 1 1v2H7V5a1 1 0 0 1 1-1Z"/></svg>
+          </div>
+          <div class="ios-cell-content">
+            <div class="ios-cell-title">Print</div>
+            <div class="ios-cell-subtitle">AirPrint support</div>
+          </div>
+          <div class="ios-cell-chevron">
+            <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <div class="ios-cell-expand">
+          <div class="ios-cell-expand-inner">
+            <div class="ios-btn-group">
+              <button class="ios-btn ios-btn-primary" onclick="withLoading(this, testPrint)">Print This Page</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- In-App Purchases Section -->
+    <section class="ios-section">
+      <div class="ios-section-header">Purchases</div>
+      <div class="ios-group">
+        <div class="ios-cell" onclick="toggleModule(this)">
+          <div class="ios-cell-icon pink">
+            <svg width="17" height="17" fill="none" viewBox="0 0 24 24"><path fill="white" d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2ZM4 8h16v2H4V8Zm0 6h8v2H4v-2Z"/></svg>
+          </div>
+          <div class="ios-cell-content">
+            <div class="ios-cell-title">In-App Purchases</div>
+            <div class="ios-cell-subtitle">StoreKit 2 integration</div>
+          </div>
+          <div class="ios-cell-chevron">
+            <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <div class="ios-cell-expand">
+          <div class="ios-cell-expand-inner">
+            <div class="ios-form-group">
+              <label class="ios-form-label">Product IDs</label>
+              <input type="text" id="iap-product-ids" value="premium, coins_100" class="ios-input" placeholder="product1, product2">
+            </div>
+            <div class="ios-btn-row mb-md">
+              <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, testIAPGetProducts)">Products</button>
+              <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, testIAPEntitlements)">Entitlements</button>
+              <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, testIAPRestore)">Restore</button>
+            </div>
+            <div class="ios-form-group">
+              <label class="ios-form-label">Purchase</label>
+              <div class="ios-input-row">
+                <input type="text" id="iap-purchase-id" value="premium" class="ios-input" placeholder="product_id">
+                <button class="ios-btn ios-btn-primary ios-btn-small" onclick="withLoading(this, testIAPPurchase)">Buy</button>
+                <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, testIAPIsOwned)">Owned?</button>
+              </div>
+            </div>
+            <div id="iap-result" class="ios-result hidden"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HealthKit Section -->
+    <section class="ios-section">
+      <div class="ios-section-header">Health & Fitness</div>
+      <div class="ios-group">
+        <div class="ios-cell" onclick="toggleModule(this)">
+          <div class="ios-cell-icon red">
+            <svg width="17" height="17" fill="none" viewBox="0 0 24 24"><path fill="white" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35Z"/></svg>
+          </div>
+          <div class="ios-cell-content">
+            <div class="ios-cell-title">HealthKit</div>
+            <div class="ios-cell-subtitle">Health & workout data</div>
+          </div>
+          <div class="ios-cell-chevron">
+            <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <div class="ios-cell-expand">
+          <div class="ios-cell-expand-inner">
+            <div class="ios-btn-row mb-md">
+              <button class="ios-btn ios-btn-tinted ios-btn-small" onclick="withLoading(this, testHealthKitAvailable)">Check</button>
+              <button class="ios-btn ios-btn-primary" onclick="withLoading(this, testHealthKitAuth)">Authorize</button>
+            </div>
+            <div class="ios-label-small">Query Data</div>
+            <div class="ios-segment-group mb-md">
+              <button class="ios-segment-btn" onclick="withLoading(this, testHealthKitSteps)">Steps</button>
+              <button class="ios-segment-btn" onclick="withLoading(this, testHealthKitHeartRate)">Heart</button>
+              <button class="ios-segment-btn" onclick="withLoading(this, testHealthKitWorkouts)">Workouts</button>
+              <button class="ios-segment-btn" onclick="withLoading(this, testHealthKitSleep)">Sleep</button>
+            </div>
+            <div class="ios-label-small">Save Workout</div>
+            <div class="ios-form-group">
+              <label class="ios-form-label">Type</label>
+              <select id="workout-type" class="ios-input ios-select">
+                <option value="running">Running</option>
+                <option value="walking">Walking</option>
+                <option value="cycling">Cycling</option>
+                <option value="swimming">Swimming</option>
+                <option value="hiking">Hiking</option>
+                <option value="yoga">Yoga</option>
+                <option value="functionalStrengthTraining">Strength</option>
+              </select>
+            </div>
+            <div class="ios-form-group">
+              <div class="ios-input-row">
+                <div style="flex: 1">
+                  <label class="ios-form-label">Minutes</label>
+                  <input type="number" id="workout-duration" value="30" class="ios-input" placeholder="30">
+                </div>
+                <div style="flex: 1">
+                  <label class="ios-form-label">Calories</label>
+                  <input type="number" id="workout-calories" value="200" class="ios-input" placeholder="200">
+                </div>
+              </div>
+            </div>
+            <div class="ios-btn-group">
+              <button class="ios-btn ios-btn-success" onclick="withLoading(this, testHealthKitSaveWorkout)">Save Workout</button>
+            </div>
+            <div id="healthkit-result" class="ios-result hidden"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Permissions Section -->
+    <section class="ios-section">
+      <div class="ios-section-header">Permissions</div>
+      <div class="ios-group">
+        <div class="ios-cell" onclick="toggleModule(this)">
+          <div class="ios-cell-icon green">
+            <svg width="17" height="17" fill="none" viewBox="0 0 24 24"><path fill="white" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9Z"/></svg>
+          </div>
+          <div class="ios-cell-content">
+            <div class="ios-cell-title">Camera & Location</div>
+            <div class="ios-cell-subtitle">Permission management</div>
+          </div>
+          <div class="ios-cell-chevron">
+            <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <div class="ios-cell-expand">
+          <div class="ios-cell-expand-inner">
+            <div class="ios-label-small">Camera</div>
+            <div class="ios-btn-row mb-md">
+              <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, testCameraPermissionCheck)">Check</button>
+              <button class="ios-btn ios-btn-primary ios-btn-small" onclick="withLoading(this, testCameraPermissionRequest)">Request</button>
+            </div>
+            <div class="ios-label-small">Location</div>
+            <div class="ios-btn-row">
+              <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, testLocationPermissionCheck)">Check</button>
+              <button class="ios-btn ios-btn-primary ios-btn-small" onclick="withLoading(this, testLocationPermissionRequest)">Request</button>
+            </div>
+            <div id="permissions-result" class="ios-result hidden mt-md"></div>
+          </div>
+        </div>
+      </div>
+      <div class="ios-section-footer">Permissions are managed by iOS. Once denied, users must enable them in Settings.</div>
+    </section>
+
+  </main>
+
+  <!-- iOS Console Sheet -->
+  <div id="console" class="ios-console">
+    <div class="ios-console-header" onclick="toggleConsole()">
+      <h3 class="ios-console-title">Console</h3>
+      <button class="ios-btn ios-btn-plain ios-btn-small" onclick="event.stopPropagation(); clearConsole();">Clear</button>
+    </div>
+    <div id="console-content" class="ios-console-content">
+      <div class="ios-empty-state">No logs yet</div>
+    </div>
+  </div>
+
+  <script src="pwakit.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+# PWAKit .gitignore
+
+# MARK: - Swift Package Manager
+
+.build/
+.build-cache/
+.swiftpm/
+Package.resolved
+
+# MARK: - Xcode
+
+# User-specific settings
+xcuserdata/
+*.xcuserstate
+
+# Build products
+build/
+DerivedData/
+
+# Index data
+*.xcindex
+IndexStoreDB/
+
+# Playground data
+timeline.xctimeline
+playground.xcworkspace
+
+# MARK: - Local Configuration
+
+# Local pwa-config (app-specific configuration)
+pwa-config.json
+
+# MARK: - macOS
+
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Icon must end with two \r
+Icon
+
+# Thumbnails
+Thumbs.db
+
+# MARK: - IDE
+
+# VSCode
+.vscode/
+
+# JetBrains IDEs
+.idea/
+
+# Vim
+*.swp
+*.swo
+*~
+
+# MARK: - Testing
+
+# Code coverage
+*.xcresult
+coverage/
+
+# MARK: - Build Artifacts
+
+# Archives
+*.xcarchive
+
+# App bundles
+*.app
+*.ipa
+
+# Crash logs
+*.crash
+
+# MARK: - Secrets
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# API keys and credentials
+*.key
+*.pem
+credentials.json
+secrets.json
+
+# MARK: - Temporary Files
+
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Log files
+*.log
+logs/
+
+# MARK: - JavaScript SDK
+
+# Node.js
+sdk/node_modules/
+sdk/dist/
+sdk/package-lock.json

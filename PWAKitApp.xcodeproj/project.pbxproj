@@ -1,0 +1,1254 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0A00175EC2A911E0CA576CBF /* RetryHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD75321E3B5DC6251519ABF /* RetryHandlerTests.swift */; };
+		0B381CF2BBCDE6D82A3DF4B5 /* AppModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD666C73DADC18CB96460D1 /* AppModuleTests.swift */; };
+		0CD4D7D8E9721C2AE7925ADE /* BridgeMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AED50228551FD616F1C613 /* BridgeMessageTests.swift */; };
+		11AAFEABE145D3D1787229F1 /* IAPModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 071F005E1AE85A924A15DCD2 /* IAPModuleTests.swift */; };
+		126BC5786E79BE2C3BDD8F84 /* JavaScriptBridgeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F2100F4458F4B7EE07E4B4E /* JavaScriptBridgeTests.swift */; };
+		151105D22B3AB68F6651BDAC /* PlatformModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659FECFB5404C4D0415EB48F /* PlatformModuleTests.swift */; };
+		1FC131E52A98C164D2BF0516 /* StoreKitManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB936B67DFC4A932876B7D16 /* StoreKitManagerTests.swift */; };
+		2E6A76730DF8DDE513CA11B0 /* ProgressObserverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CC9C1FC88959AC272FE4926 /* ProgressObserverTests.swift */; };
+		307AB1F01A69D9C4852FBE3D /* HealthKitTypesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC4F5AFB93C1A04B11715DA /* HealthKitTypesTests.swift */; };
+		37BA1E51632D51C08E0FB7C8 /* ClipboardModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 626D3448D84DF09733EE990E /* ClipboardModuleTests.swift */; };
+		3D1919E6A9E7B99A99267517 /* BridgeIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BFE47311BBE4418F8FCFB14 /* BridgeIntegrationTests.swift */; };
+		42A10DB27FE5F03137C42678 /* WebViewConfigurationFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D29CB4D454650689C9B353BC /* WebViewConfigurationFactoryTests.swift */; };
+		4808AC3FBFB259CEBED4F5B0 /* BridgeErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4811FA22B0D0493A2C547584 /* BridgeErrorTests.swift */; };
+		48673820601C49B785E6A122 /* UniversalLinkHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA798398505DB165F97DD4F /* UniversalLinkHandlerTests.swift */; };
+		4B95F91F4CF622E1187898D3 /* ModuleRegistryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2ACBC612BB90BB3F5531B5 /* ModuleRegistryTests.swift */; };
+		534A3A12D293276DCA4BAF9F /* ConfigurationValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4105C6B1D4EA98242AAC4FE1 /* ConfigurationValidatorTests.swift */; };
+		55CD228C8C0BA8D846A8F7C9 /* HealthKitManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4F33CE540B51ED3CAE7B04 /* HealthKitManagerTests.swift */; };
+		55ECE2C47F2D4E5CE701B902 /* SecureStorageModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C653D71C8288E3A7448024 /* SecureStorageModuleTests.swift */; };
+		576C88EB4EF7780512186AD1 /* AdaptiveStyleObserverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE43FB8216AE73EA3228BC0 /* AdaptiveStyleObserverTests.swift */; };
+		59491F94B07427EAEFEAD3FB /* CustomSchemeHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D87AAFF78E5769EFA2F95AE6 /* CustomSchemeHandlerTests.swift */; };
+		654925D9AE88078555417DD5 /* DownloadHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C526CC8494AE46542E247E3 /* DownloadHandlerTests.swift */; };
+		6A52B5E2134B94041C834D1A /* TestModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963993AA784594C6DDFB3885 /* TestModule.swift */; };
+		6BD90C4D1356B7783D426510 /* BridgeScriptMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A4390B85CC25B15A287753 /* BridgeScriptMessageHandlerTests.swift */; };
+		6F61914539B61088E5F51FFF /* NotificationsModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C766A4E884BD393B3BB8405F /* NotificationsModuleTests.swift */; };
+		7E6D4B8DDB4FE65E83C0FDB2 /* HapticsModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231CA78601B78C6D9775A7B5 /* HapticsModuleTests.swift */; };
+		80A5D48938304E9D613079F1 /* NavigationPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A095E38FF13B6259ACBEAFBA /* NavigationPolicyTests.swift */; };
+		81099C963C96B8FAF3014EB3 /* BiometricsModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522317285A7619F4647BC53D /* BiometricsModuleTests.swift */; };
+		8AA33D8C69FFB1F10BD58AD4 /* AppStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD61600E33373EE4DE502BCF /* AppStateTests.swift */; };
+		91B380D8B2DC715D58479AD0 /* BridgeResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F449208DB303D482CD2111 /* BridgeResponseTests.swift */; };
+		953FA5ACB7C471C0B6694FE4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 940E469C556E11CE925A0015 /* Foundation.framework */; };
+		9D1CC7B52AC96E40C6F9F8CD /* IAPTypesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E735BC1C87FC730B286E1D66 /* IAPTypesTests.swift */; };
+		A0090C47F845901C652A3313 /* ShareModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8839EF80DE1A4EB1D78E2D61 /* ShareModuleTests.swift */; };
+		A1000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1000001 /* Assets.xcassets */; };
+		A1000002 /* pwa-config.json in Resources */ = {isa = PBXBuildFile; fileRef = B1000002 /* pwa-config.json */; };
+		A1000003 /* PWAKitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000003 /* PWAKitApp.swift */; };
+		A1000004 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000004 /* AppDelegate.swift */; };
+		A1000005 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000005 /* AppState.swift */; };
+		A1000006 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000006 /* SceneDelegate.swift */; };
+		A1000007 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000007 /* ContentView.swift */; };
+		A1000008 /* WebViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000008 /* WebViewContainer.swift */; };
+		A1000009 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000009 /* LoadingView.swift */; };
+		A100000A /* ConnectionErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000A /* ConnectionErrorView.swift */; };
+		A100000B /* AuthToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000B /* AuthToolbar.swift */; };
+		A100000C /* PWAKitCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000C /* PWAKitCore.swift */; };
+		A100000D /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000D /* AppConfiguration.swift */; };
+		A100000E /* NotificationsConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000E /* NotificationsConfiguration.swift */; };
+		A100000F /* ConfigurationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000F /* ConfigurationError.swift */; };
+		A1000010 /* OriginsConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000010 /* OriginsConfiguration.swift */; };
+		A1000011 /* AppearanceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000011 /* AppearanceConfiguration.swift */; };
+		A1000012 /* PWAConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000012 /* PWAConfiguration.swift */; };
+		A1000013 /* FeaturesConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000013 /* FeaturesConfiguration.swift */; };
+		A1000014 /* FeatureFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000014 /* FeatureFlag.swift */; };
+		A1000015 /* WebViewConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000015 /* WebViewConfiguration.swift */; };
+		A1000016 /* ConfigurationLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000016 /* ConfigurationLoader.swift */; };
+		A1000017 /* ConfigurationValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000017 /* ConfigurationValidator.swift */; };
+		A1000018 /* ConfigurationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000018 /* ConfigurationStore.swift */; };
+		A1000019 /* BridgeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000019 /* BridgeError.swift */; };
+		A100001A /* UniversalLinkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001A /* UniversalLinkHandler.swift */; };
+		A100001B /* CustomSchemeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001B /* CustomSchemeHandler.swift */; };
+		A100001C /* NavigationPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001C /* NavigationPolicy.swift */; };
+		A100001D /* ModuleContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001D /* ModuleContext.swift */; };
+		A100001E /* BridgeMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001E /* BridgeMessage.swift */; };
+		A100001F /* PWAModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001F /* PWAModule.swift */; };
+		A1000020 /* BridgeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000020 /* BridgeResponse.swift */; };
+		A1000021 /* BridgeDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000021 /* BridgeDispatcher.swift */; };
+		A1000022 /* ModuleRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000022 /* ModuleRegistry.swift */; };
+		A1000023 /* SettingsConfigurationLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000023 /* SettingsConfigurationLoader.swift */; };
+		A1000024 /* JavaScriptBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000024 /* JavaScriptBridge.swift */; };
+		A1000025 /* AnyCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000025 /* AnyCodable.swift */; };
+		A1000026 /* ModuleRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000026 /* ModuleRegistration.swift */; };
+		A1000027 /* SecureStorageModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000027 /* SecureStorageModule.swift */; };
+		A1000028 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000028 /* KeychainHelper.swift */; };
+		A1000029 /* NotificationTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000029 /* NotificationTypes.swift */; };
+		A100002A /* IAPModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002A /* IAPModule.swift */; };
+		A100002B /* IAPTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002B /* IAPTypes.swift */; };
+		A100002C /* StoreKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002C /* StoreKitManager.swift */; };
+		A100002D /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002D /* HealthKitManager.swift */; };
+		A100002E /* HealthKitTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002E /* HealthKitTypes.swift */; };
+		A100002F /* HealthKitModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002F /* HealthKitModule.swift */; };
+		A1000030 /* ClipboardModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000030 /* ClipboardModule.swift */; };
+		A1000031 /* HapticsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000031 /* HapticsModule.swift */; };
+		A1000032 /* PlatformModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000032 /* PlatformModule.swift */; };
+		A1000033 /* NotificationsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000033 /* NotificationsModule.swift */; };
+		A1000034 /* AppModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000034 /* AppModule.swift */; };
+		A1000035 /* PrintModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000035 /* PrintModule.swift */; };
+		A1000036 /* BiometricsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000036 /* BiometricsModule.swift */; };
+		A1000037 /* AdaptiveStyleObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000037 /* AdaptiveStyleObserver.swift */; };
+		A1000038 /* BridgeScriptMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000038 /* BridgeScriptMessageHandler.swift */; };
+		A1000039 /* KeyboardHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000039 /* KeyboardHandler.swift */; };
+		A100003A /* PlatformCookieManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100003A /* PlatformCookieManager.swift */; };
+		A100003B /* ProgressObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100003B /* ProgressObserver.swift */; };
+		A100003C /* RetryHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100003C /* RetryHandler.swift */; };
+		A100003D /* UserAgentBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100003D /* UserAgentBuilder.swift */; };
+		A100003E /* NavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100003E /* NavigationDelegate.swift */; };
+		A100003F /* DocumentPreviewHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100003F /* DocumentPreviewHandler.swift */; };
+		A1000040 /* DownloadHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000040 /* DownloadHandler.swift */; };
+		A1000041 /* AppShortcutHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000041 /* AppShortcutHandler.swift */; };
+		A1000042 /* NotificationEventDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000042 /* NotificationEventDispatcher.swift */; };
+		A1000043 /* WebViewConfigurationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000043 /* WebViewConfigurationFactory.swift */; };
+		A1000044 /* PullToRefreshHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000044 /* PullToRefreshHandler.swift */; };
+		A1000045 /* JavaScriptDialogHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000045 /* JavaScriptDialogHandler.swift */; };
+		A1000046 /* ShareModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000046 /* ShareModule.swift */; };
+		A1000047 /* CameraPermissionModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000047 /* CameraPermissionModule.swift */; };
+		A1000048 /* LocationPermissionModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000048 /* LocationPermissionModule.swift */; };
+		A1000049 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000049 /* Color+Hex.swift */; };
+		A100004A /* WebManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100004A /* WebManifest.swift */; };
+		A100004B /* ManifestLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100004B /* ManifestLoader.swift */; };
+		A100004C /* ThemeConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100004C /* ThemeConfiguration.swift */; };
+		A2363050749A127D0095C093 /* NotificationTypesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880883326817623CA69E7350 /* NotificationTypesTests.swift */; };
+		A3608745A2BA318F26BCA01A /* ConfigurationStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2EECC4C55A029C5B769CBA /* ConfigurationStoreTests.swift */; };
+		A62C71C91ED0B267EFD3C0F6 /* LocationPermissionModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB322D5B7DD705E83669240A /* LocationPermissionModuleTests.swift */; };
+		A916699921D46F7B990A18F5 /* HealthKitModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0175126093A93F57EE61FE /* HealthKitModuleTests.swift */; };
+		AB93DB3FBBE7C98401EB9717 /* PWAConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC8062767A9F899644D622C /* PWAConfigurationTests.swift */; };
+		B02FC8B2539CEDE6D66B78EE /* AppShortcutHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B927BB9070ED37ECFE27FD /* AppShortcutHandlerTests.swift */; };
+		BCC0A1433785EFDC11BB03F2 /* BridgeDispatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F001060E88C0EFE4D35D079D /* BridgeDispatcherTests.swift */; };
+		C4FA30AF58A2378FE3F792AA /* UserAgentBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20ECCD2B61DF2A5FDDFC3EED /* UserAgentBuilderTests.swift */; };
+		C78C08968C5918279A80D091 /* CameraPermissionModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA04B2CF40AD50388931A114 /* CameraPermissionModuleTests.swift */; };
+		D81E0320F96BAA231DD8A22E /* NavigationDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7EB8E497F1A34CFD2371DD /* NavigationDelegateTests.swift */; };
+		D95453673688EE229E8E61F8 /* SettingsConfigurationLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CFE3BF3CF05F52B0D565B7 /* SettingsConfigurationLoaderTests.swift */; };
+		E78B5B0D59F3700E17FB54CE /* ConfigurationLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD81F1C98DBB53560AA2678 /* ConfigurationLoaderTests.swift */; };
+		EA5FCC1209C09758FE8B05E8 /* KeychainHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70AFAB926A6741AF924575C /* KeychainHelperTests.swift */; };
+		EBF8F8E4F01584D4B0E8512E /* NotificationEventDispatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDD2D4E364BC1163128F13F2 /* NotificationEventDispatcherTests.swift */; };
+		F066E28C979E4CC46C35B645 /* PrintModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3C35058FFAD1CEA7ADAFEB /* PrintModuleTests.swift */; };
+		F19D313C518B3498345D3698 /* PWAKitCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A113C5B74258BA33DFCBC8C /* PWAKitCoreTests.swift */; };
+		F9C4A2DADABA76A7460722C5 /* PlatformCookieManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B504E99517BD4151314F639 /* PlatformCookieManagerTests.swift */; };
+		FF90B60A3D9431B2E5CE6DA8 /* WebViewConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EB63B92AFD732EDDF913001 /* WebViewConfigurationTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F8918AA6C516315A012C5834 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1000010 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F1000001;
+			remoteInfo = PWAKitApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		071F005E1AE85A924A15DCD2 /* IAPModuleTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IAPModuleTests.swift; path = tests/PWAKitCoretests/Modules/IAPModuleTests.swift; sourceTree = SOURCE_ROOT; };
+		0A113C5B74258BA33DFCBC8C /* PWAKitCoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PWAKitCoreTests.swift; path = tests/PWAKittests/PWAKitCoreTests.swift; sourceTree = SOURCE_ROOT; };
+		0CD75321E3B5DC6251519ABF /* RetryHandlerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RetryHandlerTests.swift; path = tests/PWAKitCoretests/WebView/RetryHandlerTests.swift; sourceTree = SOURCE_ROOT; };
+		18C653D71C8288E3A7448024 /* SecureStorageModuleTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SecureStorageModuleTests.swift; path = tests/PWAKitCoretests/Modules/SecureStorageModuleTests.swift; sourceTree = SOURCE_ROOT; };
+		1BD81F1C98DBB53560AA2678 /* ConfigurationLoaderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConfigurationLoaderTests.swift; path = tests/PWAKitCoretests/Configuration/ConfigurationLoaderTests.swift; sourceTree = SOURCE_ROOT; };
+		1F7EB8E497F1A34CFD2371DD /* NavigationDelegateTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NavigationDelegateTests.swift; path = tests/PWAKitCoretests/Navigation/NavigationDelegateTests.swift; sourceTree = SOURCE_ROOT; };
+		20ECCD2B61DF2A5FDDFC3EED /* UserAgentBuilderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UserAgentBuilderTests.swift; path = tests/PWAKitCoretests/WebView/UserAgentBuilderTests.swift; sourceTree = SOURCE_ROOT; };
+		231CA78601B78C6D9775A7B5 /* HapticsModuleTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HapticsModuleTests.swift; path = tests/PWAKitCoretests/Modules/HapticsModuleTests.swift; sourceTree = SOURCE_ROOT; };
+		2AC4F5AFB93C1A04B11715DA /* HealthKitTypesTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HealthKitTypesTests.swift; path = tests/PWAKitCoretests/Modules/HealthKitTypesTests.swift; sourceTree = SOURCE_ROOT; };
+		3CC9C1FC88959AC272FE4926 /* ProgressObserverTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProgressObserverTests.swift; path = tests/PWAKitCoretests/WebView/ProgressObserverTests.swift; sourceTree = SOURCE_ROOT; };
+		4105C6B1D4EA98242AAC4FE1 /* ConfigurationValidatorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConfigurationValidatorTests.swift; path = tests/PWAKitCoretests/Configuration/ConfigurationValidatorTests.swift; sourceTree = SOURCE_ROOT; };
+		4811FA22B0D0493A2C547584 /* BridgeErrorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BridgeErrorTests.swift; path = tests/PWAKitCoretests/Bridge/BridgeErrorTests.swift; sourceTree = SOURCE_ROOT; };
+		4AD666C73DADC18CB96460D1 /* AppModuleTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppModuleTests.swift; path = tests/PWAKitCoretests/Modules/AppModuleTests.swift; sourceTree = SOURCE_ROOT; };
+		4C526CC8494AE46542E247E3 /* DownloadHandlerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DownloadHandlerTests.swift; path = tests/PWAKitCoretests/Files/DownloadHandlerTests.swift; sourceTree = SOURCE_ROOT; };
+		51B927BB9070ED37ECFE27FD /* AppShortcutHandlerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppShortcutHandlerTests.swift; path = tests/PWAKitCoretests/Navigation/AppShortcutHandlerTests.swift; sourceTree = SOURCE_ROOT; };
+		522317285A7619F4647BC53D /* BiometricsModuleTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BiometricsModuleTests.swift; path = tests/PWAKitCoretests/Modules/BiometricsModuleTests.swift; sourceTree = SOURCE_ROOT; };
+		55F449208DB303D482CD2111 /* BridgeResponseTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BridgeResponseTests.swift; path = tests/PWAKitCoretests/Bridge/BridgeResponseTests.swift; sourceTree = SOURCE_ROOT; };
+		626D3448D84DF09733EE990E /* ClipboardModuleTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ClipboardModuleTests.swift; path = tests/PWAKitCoretests/Modules/ClipboardModuleTests.swift; sourceTree = SOURCE_ROOT; };
+		63AED50228551FD616F1C613 /* BridgeMessageTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BridgeMessageTests.swift; path = tests/PWAKitCoretests/Bridge/BridgeMessageTests.swift; sourceTree = SOURCE_ROOT; };
+		659FECFB5404C4D0415EB48F /* PlatformModuleTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlatformModuleTests.swift; path = tests/PWAKitCoretests/Modules/PlatformModuleTests.swift; sourceTree = SOURCE_ROOT; };
+		6B504E99517BD4151314F639 /* PlatformCookieManagerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlatformCookieManagerTests.swift; path = tests/PWAKitCoretests/WebView/PlatformCookieManagerTests.swift; sourceTree = SOURCE_ROOT; };
+		6BFE47311BBE4418F8FCFB14 /* BridgeIntegrationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BridgeIntegrationTests.swift; path = tests/PWAKitCoretests/Bridge/BridgeIntegrationTests.swift; sourceTree = SOURCE_ROOT; };
+		6EB63B92AFD732EDDF913001 /* WebViewConfigurationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WebViewConfigurationTests.swift; path = tests/PWAKitCoretests/WebView/WebViewConfigurationTests.swift; sourceTree = SOURCE_ROOT; };
+		880883326817623CA69E7350 /* NotificationTypesTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotificationTypesTests.swift; path = tests/PWAKitCoretests/Modules/NotificationTypesTests.swift; sourceTree = SOURCE_ROOT; };
+		8839EF80DE1A4EB1D78E2D61 /* ShareModuleTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShareModuleTests.swift; path = tests/PWAKitCoretests/Modules/ShareModuleTests.swift; sourceTree = SOURCE_ROOT; };
+		8B2ACBC612BB90BB3F5531B5 /* ModuleRegistryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ModuleRegistryTests.swift; path = tests/PWAKitCoretests/Bridge/ModuleRegistryTests.swift; sourceTree = SOURCE_ROOT; };
+		92A4390B85CC25B15A287753 /* BridgeScriptMessageHandlerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BridgeScriptMessageHandlerTests.swift; path = tests/PWAKitCoretests/WebView/BridgeScriptMessageHandlerTests.swift; sourceTree = SOURCE_ROOT; };
+		940E469C556E11CE925A0015 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		963993AA784594C6DDFB3885 /* TestModule.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TestModule.swift; path = tests/PWAKitCoretests/Mocks/TestModule.swift; sourceTree = SOURCE_ROOT; };
+		9F2100F4458F4B7EE07E4B4E /* JavaScriptBridgeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = JavaScriptBridgeTests.swift; path = tests/PWAKitCoretests/Bridge/JavaScriptBridgeTests.swift; sourceTree = SOURCE_ROOT; };
+		A095E38FF13B6259ACBEAFBA /* NavigationPolicyTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NavigationPolicyTests.swift; path = tests/PWAKitCoretests/Navigation/NavigationPolicyTests.swift; sourceTree = SOURCE_ROOT; };
+		AB936B67DFC4A932876B7D16 /* StoreKitManagerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StoreKitManagerTests.swift; path = tests/PWAKitCoretests/Modules/StoreKitManagerTests.swift; sourceTree = SOURCE_ROOT; };
+		AC0175126093A93F57EE61FE /* HealthKitModuleTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HealthKitModuleTests.swift; path = tests/PWAKitCoretests/Modules/HealthKitModuleTests.swift; sourceTree = SOURCE_ROOT; };
+		AC2EECC4C55A029C5B769CBA /* ConfigurationStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConfigurationStoreTests.swift; path = tests/PWAKitCoretests/Configuration/ConfigurationStoreTests.swift; sourceTree = SOURCE_ROOT; };
+		AF3C35058FFAD1CEA7ADAFEB /* PrintModuleTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PrintModuleTests.swift; path = tests/PWAKitCoretests/Modules/PrintModuleTests.swift; sourceTree = SOURCE_ROOT; };
+		B1000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B1000002 /* pwa-config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "pwa-config.json"; sourceTree = "<group>"; };
+		B1000003 /* PWAKitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PWAKitApp.swift; sourceTree = "<group>"; };
+		B1000004 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		B1000005 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		B1000006 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		B1000007 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		B1000008 /* WebViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewContainer.swift; sourceTree = "<group>"; };
+		B1000009 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		B100000A /* ConnectionErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionErrorView.swift; sourceTree = "<group>"; };
+		B100000B /* AuthToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthToolbar.swift; sourceTree = "<group>"; };
+		B100000C /* PWAKitCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PWAKitCore.swift; sourceTree = "<group>"; };
+		B100000D /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
+		B100000E /* NotificationsConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsConfiguration.swift; sourceTree = "<group>"; };
+		B100000F /* ConfigurationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationError.swift; sourceTree = "<group>"; };
+		B1000010 /* OriginsConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OriginsConfiguration.swift; sourceTree = "<group>"; };
+		B1000011 /* AppearanceConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceConfiguration.swift; sourceTree = "<group>"; };
+		B1000012 /* PWAConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PWAConfiguration.swift; sourceTree = "<group>"; };
+		B1000013 /* FeaturesConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesConfiguration.swift; sourceTree = "<group>"; };
+		B1000014 /* FeatureFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlag.swift; sourceTree = "<group>"; };
+		B1000015 /* WebViewConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewConfiguration.swift; sourceTree = "<group>"; };
+		B1000016 /* ConfigurationLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationLoader.swift; sourceTree = "<group>"; };
+		B1000017 /* ConfigurationValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationValidator.swift; sourceTree = "<group>"; };
+		B1000018 /* ConfigurationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationStore.swift; sourceTree = "<group>"; };
+		B1000019 /* BridgeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgeError.swift; sourceTree = "<group>"; };
+		B100001A /* UniversalLinkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversalLinkHandler.swift; sourceTree = "<group>"; };
+		B100001B /* CustomSchemeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSchemeHandler.swift; sourceTree = "<group>"; };
+		B100001C /* NavigationPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationPolicy.swift; sourceTree = "<group>"; };
+		B100001D /* ModuleContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleContext.swift; sourceTree = "<group>"; };
+		B100001E /* BridgeMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgeMessage.swift; sourceTree = "<group>"; };
+		B100001F /* PWAModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PWAModule.swift; sourceTree = "<group>"; };
+		B1000020 /* BridgeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgeResponse.swift; sourceTree = "<group>"; };
+		B1000021 /* BridgeDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgeDispatcher.swift; sourceTree = "<group>"; };
+		B1000022 /* ModuleRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleRegistry.swift; sourceTree = "<group>"; };
+		B1000023 /* SettingsConfigurationLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsConfigurationLoader.swift; sourceTree = "<group>"; };
+		B1000024 /* JavaScriptBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JavaScriptBridge.swift; sourceTree = "<group>"; };
+		B1000025 /* AnyCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyCodable.swift; sourceTree = "<group>"; };
+		B1000026 /* ModuleRegistration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleRegistration.swift; sourceTree = "<group>"; };
+		B1000027 /* SecureStorageModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureStorageModule.swift; sourceTree = "<group>"; };
+		B1000028 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		B1000029 /* NotificationTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTypes.swift; sourceTree = "<group>"; };
+		B100002A /* IAPModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPModule.swift; sourceTree = "<group>"; };
+		B100002B /* IAPTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPTypes.swift; sourceTree = "<group>"; };
+		B100002C /* StoreKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreKitManager.swift; sourceTree = "<group>"; };
+		B100002D /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
+		B100002E /* HealthKitTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitTypes.swift; sourceTree = "<group>"; };
+		B100002F /* HealthKitModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitModule.swift; sourceTree = "<group>"; };
+		B1000030 /* ClipboardModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardModule.swift; sourceTree = "<group>"; };
+		B1000031 /* HapticsModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticsModule.swift; sourceTree = "<group>"; };
+		B1000032 /* PlatformModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformModule.swift; sourceTree = "<group>"; };
+		B1000033 /* NotificationsModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsModule.swift; sourceTree = "<group>"; };
+		B1000034 /* AppModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModule.swift; sourceTree = "<group>"; };
+		B1000035 /* PrintModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintModule.swift; sourceTree = "<group>"; };
+		B1000036 /* BiometricsModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricsModule.swift; sourceTree = "<group>"; };
+		B1000037 /* AdaptiveStyleObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveStyleObserver.swift; sourceTree = "<group>"; };
+		B1000038 /* BridgeScriptMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgeScriptMessageHandler.swift; sourceTree = "<group>"; };
+		B1000039 /* KeyboardHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHandler.swift; sourceTree = "<group>"; };
+		B100003A /* PlatformCookieManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformCookieManager.swift; sourceTree = "<group>"; };
+		B100003B /* ProgressObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressObserver.swift; sourceTree = "<group>"; };
+		B100003C /* RetryHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryHandler.swift; sourceTree = "<group>"; };
+		B100003D /* UserAgentBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAgentBuilder.swift; sourceTree = "<group>"; };
+		B100003E /* NavigationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationDelegate.swift; sourceTree = "<group>"; };
+		B100003F /* DocumentPreviewHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPreviewHandler.swift; sourceTree = "<group>"; };
+		B1000040 /* DownloadHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadHandler.swift; sourceTree = "<group>"; };
+		B1000041 /* AppShortcutHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppShortcutHandler.swift; sourceTree = "<group>"; };
+		B1000042 /* NotificationEventDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationEventDispatcher.swift; sourceTree = "<group>"; };
+		B1000043 /* WebViewConfigurationFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewConfigurationFactory.swift; sourceTree = "<group>"; };
+		B1000044 /* PullToRefreshHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullToRefreshHandler.swift; sourceTree = "<group>"; };
+		B1000045 /* JavaScriptDialogHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JavaScriptDialogHandler.swift; sourceTree = "<group>"; };
+		B1000046 /* ShareModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareModule.swift; sourceTree = "<group>"; };
+		B1000047 /* CameraPermissionModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPermissionModule.swift; sourceTree = "<group>"; };
+		B1000048 /* LocationPermissionModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPermissionModule.swift; sourceTree = "<group>"; };
+		B1000049 /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
+		B100004A /* WebManifest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebManifest.swift; sourceTree = "<group>"; };
+		B100004B /* ManifestLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManifestLoader.swift; sourceTree = "<group>"; };
+		B100004C /* ThemeConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeConfiguration.swift; sourceTree = "<group>"; };
+		BB322D5B7DD705E83669240A /* LocationPermissionModuleTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LocationPermissionModuleTests.swift; path = tests/PWAKitCoretests/Modules/LocationPermissionModuleTests.swift; sourceTree = SOURCE_ROOT; };
+		BD61600E33373EE4DE502BCF /* AppStateTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppStateTests.swift; path = tests/PWAKitCoretests/AppStateTests.swift; sourceTree = SOURCE_ROOT; };
+		BEC8062767A9F899644D622C /* PWAConfigurationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PWAConfigurationTests.swift; path = tests/PWAKitCoretests/Configuration/PWAConfigurationTests.swift; sourceTree = SOURCE_ROOT; };
+		BFA798398505DB165F97DD4F /* UniversalLinkHandlerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UniversalLinkHandlerTests.swift; path = tests/PWAKitCoretests/Navigation/UniversalLinkHandlerTests.swift; sourceTree = SOURCE_ROOT; };
+		C1000001 /* PWAKitApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PWAKitApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1000002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C1000003 /* PWAKit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PWAKit.entitlements; sourceTree = "<group>"; };
+		C1CFE3BF3CF05F52B0D565B7 /* SettingsConfigurationLoaderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsConfigurationLoaderTests.swift; path = tests/PWAKitCoretests/Settings/SettingsConfigurationLoaderTests.swift; sourceTree = SOURCE_ROOT; };
+		C23B430A06538362081A91C8 /* PWAKitAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PWAKitAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C70AFAB926A6741AF924575C /* KeychainHelperTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = KeychainHelperTests.swift; path = tests/PWAKitCoretests/Modules/KeychainHelperTests.swift; sourceTree = SOURCE_ROOT; };
+		C766A4E884BD393B3BB8405F /* NotificationsModuleTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotificationsModuleTests.swift; path = tests/PWAKitCoretests/Modules/NotificationsModuleTests.swift; sourceTree = SOURCE_ROOT; };
+		D29CB4D454650689C9B353BC /* WebViewConfigurationFactoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WebViewConfigurationFactoryTests.swift; path = tests/PWAKitCoretests/WebView/WebViewConfigurationFactoryTests.swift; sourceTree = SOURCE_ROOT; };
+		D87AAFF78E5769EFA2F95AE6 /* CustomSchemeHandlerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CustomSchemeHandlerTests.swift; path = tests/PWAKitCoretests/Navigation/CustomSchemeHandlerTests.swift; sourceTree = SOURCE_ROOT; };
+		D8F7C86B25A1696779E66107 /* PWAKitAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PWAKitAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA04B2CF40AD50388931A114 /* CameraPermissionModuleTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CameraPermissionModuleTests.swift; path = tests/PWAKitCoretests/Modules/CameraPermissionModuleTests.swift; sourceTree = SOURCE_ROOT; };
+		E735BC1C87FC730B286E1D66 /* IAPTypesTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IAPTypesTests.swift; path = tests/PWAKitCoretests/Modules/IAPTypesTests.swift; sourceTree = SOURCE_ROOT; };
+		EAE43FB8216AE73EA3228BC0 /* AdaptiveStyleObserverTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AdaptiveStyleObserverTests.swift; path = tests/PWAKitCoretests/WebView/AdaptiveStyleObserverTests.swift; sourceTree = SOURCE_ROOT; };
+		F001060E88C0EFE4D35D079D /* BridgeDispatcherTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BridgeDispatcherTests.swift; path = tests/PWAKitCoretests/Bridge/BridgeDispatcherTests.swift; sourceTree = SOURCE_ROOT; };
+		FD4F33CE540B51ED3CAE7B04 /* HealthKitManagerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HealthKitManagerTests.swift; path = tests/PWAKitCoretests/Modules/HealthKitManagerTests.swift; sourceTree = SOURCE_ROOT; };
+		FDD2D4E364BC1163128F13F2 /* NotificationEventDispatcherTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotificationEventDispatcherTests.swift; path = tests/PWAKitCoretests/Modules/NotificationEventDispatcherTests.swift; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C8C8C810D8003819D6EF455D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				953FA5ACB7C471C0B6694FE4 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D1000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		014C08F97007303B101C6F4A /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				1BD81F1C98DBB53560AA2678 /* ConfigurationLoaderTests.swift */,
+				AC2EECC4C55A029C5B769CBA /* ConfigurationStoreTests.swift */,
+				4105C6B1D4EA98242AAC4FE1 /* ConfigurationValidatorTests.swift */,
+				BEC8062767A9F899644D622C /* PWAConfigurationTests.swift */,
+			);
+			name = Configuration;
+			sourceTree = "<group>";
+		};
+		8306B34E5A0F831E37C9133B /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				963993AA784594C6DDFB3885 /* TestModule.swift */,
+			);
+			name = Mocks;
+			sourceTree = "<group>";
+		};
+		A216BDA9AB37D571996167C5 /* PWAKitCoreTests */ = {
+			isa = PBXGroup;
+			children = (
+				BD61600E33373EE4DE502BCF /* AppStateTests.swift */,
+				ABAE50AD4C4009EDA80AFD12 /* Bridge */,
+				014C08F97007303B101C6F4A /* Configuration */,
+				ACFAC6296852D7D4BAFBD4F6 /* Files */,
+				8306B34E5A0F831E37C9133B /* Mocks */,
+				C3060E5302003B09C7E4C152 /* Modules */,
+				D1A6EFB1ADBB1B588F7A63DE /* Navigation */,
+				E154468345D99C9E9AAFF663 /* Settings */,
+				F1E5BD5BCA0760387B39C876 /* WebView */,
+			);
+			name = PWAKitCoreTests;
+			sourceTree = "<group>";
+		};
+		ABAE50AD4C4009EDA80AFD12 /* Bridge */ = {
+			isa = PBXGroup;
+			children = (
+				F001060E88C0EFE4D35D079D /* BridgeDispatcherTests.swift */,
+				4811FA22B0D0493A2C547584 /* BridgeErrorTests.swift */,
+				6BFE47311BBE4418F8FCFB14 /* BridgeIntegrationTests.swift */,
+				63AED50228551FD616F1C613 /* BridgeMessageTests.swift */,
+				55F449208DB303D482CD2111 /* BridgeResponseTests.swift */,
+				9F2100F4458F4B7EE07E4B4E /* JavaScriptBridgeTests.swift */,
+				8B2ACBC612BB90BB3F5531B5 /* ModuleRegistryTests.swift */,
+			);
+			name = Bridge;
+			sourceTree = "<group>";
+		};
+		ACFAC6296852D7D4BAFBD4F6 /* Files */ = {
+			isa = PBXGroup;
+			children = (
+				4C526CC8494AE46542E247E3 /* DownloadHandlerTests.swift */,
+			);
+			name = Files;
+			sourceTree = "<group>";
+		};
+		B61F09CD6508B79BD28385BC /* PWAKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				0A113C5B74258BA33DFCBC8C /* PWAKitCoreTests.swift */,
+			);
+			name = PWAKitTests;
+			sourceTree = "<group>";
+		};
+		C3060E5302003B09C7E4C152 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				4AD666C73DADC18CB96460D1 /* AppModuleTests.swift */,
+				522317285A7619F4647BC53D /* BiometricsModuleTests.swift */,
+				DA04B2CF40AD50388931A114 /* CameraPermissionModuleTests.swift */,
+				626D3448D84DF09733EE990E /* ClipboardModuleTests.swift */,
+				231CA78601B78C6D9775A7B5 /* HapticsModuleTests.swift */,
+				FD4F33CE540B51ED3CAE7B04 /* HealthKitManagerTests.swift */,
+				AC0175126093A93F57EE61FE /* HealthKitModuleTests.swift */,
+				2AC4F5AFB93C1A04B11715DA /* HealthKitTypesTests.swift */,
+				071F005E1AE85A924A15DCD2 /* IAPModuleTests.swift */,
+				E735BC1C87FC730B286E1D66 /* IAPTypesTests.swift */,
+				C70AFAB926A6741AF924575C /* KeychainHelperTests.swift */,
+				BB322D5B7DD705E83669240A /* LocationPermissionModuleTests.swift */,
+				FDD2D4E364BC1163128F13F2 /* NotificationEventDispatcherTests.swift */,
+				880883326817623CA69E7350 /* NotificationTypesTests.swift */,
+				C766A4E884BD393B3BB8405F /* NotificationsModuleTests.swift */,
+				659FECFB5404C4D0415EB48F /* PlatformModuleTests.swift */,
+				AF3C35058FFAD1CEA7ADAFEB /* PrintModuleTests.swift */,
+				18C653D71C8288E3A7448024 /* SecureStorageModuleTests.swift */,
+				8839EF80DE1A4EB1D78E2D61 /* ShareModuleTests.swift */,
+				AB936B67DFC4A932876B7D16 /* StoreKitManagerTests.swift */,
+			);
+			name = Modules;
+			sourceTree = "<group>";
+		};
+		D1A6EFB1ADBB1B588F7A63DE /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				51B927BB9070ED37ECFE27FD /* AppShortcutHandlerTests.swift */,
+				D87AAFF78E5769EFA2F95AE6 /* CustomSchemeHandlerTests.swift */,
+				1F7EB8E497F1A34CFD2371DD /* NavigationDelegateTests.swift */,
+				A095E38FF13B6259ACBEAFBA /* NavigationPolicyTests.swift */,
+				BFA798398505DB165F97DD4F /* UniversalLinkHandlerTests.swift */,
+			);
+			name = Navigation;
+			sourceTree = "<group>";
+		};
+		E1000001 = {
+			isa = PBXGroup;
+			children = (
+				E1000002 /* src */,
+				E1000010 /* Products */,
+				FB440ACE3B933B0411D55223 /* Frameworks */,
+				FB38C94946EAE28008DE3FCF /* tests */,
+			);
+			sourceTree = "<group>";
+		};
+		E1000002 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E1000003 /* PWAKit */,
+				E1000004 /* PWAKitCore */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E1000003 /* PWAKit */ = {
+			isa = PBXGroup;
+			children = (
+				E1000005 /* App */,
+				E1000006 /* Views */,
+				E1000007 /* Resources */,
+				C1000002 /* Info.plist */,
+				C1000003 /* PWAKit.entitlements */,
+			);
+			path = PWAKit;
+			sourceTree = "<group>";
+		};
+		E1000004 /* PWAKitCore */ = {
+			isa = PBXGroup;
+			children = (
+				B100000C /* PWAKitCore.swift */,
+				E1000008 /* Configuration */,
+				E1000009 /* Bridge */,
+				E100000A /* Modules */,
+				E100000B /* Navigation */,
+				E100000C /* WebView */,
+				E100000D /* Files */,
+				E100000E /* Settings */,
+				E100001C /* Utilities */,
+				E100001D /* Manifest */,
+			);
+			path = PWAKitCore;
+			sourceTree = "<group>";
+		};
+		E1000005 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				B1000003 /* PWAKitApp.swift */,
+				B1000004 /* AppDelegate.swift */,
+				B1000005 /* AppState.swift */,
+				B1000006 /* SceneDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		E1000006 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B1000007 /* ContentView.swift */,
+				B1000008 /* WebViewContainer.swift */,
+				B1000009 /* LoadingView.swift */,
+				B100000A /* ConnectionErrorView.swift */,
+				B100000B /* AuthToolbar.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		E1000007 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B1000001 /* Assets.xcassets */,
+				B1000002 /* pwa-config.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		E1000008 /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				B100000D /* AppConfiguration.swift */,
+				B100000E /* NotificationsConfiguration.swift */,
+				B100000F /* ConfigurationError.swift */,
+				B1000010 /* OriginsConfiguration.swift */,
+				B1000011 /* AppearanceConfiguration.swift */,
+				B1000012 /* PWAConfiguration.swift */,
+				B1000013 /* FeaturesConfiguration.swift */,
+				B1000014 /* FeatureFlag.swift */,
+				B1000016 /* ConfigurationLoader.swift */,
+				B1000017 /* ConfigurationValidator.swift */,
+				B1000018 /* ConfigurationStore.swift */,
+				B100004C /* ThemeConfiguration.swift */,
+			);
+			path = Configuration;
+			sourceTree = "<group>";
+		};
+		E1000009 /* Bridge */ = {
+			isa = PBXGroup;
+			children = (
+				B1000019 /* BridgeError.swift */,
+				B100001E /* BridgeMessage.swift */,
+				B1000020 /* BridgeResponse.swift */,
+				B1000021 /* BridgeDispatcher.swift */,
+				B1000022 /* ModuleRegistry.swift */,
+				B1000024 /* JavaScriptBridge.swift */,
+				B1000025 /* AnyCodable.swift */,
+			);
+			path = Bridge;
+			sourceTree = "<group>";
+		};
+		E100000A /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				B100001D /* ModuleContext.swift */,
+				B100001F /* PWAModule.swift */,
+				B1000026 /* ModuleRegistration.swift */,
+				E100000F /* SecureStorage */,
+				E1000011 /* Notifications */,
+				E1000012 /* IAP */,
+				E1000013 /* HealthKit */,
+				E1000014 /* Clipboard */,
+				E1000015 /* Haptics */,
+				E1000016 /* Platform */,
+				E1000017 /* App */,
+				E1000018 /* Print */,
+				E1000019 /* Biometrics */,
+				E100001A /* Share */,
+				E100001B /* Permissions */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		E100000B /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				B100001A /* UniversalLinkHandler.swift */,
+				B100001B /* CustomSchemeHandler.swift */,
+				B100001C /* NavigationPolicy.swift */,
+				B100003E /* NavigationDelegate.swift */,
+				B1000041 /* AppShortcutHandler.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
+		E100000C /* WebView */ = {
+			isa = PBXGroup;
+			children = (
+				B1000015 /* WebViewConfiguration.swift */,
+				B1000037 /* AdaptiveStyleObserver.swift */,
+				B1000038 /* BridgeScriptMessageHandler.swift */,
+				B1000039 /* KeyboardHandler.swift */,
+				B100003A /* PlatformCookieManager.swift */,
+				B100003B /* ProgressObserver.swift */,
+				B100003C /* RetryHandler.swift */,
+				B100003D /* UserAgentBuilder.swift */,
+				B1000043 /* WebViewConfigurationFactory.swift */,
+				B1000044 /* PullToRefreshHandler.swift */,
+				B1000045 /* JavaScriptDialogHandler.swift */,
+			);
+			path = WebView;
+			sourceTree = "<group>";
+		};
+		E100000D /* Files */ = {
+			isa = PBXGroup;
+			children = (
+				B100003F /* DocumentPreviewHandler.swift */,
+				B1000040 /* DownloadHandler.swift */,
+			);
+			path = Files;
+			sourceTree = "<group>";
+		};
+		E100000E /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				B1000023 /* SettingsConfigurationLoader.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		E100000F /* SecureStorage */ = {
+			isa = PBXGroup;
+			children = (
+				B1000027 /* SecureStorageModule.swift */,
+				B1000028 /* KeychainHelper.swift */,
+			);
+			path = SecureStorage;
+			sourceTree = "<group>";
+		};
+		E1000010 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C1000001 /* PWAKitApp.app */,
+				D8F7C86B25A1696779E66107 /* PWAKitAppTests.xctest */,
+				C23B430A06538362081A91C8 /* PWAKitAppTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E1000011 /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				B1000029 /* NotificationTypes.swift */,
+				B1000033 /* NotificationsModule.swift */,
+				B1000042 /* NotificationEventDispatcher.swift */,
+			);
+			path = Notifications;
+			sourceTree = "<group>";
+		};
+		E1000012 /* IAP */ = {
+			isa = PBXGroup;
+			children = (
+				B100002A /* IAPModule.swift */,
+				B100002B /* IAPTypes.swift */,
+				B100002C /* StoreKitManager.swift */,
+			);
+			path = IAP;
+			sourceTree = "<group>";
+		};
+		E1000013 /* HealthKit */ = {
+			isa = PBXGroup;
+			children = (
+				B100002D /* HealthKitManager.swift */,
+				B100002E /* HealthKitTypes.swift */,
+				B100002F /* HealthKitModule.swift */,
+			);
+			path = HealthKit;
+			sourceTree = "<group>";
+		};
+		E1000014 /* Clipboard */ = {
+			isa = PBXGroup;
+			children = (
+				B1000030 /* ClipboardModule.swift */,
+			);
+			path = Clipboard;
+			sourceTree = "<group>";
+		};
+		E1000015 /* Haptics */ = {
+			isa = PBXGroup;
+			children = (
+				B1000031 /* HapticsModule.swift */,
+			);
+			path = Haptics;
+			sourceTree = "<group>";
+		};
+		E1000016 /* Platform */ = {
+			isa = PBXGroup;
+			children = (
+				B1000032 /* PlatformModule.swift */,
+			);
+			path = Platform;
+			sourceTree = "<group>";
+		};
+		E1000017 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				B1000034 /* AppModule.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		E1000018 /* Print */ = {
+			isa = PBXGroup;
+			children = (
+				B1000035 /* PrintModule.swift */,
+			);
+			path = Print;
+			sourceTree = "<group>";
+		};
+		E1000019 /* Biometrics */ = {
+			isa = PBXGroup;
+			children = (
+				B1000036 /* BiometricsModule.swift */,
+			);
+			path = Biometrics;
+			sourceTree = "<group>";
+		};
+		E100001A /* Share */ = {
+			isa = PBXGroup;
+			children = (
+				B1000046 /* ShareModule.swift */,
+			);
+			path = Share;
+			sourceTree = "<group>";
+		};
+		E100001B /* Permissions */ = {
+			isa = PBXGroup;
+			children = (
+				B1000047 /* CameraPermissionModule.swift */,
+				B1000048 /* LocationPermissionModule.swift */,
+			);
+			path = Permissions;
+			sourceTree = "<group>";
+		};
+		E100001C /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				B1000049 /* Color+Hex.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		E100001D /* Manifest */ = {
+			isa = PBXGroup;
+			children = (
+				B100004A /* WebManifest.swift */,
+				B100004B /* ManifestLoader.swift */,
+			);
+			path = Manifest;
+			sourceTree = "<group>";
+		};
+		E154468345D99C9E9AAFF663 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				C1CFE3BF3CF05F52B0D565B7 /* SettingsConfigurationLoaderTests.swift */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
+		EA54E575DEF31E3486150D7C /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				940E469C556E11CE925A0015 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		F1E5BD5BCA0760387B39C876 /* WebView */ = {
+			isa = PBXGroup;
+			children = (
+				EAE43FB8216AE73EA3228BC0 /* AdaptiveStyleObserverTests.swift */,
+				92A4390B85CC25B15A287753 /* BridgeScriptMessageHandlerTests.swift */,
+				6B504E99517BD4151314F639 /* PlatformCookieManagerTests.swift */,
+				3CC9C1FC88959AC272FE4926 /* ProgressObserverTests.swift */,
+				0CD75321E3B5DC6251519ABF /* RetryHandlerTests.swift */,
+				20ECCD2B61DF2A5FDDFC3EED /* UserAgentBuilderTests.swift */,
+				D29CB4D454650689C9B353BC /* WebViewConfigurationFactoryTests.swift */,
+				6EB63B92AFD732EDDF913001 /* WebViewConfigurationTests.swift */,
+			);
+			name = WebView;
+			sourceTree = "<group>";
+		};
+		FB38C94946EAE28008DE3FCF /* tests */ = {
+			isa = PBXGroup;
+			children = (
+				A216BDA9AB37D571996167C5 /* PWAKitCoreTests */,
+				B61F09CD6508B79BD28385BC /* PWAKitTests */,
+			);
+			path = tests;
+			sourceTree = "<group>";
+		};
+		FB440ACE3B933B0411D55223 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EA54E575DEF31E3486150D7C /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F1000001 /* PWAKitApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1000002 /* Build configuration list for PBXNativeTarget "PWAKitApp" */;
+			buildPhases = (
+				F1000003 /* Sources */,
+				D1000001 /* Frameworks */,
+				F1000004 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PWAKitApp;
+			productName = PWAKitApp;
+			productReference = C1000001 /* PWAKitApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F64FEF3B6DCFC9F2132CDC82 /* PWAKitAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ABDD172BD3DB2FE49B987643 /* Build configuration list for PBXNativeTarget "PWAKitAppTests" */;
+			buildPhases = (
+				A42936D42C4073CB84789FE0 /* Sources */,
+				C8C8C810D8003819D6EF455D /* Frameworks */,
+				647B2EA5573393B4EFFAF654 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2F6BCF9CC400936C43596372 /* PBXTargetDependency */,
+			);
+			name = PWAKitAppTests;
+			productName = PWAKitAppTests;
+			productReference = C23B430A06538362081A91C8 /* PWAKitAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F1000010 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					F1000001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = F1000011 /* Build configuration list for PBXProject "PWAKitApp" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E1000001;
+			productRefGroup = E1000010 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F1000001 /* PWAKitApp */,
+				F64FEF3B6DCFC9F2132CDC82 /* PWAKitAppTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		647B2EA5573393B4EFFAF654 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1000004 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000001 /* Assets.xcassets in Resources */,
+				A1000002 /* pwa-config.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A42936D42C4073CB84789FE0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8AA33D8C69FFB1F10BD58AD4 /* AppStateTests.swift in Sources */,
+				BCC0A1433785EFDC11BB03F2 /* BridgeDispatcherTests.swift in Sources */,
+				4808AC3FBFB259CEBED4F5B0 /* BridgeErrorTests.swift in Sources */,
+				3D1919E6A9E7B99A99267517 /* BridgeIntegrationTests.swift in Sources */,
+				0CD4D7D8E9721C2AE7925ADE /* BridgeMessageTests.swift in Sources */,
+				91B380D8B2DC715D58479AD0 /* BridgeResponseTests.swift in Sources */,
+				126BC5786E79BE2C3BDD8F84 /* JavaScriptBridgeTests.swift in Sources */,
+				4B95F91F4CF622E1187898D3 /* ModuleRegistryTests.swift in Sources */,
+				E78B5B0D59F3700E17FB54CE /* ConfigurationLoaderTests.swift in Sources */,
+				A3608745A2BA318F26BCA01A /* ConfigurationStoreTests.swift in Sources */,
+				534A3A12D293276DCA4BAF9F /* ConfigurationValidatorTests.swift in Sources */,
+				AB93DB3FBBE7C98401EB9717 /* PWAConfigurationTests.swift in Sources */,
+				654925D9AE88078555417DD5 /* DownloadHandlerTests.swift in Sources */,
+				6A52B5E2134B94041C834D1A /* TestModule.swift in Sources */,
+				0B381CF2BBCDE6D82A3DF4B5 /* AppModuleTests.swift in Sources */,
+				81099C963C96B8FAF3014EB3 /* BiometricsModuleTests.swift in Sources */,
+				C78C08968C5918279A80D091 /* CameraPermissionModuleTests.swift in Sources */,
+				37BA1E51632D51C08E0FB7C8 /* ClipboardModuleTests.swift in Sources */,
+				7E6D4B8DDB4FE65E83C0FDB2 /* HapticsModuleTests.swift in Sources */,
+				55CD228C8C0BA8D846A8F7C9 /* HealthKitManagerTests.swift in Sources */,
+				A916699921D46F7B990A18F5 /* HealthKitModuleTests.swift in Sources */,
+				307AB1F01A69D9C4852FBE3D /* HealthKitTypesTests.swift in Sources */,
+				11AAFEABE145D3D1787229F1 /* IAPModuleTests.swift in Sources */,
+				9D1CC7B52AC96E40C6F9F8CD /* IAPTypesTests.swift in Sources */,
+				EA5FCC1209C09758FE8B05E8 /* KeychainHelperTests.swift in Sources */,
+				A62C71C91ED0B267EFD3C0F6 /* LocationPermissionModuleTests.swift in Sources */,
+				EBF8F8E4F01584D4B0E8512E /* NotificationEventDispatcherTests.swift in Sources */,
+				A2363050749A127D0095C093 /* NotificationTypesTests.swift in Sources */,
+				6F61914539B61088E5F51FFF /* NotificationsModuleTests.swift in Sources */,
+				151105D22B3AB68F6651BDAC /* PlatformModuleTests.swift in Sources */,
+				F066E28C979E4CC46C35B645 /* PrintModuleTests.swift in Sources */,
+				55ECE2C47F2D4E5CE701B902 /* SecureStorageModuleTests.swift in Sources */,
+				A0090C47F845901C652A3313 /* ShareModuleTests.swift in Sources */,
+				1FC131E52A98C164D2BF0516 /* StoreKitManagerTests.swift in Sources */,
+				B02FC8B2539CEDE6D66B78EE /* AppShortcutHandlerTests.swift in Sources */,
+				59491F94B07427EAEFEAD3FB /* CustomSchemeHandlerTests.swift in Sources */,
+				D81E0320F96BAA231DD8A22E /* NavigationDelegateTests.swift in Sources */,
+				80A5D48938304E9D613079F1 /* NavigationPolicyTests.swift in Sources */,
+				48673820601C49B785E6A122 /* UniversalLinkHandlerTests.swift in Sources */,
+				D95453673688EE229E8E61F8 /* SettingsConfigurationLoaderTests.swift in Sources */,
+				576C88EB4EF7780512186AD1 /* AdaptiveStyleObserverTests.swift in Sources */,
+				6BD90C4D1356B7783D426510 /* BridgeScriptMessageHandlerTests.swift in Sources */,
+				F9C4A2DADABA76A7460722C5 /* PlatformCookieManagerTests.swift in Sources */,
+				2E6A76730DF8DDE513CA11B0 /* ProgressObserverTests.swift in Sources */,
+				0A00175EC2A911E0CA576CBF /* RetryHandlerTests.swift in Sources */,
+				C4FA30AF58A2378FE3F792AA /* UserAgentBuilderTests.swift in Sources */,
+				42A10DB27FE5F03137C42678 /* WebViewConfigurationFactoryTests.swift in Sources */,
+				FF90B60A3D9431B2E5CE6DA8 /* WebViewConfigurationTests.swift in Sources */,
+				F19D313C518B3498345D3698 /* PWAKitCoreTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1000003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000003 /* PWAKitApp.swift in Sources */,
+				A1000004 /* AppDelegate.swift in Sources */,
+				A1000005 /* AppState.swift in Sources */,
+				A1000006 /* SceneDelegate.swift in Sources */,
+				A1000007 /* ContentView.swift in Sources */,
+				A1000008 /* WebViewContainer.swift in Sources */,
+				A1000009 /* LoadingView.swift in Sources */,
+				A100000A /* ConnectionErrorView.swift in Sources */,
+				A100000B /* AuthToolbar.swift in Sources */,
+				A100000C /* PWAKitCore.swift in Sources */,
+				A100000D /* AppConfiguration.swift in Sources */,
+				A100000E /* NotificationsConfiguration.swift in Sources */,
+				A100000F /* ConfigurationError.swift in Sources */,
+				A1000010 /* OriginsConfiguration.swift in Sources */,
+				A1000011 /* AppearanceConfiguration.swift in Sources */,
+				A1000012 /* PWAConfiguration.swift in Sources */,
+				A1000013 /* FeaturesConfiguration.swift in Sources */,
+				A1000014 /* FeatureFlag.swift in Sources */,
+				A1000015 /* WebViewConfiguration.swift in Sources */,
+				A1000016 /* ConfigurationLoader.swift in Sources */,
+				A1000017 /* ConfigurationValidator.swift in Sources */,
+				A1000018 /* ConfigurationStore.swift in Sources */,
+				A1000019 /* BridgeError.swift in Sources */,
+				A100001A /* UniversalLinkHandler.swift in Sources */,
+				A100001B /* CustomSchemeHandler.swift in Sources */,
+				A100001C /* NavigationPolicy.swift in Sources */,
+				A100001D /* ModuleContext.swift in Sources */,
+				A100001E /* BridgeMessage.swift in Sources */,
+				A100001F /* PWAModule.swift in Sources */,
+				A1000020 /* BridgeResponse.swift in Sources */,
+				A1000021 /* BridgeDispatcher.swift in Sources */,
+				A1000022 /* ModuleRegistry.swift in Sources */,
+				A1000023 /* SettingsConfigurationLoader.swift in Sources */,
+				A1000024 /* JavaScriptBridge.swift in Sources */,
+				A1000025 /* AnyCodable.swift in Sources */,
+				A1000026 /* ModuleRegistration.swift in Sources */,
+				A1000027 /* SecureStorageModule.swift in Sources */,
+				A1000028 /* KeychainHelper.swift in Sources */,
+				A1000029 /* NotificationTypes.swift in Sources */,
+				A100002A /* IAPModule.swift in Sources */,
+				A100002B /* IAPTypes.swift in Sources */,
+				A100002C /* StoreKitManager.swift in Sources */,
+				A100002D /* HealthKitManager.swift in Sources */,
+				A100002E /* HealthKitTypes.swift in Sources */,
+				A100002F /* HealthKitModule.swift in Sources */,
+				A1000030 /* ClipboardModule.swift in Sources */,
+				A1000031 /* HapticsModule.swift in Sources */,
+				A1000032 /* PlatformModule.swift in Sources */,
+				A1000033 /* NotificationsModule.swift in Sources */,
+				A1000034 /* AppModule.swift in Sources */,
+				A1000035 /* PrintModule.swift in Sources */,
+				A1000036 /* BiometricsModule.swift in Sources */,
+				A1000037 /* AdaptiveStyleObserver.swift in Sources */,
+				A1000038 /* BridgeScriptMessageHandler.swift in Sources */,
+				A1000039 /* KeyboardHandler.swift in Sources */,
+				A100003A /* PlatformCookieManager.swift in Sources */,
+				A100003B /* ProgressObserver.swift in Sources */,
+				A100003C /* RetryHandler.swift in Sources */,
+				A100003D /* UserAgentBuilder.swift in Sources */,
+				A100003E /* NavigationDelegate.swift in Sources */,
+				A100003F /* DocumentPreviewHandler.swift in Sources */,
+				A1000040 /* DownloadHandler.swift in Sources */,
+				A1000041 /* AppShortcutHandler.swift in Sources */,
+				A1000042 /* NotificationEventDispatcher.swift in Sources */,
+				A1000043 /* WebViewConfigurationFactory.swift in Sources */,
+				A1000044 /* PullToRefreshHandler.swift in Sources */,
+				A1000045 /* JavaScriptDialogHandler.swift in Sources */,
+				A1000046 /* ShareModule.swift in Sources */,
+				A1000047 /* CameraPermissionModule.swift in Sources */,
+				A1000048 /* LocationPermissionModule.swift in Sources */,
+				A1000049 /* Color+Hex.swift in Sources */,
+				A100004A /* WebManifest.swift in Sources */,
+				A100004B /* ManifestLoader.swift in Sources */,
+				A100004C /* ThemeConfiguration.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2F6BCF9CC400936C43596372 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = PWAKitApp;
+			target = F1000001 /* PWAKitApp */;
+			targetProxy = F8918AA6C516315A012C5834 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		489E0756F9632D5293DC304E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pwakit.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PWAKitApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PWAKitApp";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		512DBE182E44D3050FF4680A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pwakit.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PWAKitApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PWAKitApp";
+			};
+			name = Debug;
+		};
+		G1000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		G1000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		G1000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = src/PWAKit/PWAKit.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ANGUD7343N;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = src/PWAKit/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pwakit.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		G1000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = src/PWAKit/PWAKit.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ANGUD7343N;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = src/PWAKit/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pwakit.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		ABDD172BD3DB2FE49B987643 /* Build configuration list for PBXNativeTarget "PWAKitAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				489E0756F9632D5293DC304E /* Release */,
+				512DBE182E44D3050FF4680A /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F1000002 /* Build configuration list for PBXNativeTarget "PWAKitApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				G1000003 /* Debug */,
+				G1000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F1000011 /* Build configuration list for PBXProject "PWAKitApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				G1000001 /* Debug */,
+				G1000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F1000010 /* Project object */;
+}

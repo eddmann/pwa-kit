@@ -1,0 +1,21 @@
+{
+  "name": "PWAKit",
+  "short_name": "PWAKit",
+  "description": "Kitchen Sink demo showcasing all PWAKit native capabilities",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f2f2f7",
+  "theme_color": "#f2f2f7",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect fill='%23007aff' width='180' height='180' rx='40'/%3E%3Cpath fill='white' d='M90 30c-33.14 0-60 26.86-60 60s26.86 60 60 60 60-26.86 60-60-26.86-60-60-60zm0 100c-22.06 0-40-17.94-40-40s17.94-40 40-40 40 17.94 40 40-17.94 40-40 40z'/%3E%3Ccircle fill='white' cx='90' cy='90' r='20'/%3E%3C/svg%3E",
+      "sizes": "180x180",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["utilities", "developer tools"],
+  "lang": "en",
+  "dir": "ltr"
+}
