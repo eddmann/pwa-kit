@@ -12,7 +12,7 @@
 #   make clean    - Clean build artifacts
 #
 
-.PHONY: help setup configure open example lint format clean check prereq sync
+.PHONY: help setup configure open example lint format clean check prereq sync build test
 
 # Default target
 .DEFAULT_GOAL := help
@@ -40,6 +40,8 @@ help: ## Show available commands
 	@echo "  $(BLUE)open$(NC)          Open Xcode project"
 	@echo ""
 	@echo "$(GREEN)Development:$(NC)"
+	@echo "  $(BLUE)build$(NC)         Build iOS app"
+	@echo "  $(BLUE)test$(NC)          Run tests"
 	@echo "  $(BLUE)example$(NC)       Run kitchen sink demo server"
 	@echo "  $(BLUE)sync$(NC)          Sync pwa-config.json to Info.plist"
 	@echo "  $(BLUE)lint$(NC)          Run SwiftLint"
@@ -75,6 +77,24 @@ sync: ## Sync pwa-config.json to Info.plist
 open: ## Open Xcode project
 	@echo "$(BLUE)==>$(NC) Opening PWAKitApp.xcodeproj..."
 	@open PWAKitApp.xcodeproj
+
+build: ## Build iOS app
+	@echo "$(BLUE)==>$(NC) Building PWAKitApp..."
+	@xcodebuild build \
+		-project PWAKitApp.xcodeproj \
+		-scheme PWAKitApp \
+		-destination 'platform=iOS Simulator,name=iPhone 15' \
+		-quiet
+	@echo "$(GREEN)✓$(NC) Build complete"
+
+test: ## Run tests
+	@echo "$(BLUE)==>$(NC) Running tests..."
+	@xcodebuild test \
+		-project PWAKitApp.xcodeproj \
+		-scheme PWAKitApp \
+		-destination 'platform=iOS Simulator,name=iPhone 15' \
+		-quiet
+	@echo "$(GREEN)✓$(NC) Tests complete"
 
 example: ## Run kitchen sink demo server
 	@./scripts/run-example.sh --server-only
