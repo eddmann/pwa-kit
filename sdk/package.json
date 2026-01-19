@@ -45,11 +45,11 @@
   "author": "Edd Mann",
   "license": "MIT",
   "devDependencies": {
-    "@vitest/coverage-v8": "^2.0.0",
-    "jsdom": "^25.0.0",
-    "tsup": "^8.0.0",
-    "typescript": "^5.3.0",
-    "vitest": "^2.0.0"
+    "@vitest/coverage-v8": "^4.0.17",
+    "jsdom": "^27.4.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.17"
   },
   "engines": {
     "node": ">=18.0.0"
