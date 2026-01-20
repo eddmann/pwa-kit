@@ -10,8 +10,6 @@ Turn your Progressive Web App into a native iOS app with full access to native c
 
 PWAKit wraps your web app in a native iOS shell, providing a JavaScript bridge to access device features like haptics, biometrics, push notifications, HealthKit, and more.
 
-**Target:** iOS 15+ | **Swift:** 6.0 | **Architecture:** Modular, Protocol-Oriented, Actor-Based
-
 ## Why PWAKit?
 
 PWAKit wraps your existing Progressive Web App in a thin native iOS shell. Unlike frameworks that require learning new languages or rewriting your app, **your code stays 100% web**. For detailed comparisons with Capacitor, React Native, Flutter, and native Swift, see [docs/comparison.md](docs/comparison.md).
