@@ -17,7 +17,7 @@ import UIKit
 ///   - `files`: Optional array of file objects with `name`, `type`, and `data` (base64)
 ///
 /// - `canShare(data?)`: Check if sharing is possible for the given data types.
-///   - Returns `{ canShare: true }` if sharing is available
+///   - Returns `{ available: true }` if sharing is available
 ///
 /// ## Example
 ///
@@ -277,7 +277,7 @@ public struct ShareModule: PWAModule {
     /// - Returns: A dictionary with `canShare: true` if sharing is available.
     private func handleCanShare(payload _: AnyCodable?) -> AnyCodable {
         AnyCodable([
-            "canShare": AnyCodable(true),
+            "available": AnyCodable(true),
         ])
     }
 }

@@ -142,10 +142,10 @@ struct ShareModuleTests {
 
         let dict = result?.dictionaryValue
         #expect(dict != nil)
-        #expect(dict?["canShare"]?.boolValue != nil)
+        #expect(dict?["available"]?.boolValue != nil)
 
-        // On iOS, canShare should be true
-        #expect(dict?["canShare"]?.boolValue == true)
+        // On iOS, available should be true
+        #expect(dict?["available"]?.boolValue == true)
     }
 
     @Test("canShare ignores payload")
