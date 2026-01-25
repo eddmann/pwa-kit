@@ -1,0 +1,14 @@
+{
+  "name": "pwakit-example",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "node server.js",
+    "build": "cd ../sdk && bun run build && cd ../example && rm -rf dist && mkdir -p dist && cp index.html app.js styles.css manifest.json dist/ && cp ../sdk/dist/index.global.js dist/pwakit.js",
+    "deploy": "wrangler deploy",
+    "ship": "bun run build && bun run deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.60.0"
+  }
+}
