@@ -82,6 +82,7 @@ Native iOS features without web equivalents, namespaced under `ios.*`:
 | `ios.healthKit` | HealthKit data access |
 | `ios.storeKit` | In-app purchases (StoreKit 2) |
 | `ios.app` | App lifecycle and reviews |
+| `ios.notifications` | Local notification scheduling |
 
 ## Web API Alignment
 
@@ -398,6 +399,87 @@ await ios.app.requestReview();
 await ios.app.openSettings();
 ```
 
+### ios.notifications
+
+Local notification scheduling. Schedule one-off or recurring notifications that fire even when the app is in the background.
+
+```typescript
+import { ios } from '@eddmann/pwa-kit-sdk';
+
+// Schedule a notification in 60 seconds
+await ios.notifications.schedule({
+  id: 'reminder-123',
+  title: 'Time for a break',
+  body: 'You have been working for an hour',
+  trigger: { type: 'timeInterval', seconds: 60 }
+});
+
+// Schedule a repeating notification (minimum 60 seconds)
+await ios.notifications.schedule({
+  id: 'hourly',
+  title: 'Hourly check-in',
+  trigger: { type: 'timeInterval', seconds: 3600, repeats: true }
+});
+
+// Schedule at a specific date
+await ios.notifications.schedule({
+  id: 'meeting',
+  title: 'Meeting starts',
+  body: 'Project sync in conference room A',
+  trigger: { type: 'date', date: new Date('2024-12-25T10:00:00') }
+});
+
+// Schedule a daily recurring notification (9 AM)
+await ios.notifications.schedule({
+  id: 'daily-reminder',
+  title: 'Good morning!',
+  body: 'Start your day with a review',
+  trigger: { type: 'calendar', hour: 9, minute: 0, repeats: true }
+});
+
+// Include badge, sound, and custom data
+await ios.notifications.schedule({
+  id: 'full-example',
+  title: 'New message',
+  body: 'You have a new message',
+  subtitle: 'From John',
+  badge: 1,
+  sound: 'default',
+  data: { messageId: '123', senderId: 'john' },
+  trigger: { type: 'timeInterval', seconds: 5 }
+});
+
+// Cancel a specific notification
+await ios.notifications.cancel('reminder-123');
+
+// Cancel all scheduled notifications
+await ios.notifications.cancelAll();
+
+// Get all pending notifications
+const pending = await ios.notifications.getPending();
+for (const notification of pending) {
+  console.log(`${notification.id}: ${notification.title}`);
+  if (notification.nextTriggerDate) {
+    console.log(`  Next: ${notification.nextTriggerDate}`);
+  }
+}
+```
+
+**Trigger Types:**
+
+| Type | Description | Example |
+|------|-------------|---------|
+| `timeInterval` | Fire after N seconds | `{ type: 'timeInterval', seconds: 60, repeats: false }` |
+| `date` | Fire at specific date/time | `{ type: 'date', date: new Date('2024-12-25T10:00:00') }` |
+| `calendar` | Fire on calendar match | `{ type: 'calendar', hour: 9, minute: 0, repeats: true }` |
+
+**Calendar Trigger Components:**
+- `hour` (0-23), `minute` (0-59), `second` (0-59)
+- `weekday` (1=Sunday, 7=Saturday)
+- `day` (1-31), `month` (1-12), `year`
+
+**Note:** iOS limits apps to 64 scheduled local notifications. Use `getPending()` to monitor your notification count.
+
 ## Detection Utilities
 
 ```typescript
@@ -516,6 +598,13 @@ import type {
   PurchaseResult,
   HealthSample,
   WorkoutData,
+  // Local notification types
+  NotificationOptions,
+  NotificationTrigger,
+  TimeIntervalTrigger,
+  DateTrigger,
+  CalendarTrigger,
+  PendingNotification,
   // Platform types
   PlatformInfo,
   PlatformDetectionInfo,

@@ -18,7 +18,7 @@ PWAKit wraps your existing Progressive Web App in a thin native iOS shell. Unlik
 
 - **Native iOS App**: Full App Store distribution with native performance
 - **JavaScript Bridge**: Access iOS capabilities from your web code
-- **13 Native Modules**: Haptics, notifications, biometrics, secure storage, and more
+- **14 Native Modules**: Haptics, notifications, biometrics, secure storage, and more
 - **TypeScript SDK**: Fully typed APIs for all native features
 - **JSON Configuration**: Easy setup without Swift knowledge
 - **iOS 15+ Support**: Broad device compatibility
@@ -113,21 +113,22 @@ See [sdk/README.md](sdk/README.md) for the complete SDK documentation and API re
 
 PWAKit includes 13 native modules:
 
-| Module              | Description        | SDK API                                        |
-| ------------------- | ------------------ | ---------------------------------------------- |
-| Platform            | Device info        | `platform.getInfo()`                           |
-| App                 | Lifecycle, reviews | `ios.app.requestReview()`                      |
-| Haptics             | Haptic feedback    | `haptics.impact('medium')`                     |
-| Notifications       | Push notifications | `push.subscribe()`                             |
-| Biometrics          | Face ID / Touch ID | `ios.biometrics.authenticate()`                |
-| Secure Storage      | Keychain           | `ios.secureStorage.set()`                      |
-| Clipboard           | Copy/paste         | `clipboard.writeText()`                        |
-| Share               | Share sheet        | `share.share()`                                |
-| Print               | AirPrint           | `print.print()`                                |
-| Camera Permission   | Camera access      | `permissions.request({ name: 'camera' })`      |
-| Location Permission | Location access    | `permissions.request({ name: 'geolocation' })` |
-| HealthKit           | Health data        | `ios.healthKit.querySteps()`                   |
-| StoreKit            | In-app purchases   | `ios.storeKit.purchase()`                      |
+| Module              | Description              | SDK API                                        |
+| ------------------- | ------------------------ | ---------------------------------------------- |
+| Platform            | Device info              | `platform.getInfo()`                           |
+| App                 | Lifecycle, reviews       | `ios.app.requestReview()`                      |
+| Haptics             | Haptic feedback          | `haptics.impact('medium')`                     |
+| Push Notifications  | Remote push (APNs)       | `push.subscribe()`                             |
+| Local Notifications | Scheduled notifications  | `ios.notifications.schedule()`                 |
+| Biometrics          | Face ID / Touch ID       | `ios.biometrics.authenticate()`                |
+| Secure Storage      | Keychain                 | `ios.secureStorage.set()`                      |
+| Clipboard           | Copy/paste               | `clipboard.writeText()`                        |
+| Share               | Share sheet              | `share.share()`                                |
+| Print               | AirPrint                 | `print.print()`                                |
+| Camera Permission   | Camera access            | `permissions.request({ name: 'camera' })`      |
+| Location Permission | Location access          | `permissions.request({ name: 'geolocation' })` |
+| HealthKit           | Health data              | `ios.healthKit.querySteps()`                   |
+| StoreKit            | In-app purchases         | `ios.storeKit.purchase()`                      |
 
 For full API documentation, see [sdk/README.md](sdk/README.md). To create your own modules, see [docs/custom-modules.md](docs/custom-modules.md).
 

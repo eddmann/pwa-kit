@@ -411,6 +411,453 @@ struct NotificationsModuleTests {
         }
     }
 
+    // MARK: - Schedule Tests
+
+    @Suite("Schedule Action")
+    struct ScheduleTests {
+        @Test("Schedules time interval notification successfully")
+        @MainActor
+        func schedulesTimeIntervalNotification() async throws {
+            let notificationCenter = MockNotificationCenter()
+            let module = NotificationsModule(
+                storage: MockTokenStorage(),
+                notificationCenter: notificationCenter
+            )
+            let context = ModuleContext()
+            let payload = AnyCodable([
+                "id": AnyCodable("test-notification"),
+                "title": AnyCodable("Test Title"),
+                "body": AnyCodable("Test Body"),
+                "trigger": AnyCodable([
+                    "type": AnyCodable("timeInterval"),
+                    "seconds": AnyCodable(60),
+                ]),
+            ])
+
+            let result = try await module.handle(
+                action: "schedule",
+                payload: payload,
+                context: context
+            )
+
+            #expect(result?["success"]?.boolValue == true)
+            #expect(result?["id"]?.stringValue == "test-notification")
+            #expect(notificationCenter.addedRequestCount == 1)
+            #expect(notificationCenter.lastAddedRequest?.identifier == "test-notification")
+            #expect(notificationCenter.lastAddedRequest?.content.title == "Test Title")
+            #expect(notificationCenter.lastAddedRequest?.content.body == "Test Body")
+        }
+
+        @Test("Schedules calendar notification successfully")
+        @MainActor
+        func schedulesCalendarNotification() async throws {
+            let notificationCenter = MockNotificationCenter()
+            let module = NotificationsModule(
+                storage: MockTokenStorage(),
+                notificationCenter: notificationCenter
+            )
+            let context = ModuleContext()
+            let payload = AnyCodable([
+                "id": AnyCodable("daily-reminder"),
+                "title": AnyCodable("Daily Reminder"),
+                "trigger": AnyCodable([
+                    "type": AnyCodable("calendar"),
+                    "hour": AnyCodable(9),
+                    "minute": AnyCodable(0),
+                    "repeats": AnyCodable(true),
+                ]),
+            ])
+
+            let result = try await module.handle(
+                action: "schedule",
+                payload: payload,
+                context: context
+            )
+
+            #expect(result?["success"]?.boolValue == true)
+            #expect(notificationCenter.addedRequestCount == 1)
+            let trigger = notificationCenter.lastAddedRequest?.trigger as? UNCalendarNotificationTrigger
+            #expect(trigger?.repeats == true)
+        }
+
+        @Test("Schedules date notification successfully")
+        @MainActor
+        func schedulesDateNotification() async throws {
+            let notificationCenter = MockNotificationCenter()
+            let module = NotificationsModule(
+                storage: MockTokenStorage(),
+                notificationCenter: notificationCenter
+            )
+            let context = ModuleContext()
+
+            // Create a future date
+            let futureDate = Date().addingTimeInterval(3600) // 1 hour from now
+            let dateString = ISO8601DateFormatter().string(from: futureDate)
+
+            let payload = AnyCodable([
+                "id": AnyCodable("meeting-reminder"),
+                "title": AnyCodable("Meeting starts"),
+                "trigger": AnyCodable([
+                    "type": AnyCodable("date"),
+                    "date": AnyCodable(dateString),
+                ]),
+            ])
+
+            let result = try await module.handle(
+                action: "schedule",
+                payload: payload,
+                context: context
+            )
+
+            #expect(result?["success"]?.boolValue == true)
+            #expect(notificationCenter.addedRequestCount == 1)
+            let trigger = notificationCenter.lastAddedRequest?.trigger as? UNCalendarNotificationTrigger
+            #expect(trigger?.repeats == false)
+        }
+
+        @Test("Sets notification sound correctly")
+        @MainActor
+        func setsNotificationSound() async throws {
+            let notificationCenter = MockNotificationCenter()
+            let module = NotificationsModule(
+                storage: MockTokenStorage(),
+                notificationCenter: notificationCenter
+            )
+            let context = ModuleContext()
+            let payload = AnyCodable([
+                "id": AnyCodable("sound-test"),
+                "title": AnyCodable("Sound Test"),
+                "sound": AnyCodable("default"),
+                "trigger": AnyCodable([
+                    "type": AnyCodable("timeInterval"),
+                    "seconds": AnyCodable(60),
+                ]),
+            ])
+
+            _ = try await module.handle(
+                action: "schedule",
+                payload: payload,
+                context: context
+            )
+
+            #expect(notificationCenter.lastAddedRequest?.content.sound != nil)
+        }
+
+        @Test("Sets badge correctly")
+        @MainActor
+        func setsBadge() async throws {
+            let notificationCenter = MockNotificationCenter()
+            let module = NotificationsModule(
+                storage: MockTokenStorage(),
+                notificationCenter: notificationCenter
+            )
+            let context = ModuleContext()
+            let payload = AnyCodable([
+                "id": AnyCodable("badge-test"),
+                "title": AnyCodable("Badge Test"),
+                "badge": AnyCodable(5),
+                "trigger": AnyCodable([
+                    "type": AnyCodable("timeInterval"),
+                    "seconds": AnyCodable(60),
+                ]),
+            ])
+
+            _ = try await module.handle(
+                action: "schedule",
+                payload: payload,
+                context: context
+            )
+
+            #expect(notificationCenter.lastAddedRequest?.content.badge == 5)
+        }
+
+        @Test("Throws error for missing id")
+        @MainActor
+        func throwsForMissingId() async throws {
+            let module = NotificationsModule(
+                storage: MockTokenStorage(),
+                notificationCenter: MockNotificationCenter()
+            )
+            let context = ModuleContext()
+            let payload = AnyCodable([
+                "title": AnyCodable("Test"),
+                "trigger": AnyCodable(["type": AnyCodable("timeInterval"), "seconds": AnyCodable(60)]),
+            ])
+
+            await #expect(throws: BridgeError.self) {
+                _ = try await module.handle(
+                    action: "schedule",
+                    payload: payload,
+                    context: context
+                )
+            }
+        }
+
+        @Test("Throws error for missing title")
+        @MainActor
+        func throwsForMissingTitle() async throws {
+            let module = NotificationsModule(
+                storage: MockTokenStorage(),
+                notificationCenter: MockNotificationCenter()
+            )
+            let context = ModuleContext()
+            let payload = AnyCodable([
+                "id": AnyCodable("test"),
+                "trigger": AnyCodable(["type": AnyCodable("timeInterval"), "seconds": AnyCodable(60)]),
+            ])
+
+            await #expect(throws: BridgeError.self) {
+                _ = try await module.handle(
+                    action: "schedule",
+                    payload: payload,
+                    context: context
+                )
+            }
+        }
+
+        @Test("Throws error for missing trigger")
+        @MainActor
+        func throwsForMissingTrigger() async throws {
+            let module = NotificationsModule(
+                storage: MockTokenStorage(),
+                notificationCenter: MockNotificationCenter()
+            )
+            let context = ModuleContext()
+            let payload = AnyCodable([
+                "id": AnyCodable("test"),
+                "title": AnyCodable("Test"),
+            ])
+
+            await #expect(throws: BridgeError.self) {
+                _ = try await module.handle(
+                    action: "schedule",
+                    payload: payload,
+                    context: context
+                )
+            }
+        }
+
+        @Test("Throws error for repeating interval less than 60 seconds")
+        @MainActor
+        func throwsForShortRepeatingInterval() async throws {
+            let module = NotificationsModule(
+                storage: MockTokenStorage(),
+                notificationCenter: MockNotificationCenter()
+            )
+            let context = ModuleContext()
+            let payload = AnyCodable([
+                "id": AnyCodable("test"),
+                "title": AnyCodable("Test"),
+                "trigger": AnyCodable([
+                    "type": AnyCodable("timeInterval"),
+                    "seconds": AnyCodable(30),
+                    "repeats": AnyCodable(true),
+                ]),
+            ])
+
+            await #expect(throws: BridgeError.self) {
+                _ = try await module.handle(
+                    action: "schedule",
+                    payload: payload,
+                    context: context
+                )
+            }
+        }
+
+        @Test("Throws error for past date")
+        @MainActor
+        func throwsForPastDate() async throws {
+            let module = NotificationsModule(
+                storage: MockTokenStorage(),
+                notificationCenter: MockNotificationCenter()
+            )
+            let context = ModuleContext()
+            let pastDate = Date().addingTimeInterval(-3600) // 1 hour ago
+            let dateString = ISO8601DateFormatter().string(from: pastDate)
+            let payload = AnyCodable([
+                "id": AnyCodable("test"),
+                "title": AnyCodable("Test"),
+                "trigger": AnyCodable([
+                    "type": AnyCodable("date"),
+                    "date": AnyCodable(dateString),
+                ]),
+            ])
+
+            await #expect(throws: BridgeError.self) {
+                _ = try await module.handle(
+                    action: "schedule",
+                    payload: payload,
+                    context: context
+                )
+            }
+        }
+
+        @Test("Throws error for invalid calendar hour")
+        @MainActor
+        func throwsForInvalidCalendarHour() async throws {
+            let module = NotificationsModule(
+                storage: MockTokenStorage(),
+                notificationCenter: MockNotificationCenter()
+            )
+            let context = ModuleContext()
+            let payload = AnyCodable([
+                "id": AnyCodable("test"),
+                "title": AnyCodable("Test"),
+                "trigger": AnyCodable([
+                    "type": AnyCodable("calendar"),
+                    "hour": AnyCodable(25),
+                ]),
+            ])
+
+            await #expect(throws: BridgeError.self) {
+                _ = try await module.handle(
+                    action: "schedule",
+                    payload: payload,
+                    context: context
+                )
+            }
+        }
+    }
+
+    // MARK: - Cancel Tests
+
+    @Suite("Cancel Action")
+    struct CancelTests {
+        @Test("Cancels notification successfully")
+        @MainActor
+        func cancelsNotificationSuccessfully() async throws {
+            let notificationCenter = MockNotificationCenter()
+            let module = NotificationsModule(
+                storage: MockTokenStorage(),
+                notificationCenter: notificationCenter
+            )
+            let context = ModuleContext()
+            let payload = AnyCodable(["id": AnyCodable("test-notification")])
+
+            let result = try await module.handle(
+                action: "cancel",
+                payload: payload,
+                context: context
+            )
+
+            #expect(result?["success"]?.boolValue == true)
+            #expect(notificationCenter.lastRemovedIdentifiers.contains("test-notification"))
+        }
+
+        @Test("Throws error for missing id")
+        @MainActor
+        func throwsForMissingId() async throws {
+            let module = NotificationsModule(
+                storage: MockTokenStorage(),
+                notificationCenter: MockNotificationCenter()
+            )
+            let context = ModuleContext()
+            let payload = AnyCodable([:] as [String: AnyCodable])
+
+            await #expect(throws: BridgeError.self) {
+                _ = try await module.handle(
+                    action: "cancel",
+                    payload: payload,
+                    context: context
+                )
+            }
+        }
+    }
+
+    // MARK: - Cancel All Tests
+
+    @Suite("Cancel All Action")
+    struct CancelAllTests {
+        @Test("Cancels all notifications successfully")
+        @MainActor
+        func cancelsAllNotificationsSuccessfully() async throws {
+            let notificationCenter = MockNotificationCenter()
+            let module = NotificationsModule(
+                storage: MockTokenStorage(),
+                notificationCenter: notificationCenter
+            )
+            let context = ModuleContext()
+
+            let result = try await module.handle(
+                action: "cancelAll",
+                payload: nil,
+                context: context
+            )
+
+            #expect(result?["success"]?.boolValue == true)
+            #expect(notificationCenter.wasAllRemoved == true)
+        }
+    }
+
+    // MARK: - Get Pending Tests
+
+    @Suite("Get Pending Action")
+    struct GetPendingTests {
+        @Test("Returns empty array when no pending notifications")
+        @MainActor
+        func returnsEmptyArrayWhenNoPending() async throws {
+            let notificationCenter = MockNotificationCenter()
+            let module = NotificationsModule(
+                storage: MockTokenStorage(),
+                notificationCenter: notificationCenter
+            )
+            let context = ModuleContext()
+
+            let result = try await module.handle(
+                action: "getPending",
+                payload: nil,
+                context: context
+            )
+
+            let notifications = result?["notifications"]?.arrayValue
+            #expect(notifications != nil)
+            #expect(notifications?.isEmpty == true)
+        }
+
+        @Test("Returns pending notifications")
+        @MainActor
+        func returnsPendingNotifications() async throws {
+            let notificationCenter = MockNotificationCenter()
+            let module = NotificationsModule(
+                storage: MockTokenStorage(),
+                notificationCenter: notificationCenter
+            )
+            let context = ModuleContext()
+
+            // Schedule a notification first
+            let schedulePayload = AnyCodable([
+                "id": AnyCodable("test-pending"),
+                "title": AnyCodable("Pending Test"),
+                "body": AnyCodable("Test body"),
+                "trigger": AnyCodable([
+                    "type": AnyCodable("timeInterval"),
+                    "seconds": AnyCodable(3600),
+                ]),
+            ])
+
+            _ = try await module.handle(
+                action: "schedule",
+                payload: schedulePayload,
+                context: context
+            )
+
+            // Now get pending
+            let result = try await module.handle(
+                action: "getPending",
+                payload: nil,
+                context: context
+            )
+
+            let notifications = result?["notifications"]?.arrayValue
+            #expect(notifications?.count == 1)
+
+            let first = notifications?.first?.dictionaryValue
+            #expect(first?["id"]?.stringValue == "test-pending")
+            #expect(first?["title"]?.stringValue == "Pending Test")
+            #expect(first?["body"]?.stringValue == "Test body")
+        }
+    }
+
     // MARK: - Module Configuration Tests
 
     @Suite("Module Configuration")
@@ -427,7 +874,11 @@ struct NotificationsModuleTests {
             #expect(actions.contains("getToken"))
             #expect(actions.contains("getPermissionState"))
             #expect(actions.contains("setBadge"))
-            #expect(actions.count == 4)
+            #expect(actions.contains("schedule"))
+            #expect(actions.contains("cancel"))
+            #expect(actions.contains("cancelAll"))
+            #expect(actions.contains("getPending"))
+            #expect(actions.count == 8)
         }
 
         @Test("Uses correct device token key")
@@ -509,6 +960,9 @@ final class MockTokenStorage: TokenStorage, @unchecked Sendable {
 final class MockNotificationCenter: NotificationCenterProtocol, @unchecked Sendable {
     private let authorizationStatus: UNAuthorizationStatus
     private let willGrantAuthorization: Bool
+    private var addedRequests: [UNNotificationRequest] = []
+    private var removedIdentifiers: [String] = []
+    private var allRemoved = false
 
     init(
         authorizationStatus: UNAuthorizationStatus = .notDetermined,
@@ -524,5 +978,40 @@ final class MockNotificationCenter: NotificationCenterProtocol, @unchecked Senda
 
     func getAuthorizationStatus() async -> UNAuthorizationStatus {
         authorizationStatus
+    }
+
+    func add(_ request: UNNotificationRequest) async throws {
+        addedRequests.append(request)
+    }
+
+    func removePendingNotificationRequests(withIdentifiers identifiers: [String]) {
+        removedIdentifiers.append(contentsOf: identifiers)
+        addedRequests.removeAll { identifiers.contains($0.identifier) }
+    }
+
+    func removeAllPendingNotificationRequests() {
+        allRemoved = true
+        addedRequests.removeAll()
+    }
+
+    func pendingNotificationRequests() async -> [UNNotificationRequest] {
+        addedRequests
+    }
+
+    /// Test helpers
+    var lastAddedRequest: UNNotificationRequest? {
+        addedRequests.last
+    }
+
+    var addedRequestCount: Int {
+        addedRequests.count
+    }
+
+    var lastRemovedIdentifiers: [String] {
+        removedIdentifiers
+    }
+
+    var wasAllRemoved: Bool {
+        allRemoved
     }
 }

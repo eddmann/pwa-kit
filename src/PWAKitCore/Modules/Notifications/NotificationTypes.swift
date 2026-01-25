@@ -237,3 +237,285 @@ public struct SetBadgeRequest: Codable, Sendable, Equatable {
         self.count = count
     }
 }
+
+// MARK: - NotificationTrigger
+
+/// Trigger configuration for local notifications.
+///
+/// Defines when a local notification should be delivered.
+/// Supports time intervals, specific dates, and calendar-based triggers.
+///
+/// ## Example
+///
+/// Time interval trigger:
+/// ```json
+/// { "type": "timeInterval", "seconds": 60, "repeats": false }
+/// ```
+///
+/// Date trigger:
+/// ```json
+/// { "type": "date", "date": "2024-01-15T14:00:00Z" }
+/// ```
+///
+/// Calendar trigger:
+/// ```json
+/// { "type": "calendar", "hour": 9, "minute": 0, "repeats": true }
+/// ```
+public enum NotificationTrigger: Codable, Sendable, Equatable {
+    /// Trigger after a time interval.
+    ///
+    /// - Parameters:
+    ///   - seconds: Number of seconds until the notification fires.
+    ///   - repeats: Whether to repeat. If true, minimum interval is 60 seconds.
+    case timeInterval(seconds: Double, repeats: Bool)
+
+    /// Trigger at a specific date.
+    ///
+    /// - Parameter date: The date when the notification should fire.
+    case date(Date)
+
+    /// Trigger based on calendar components.
+    ///
+    /// - Parameters:
+    ///   - components: Calendar components defining when to trigger.
+    ///   - repeats: Whether to repeat at this time.
+    case calendar(components: CalendarComponents, repeats: Bool)
+
+    /// Calendar components for scheduling.
+    public struct CalendarComponents: Codable, Sendable, Equatable {
+        public let hour: Int?
+        public let minute: Int?
+        public let second: Int?
+        public let weekday: Int?
+        public let day: Int?
+        public let month: Int?
+        public let year: Int?
+
+        public init(
+            hour: Int? = nil,
+            minute: Int? = nil,
+            second: Int? = nil,
+            weekday: Int? = nil,
+            day: Int? = nil,
+            month: Int? = nil,
+            year: Int? = nil
+        ) {
+            self.hour = hour
+            self.minute = minute
+            self.second = second
+            self.weekday = weekday
+            self.day = day
+            self.month = month
+            self.year = year
+        }
+    }
+
+    // MARK: - Codable
+
+    private enum CodingKeys: String, CodingKey {
+        case type
+        case seconds
+        case repeats
+        case date
+        case hour
+        case minute
+        case second
+        case weekday
+        case day
+        case month
+        case year
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+
+        switch type {
+        case "timeInterval":
+            let seconds = try container.decode(Double.self, forKey: .seconds)
+            let repeats = try container.decodeIfPresent(Bool.self, forKey: .repeats) ?? false
+            self = .timeInterval(seconds: seconds, repeats: repeats)
+
+        case "date":
+            let dateValue = try container.decode(String.self, forKey: .date)
+            guard let date = ISO8601DateFormatter().date(from: dateValue) else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: .date,
+                    in: container,
+                    debugDescription: "Invalid ISO8601 date format"
+                )
+            }
+            self = .date(date)
+
+        case "calendar":
+            let components = try CalendarComponents(
+                hour: container.decodeIfPresent(Int.self, forKey: .hour),
+                minute: container.decodeIfPresent(Int.self, forKey: .minute),
+                second: container.decodeIfPresent(Int.self, forKey: .second),
+                weekday: container.decodeIfPresent(Int.self, forKey: .weekday),
+                day: container.decodeIfPresent(Int.self, forKey: .day),
+                month: container.decodeIfPresent(Int.self, forKey: .month),
+                year: container.decodeIfPresent(Int.self, forKey: .year)
+            )
+            let repeats = try container.decodeIfPresent(Bool.self, forKey: .repeats) ?? false
+            self = .calendar(components: components, repeats: repeats)
+
+        default:
+            throw DecodingError.dataCorruptedError(
+                forKey: .type,
+                in: container,
+                debugDescription: "Unknown trigger type: \(type)"
+            )
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        switch self {
+        case let .timeInterval(seconds, repeats):
+            try container.encode("timeInterval", forKey: .type)
+            try container.encode(seconds, forKey: .seconds)
+            try container.encode(repeats, forKey: .repeats)
+
+        case let .date(date):
+            try container.encode("date", forKey: .type)
+            try container.encode(ISO8601DateFormatter().string(from: date), forKey: .date)
+
+        case let .calendar(components, repeats):
+            try container.encode("calendar", forKey: .type)
+            try container.encodeIfPresent(components.hour, forKey: .hour)
+            try container.encodeIfPresent(components.minute, forKey: .minute)
+            try container.encodeIfPresent(components.second, forKey: .second)
+            try container.encodeIfPresent(components.weekday, forKey: .weekday)
+            try container.encodeIfPresent(components.day, forKey: .day)
+            try container.encodeIfPresent(components.month, forKey: .month)
+            try container.encodeIfPresent(components.year, forKey: .year)
+            try container.encode(repeats, forKey: .repeats)
+        }
+    }
+}
+
+// MARK: - ScheduleNotificationRequest
+
+/// Request payload for scheduling a local notification.
+///
+/// ## Example
+///
+/// ```json
+/// {
+///   "id": "reminder-123",
+///   "title": "Time to check in",
+///   "body": "Don't forget your daily check-in!",
+///   "badge": 1,
+///   "sound": "default",
+///   "trigger": { "type": "timeInterval", "seconds": 3600 }
+/// }
+/// ```
+public struct ScheduleNotificationRequest: Codable, Sendable, Equatable {
+    /// Unique identifier for the notification.
+    public let id: String
+
+    /// The notification title.
+    public let title: String
+
+    /// The notification body text.
+    public let body: String?
+
+    /// The notification subtitle.
+    public let subtitle: String?
+
+    /// The badge count to display.
+    public let badge: Int?
+
+    /// The sound to play. Use "default" for the default sound.
+    public let sound: String?
+
+    /// Custom data to include with the notification.
+    public let data: [String: AnyCodable]?
+
+    /// When to trigger the notification.
+    public let trigger: NotificationTrigger
+
+    /// Creates a schedule notification request.
+    public init(
+        id: String,
+        title: String,
+        body: String? = nil,
+        subtitle: String? = nil,
+        badge: Int? = nil,
+        sound: String? = nil,
+        data: [String: AnyCodable]? = nil,
+        trigger: NotificationTrigger
+    ) {
+        self.id = id
+        self.title = title
+        self.body = body
+        self.subtitle = subtitle
+        self.badge = badge
+        self.sound = sound
+        self.data = data
+        self.trigger = trigger
+    }
+}
+
+// MARK: - CancelNotificationRequest
+
+/// Request payload for canceling a scheduled notification.
+///
+/// ## Example
+///
+/// ```json
+/// { "id": "reminder-123" }
+/// ```
+public struct CancelNotificationRequest: Codable, Sendable, Equatable {
+    /// The identifier of the notification to cancel.
+    public let id: String
+
+    /// Creates a cancel notification request.
+    public init(id: String) {
+        self.id = id
+    }
+}
+
+// MARK: - PendingNotificationInfo
+
+/// Information about a pending scheduled notification.
+///
+/// Returned when listing pending notifications.
+public struct PendingNotificationInfo: Codable, Sendable, Equatable {
+    /// The notification identifier.
+    public let id: String
+
+    /// The notification title.
+    public let title: String
+
+    /// The notification body.
+    public let body: String?
+
+    /// The notification subtitle.
+    public let subtitle: String?
+
+    /// Whether the notification repeats.
+    public let repeats: Bool
+
+    /// The next trigger date, if determinable.
+    public let nextTriggerDate: String?
+
+    /// Creates pending notification info.
+    public init(
+        id: String,
+        title: String,
+        body: String? = nil,
+        subtitle: String? = nil,
+        repeats: Bool = false,
+        nextTriggerDate: String? = nil
+    ) {
+        self.id = id
+        self.title = title
+        self.body = body
+        self.subtitle = subtitle
+        self.repeats = repeats
+        self.nextTriggerDate = nextTriggerDate
+    }
+}

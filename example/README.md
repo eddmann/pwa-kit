@@ -9,6 +9,7 @@ A comprehensive demonstration app showcasing **every PWAKit capability**. This "
 | Platform Detection | Native bridge detection, device info, user agent parsing |
 | Haptics | Impact feedback (5 styles), notification feedback (3 types), selection feedback |
 | Push Notifications | Subscribe, get token, check permission, set/clear badge |
+| Local Notifications | Schedule, cancel, list pending; time interval, date, and calendar triggers |
 | Share Sheet | Share text/URLs, share files (images, documents) |
 | Biometrics | Face ID / Touch ID availability and authentication |
 | Secure Storage | Keychain save, load, delete, and exists operations |
@@ -52,6 +53,14 @@ A comprehensive demonstration app showcasing **every PWAKit capability**. This "
 - Check permission state (granted/denied/prompt)
 - Set and clear app icon badge count
 - Listen for incoming push events in real-time
+
+### Local Notifications
+- Schedule one-off notifications (time interval or specific date)
+- Schedule recurring notifications (calendar-based triggers)
+- Cancel specific notifications by ID
+- Cancel all scheduled notifications
+- List all pending notifications with next trigger dates
+- Configure badge, sound, and custom data payloads
 
 ### Sharing
 - Check if sharing is available

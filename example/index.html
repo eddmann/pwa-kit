@@ -135,6 +135,68 @@
             <div id="notifications-result" class="ios-result hidden"></div>
           </div>
         </div>
+
+        <div class="ios-cell" onclick="toggleModule(this)">
+          <div class="ios-cell-icon orange">
+            <svg width="17" height="17" fill="none" viewBox="0 0 24 24"><path fill="white" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Zm1-13h-2v6l5.25 3.15.75-1.23-4-2.42Z"/></svg>
+          </div>
+          <div class="ios-cell-content">
+            <div class="ios-cell-title">Local Notifications</div>
+            <div class="ios-cell-subtitle">Schedule & manage</div>
+          </div>
+          <div class="ios-cell-chevron">
+            <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <div class="ios-cell-expand">
+          <div class="ios-cell-expand-inner">
+            <div class="ios-label-small">Quick Schedule</div>
+            <div class="ios-form-group">
+              <label class="ios-form-label">Title</label>
+              <input type="text" id="local-title" value="Reminder" class="ios-input" placeholder="Notification title">
+            </div>
+            <div class="ios-form-group">
+              <label class="ios-form-label">Body</label>
+              <input type="text" id="local-body" value="Don't forget!" class="ios-input" placeholder="Notification body">
+            </div>
+            <div class="ios-form-group">
+              <label class="ios-form-label">Delay (seconds)</label>
+              <input type="number" id="local-seconds" value="10" min="1" class="ios-input" style="max-width: 100px;">
+            </div>
+            <div class="ios-btn-group mb-md">
+              <button class="ios-btn ios-btn-primary" onclick="withLoading(this, testLocalScheduleInterval)">Schedule Now</button>
+            </div>
+            <div class="ios-label-small">Daily Reminder</div>
+            <div class="ios-form-group">
+              <div class="ios-input-row">
+                <div style="flex: 1">
+                  <label class="ios-form-label">Hour (0-23)</label>
+                  <input type="number" id="local-hour" value="9" min="0" max="23" class="ios-input">
+                </div>
+                <div style="flex: 1">
+                  <label class="ios-form-label">Minute (0-59)</label>
+                  <input type="number" id="local-minute" value="0" min="0" max="59" class="ios-input">
+                </div>
+              </div>
+            </div>
+            <div class="ios-btn-group mb-md">
+              <button class="ios-btn ios-btn-secondary" onclick="withLoading(this, testLocalScheduleCalendar)">Schedule Daily</button>
+            </div>
+            <div class="ios-label-small">Management</div>
+            <div class="ios-btn-row mb-md">
+              <button class="ios-btn ios-btn-tinted ios-btn-small" onclick="withLoading(this, testLocalGetPending)">Get Pending</button>
+              <button class="ios-btn ios-btn-danger ios-btn-small" onclick="withLoading(this, testLocalCancelAll)">Cancel All</button>
+            </div>
+            <div class="ios-form-group">
+              <label class="ios-form-label">Cancel by ID</label>
+              <div class="ios-input-row">
+                <input type="text" id="local-cancel-id" class="ios-input" placeholder="notification-id">
+                <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, testLocalCancel)">Cancel</button>
+              </div>
+            </div>
+            <div id="local-result" class="ios-result hidden"></div>
+          </div>
+        </div>
       </div>
     </section>
 

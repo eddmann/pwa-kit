@@ -25,6 +25,13 @@
  *
  * // App lifecycle
  * await ios.app.requestReview();
+ *
+ * // Local notifications (scheduling)
+ * await ios.notifications.schedule({
+ *   id: 'reminder',
+ *   title: 'Reminder',
+ *   trigger: { type: 'timeInterval', seconds: 60 }
+ * });
  * ```
  */
 
@@ -63,3 +70,13 @@ export type {
 
 export { app } from './app';
 export type { AppVersion, ReviewResult } from './app';
+
+export { notifications } from './notifications';
+export type {
+  TimeIntervalTrigger,
+  DateTrigger,
+  CalendarTrigger,
+  NotificationTrigger,
+  NotificationOptions,
+  PendingNotification,
+} from './notifications';

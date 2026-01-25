@@ -731,6 +731,113 @@ async function testHealthKitSaveWorkout() {
   }
 }
 
+// Local Notifications Module (iOS-specific)
+async function testLocalScheduleInterval() {
+  const id = `reminder-${Date.now()}`;
+  const title = document.getElementById('local-title').value || 'Reminder';
+  const body = document.getElementById('local-body').value || '';
+  const seconds = parseInt(document.getElementById('local-seconds').value || '10', 10);
+
+  if (seconds < 1) {
+    consoleLog.warn('Delay must be at least 1 second');
+    return;
+  }
+
+  try {
+    consoleLog.info(`Scheduling notification in ${seconds} seconds...`);
+    const resultId = await ios.notifications.schedule({
+      id,
+      title,
+      body: body || undefined,
+      sound: 'default',
+      trigger: { type: 'timeInterval', seconds }
+    });
+    consoleLog.success('Notification scheduled', { id: resultId });
+    showResult('local-result', { success: true, id: resultId, firesIn: `${seconds} seconds` }, true);
+    // Update the cancel input with this ID for easy testing
+    document.getElementById('local-cancel-id').value = resultId;
+  } catch (err) {
+    consoleLog.error('Schedule failed:', err.message);
+    showResult('local-result', err.message, false);
+  }
+}
+
+async function testLocalScheduleCalendar() {
+  const id = `daily-${Date.now()}`;
+  const title = document.getElementById('local-title').value || 'Daily Reminder';
+  const body = document.getElementById('local-body').value || '';
+  const hour = parseInt(document.getElementById('local-hour').value || '9', 10);
+  const minute = parseInt(document.getElementById('local-minute').value || '0', 10);
+
+  if (hour < 0 || hour > 23) {
+    consoleLog.warn('Hour must be between 0 and 23');
+    return;
+  }
+  if (minute < 0 || minute > 59) {
+    consoleLog.warn('Minute must be between 0 and 59');
+    return;
+  }
+
+  try {
+    consoleLog.info(`Scheduling daily notification at ${hour}:${minute.toString().padStart(2, '0')}...`);
+    const resultId = await ios.notifications.schedule({
+      id,
+      title,
+      body: body || undefined,
+      sound: 'default',
+      trigger: { type: 'calendar', hour, minute, repeats: true }
+    });
+    consoleLog.success('Daily notification scheduled', { id: resultId, time: `${hour}:${minute.toString().padStart(2, '0')}` });
+    showResult('local-result', { success: true, id: resultId, daily: `${hour}:${minute.toString().padStart(2, '0')}`, repeats: true }, true);
+    document.getElementById('local-cancel-id').value = resultId;
+  } catch (err) {
+    consoleLog.error('Schedule failed:', err.message);
+    showResult('local-result', err.message, false);
+  }
+}
+
+async function testLocalGetPending() {
+  try {
+    consoleLog.info('Getting pending notifications...');
+    const pending = await ios.notifications.getPending();
+    consoleLog.success('Pending notifications:', pending);
+    showResult('local-result', { count: pending.length, notifications: pending }, true);
+  } catch (err) {
+    consoleLog.error('Get pending failed:', err.message);
+    showResult('local-result', err.message, false);
+  }
+}
+
+async function testLocalCancel() {
+  const id = document.getElementById('local-cancel-id').value;
+  if (!id) {
+    consoleLog.warn('Please enter a notification ID to cancel');
+    return;
+  }
+
+  try {
+    consoleLog.info(`Canceling notification: ${id}`);
+    await ios.notifications.cancel(id);
+    consoleLog.success(`Notification canceled: ${id}`);
+    showResult('local-result', { success: true, canceled: id }, true);
+  } catch (err) {
+    consoleLog.error('Cancel failed:', err.message);
+    showResult('local-result', err.message, false);
+  }
+}
+
+async function testLocalCancelAll() {
+  try {
+    consoleLog.info('Canceling all notifications...');
+    await ios.notifications.cancelAll();
+    consoleLog.success('All notifications canceled');
+    showResult('local-result', { success: true, message: 'All notifications canceled' }, true);
+  } catch (err) {
+    consoleLog.error('Cancel all failed:', err.message);
+    showResult('local-result', err.message, false);
+  }
+}
+
 // Permissions Module
 async function testCameraPermissionCheck() {
   try {

@@ -69,7 +69,16 @@ import UserNotifications
 /// ```
 public struct NotificationsModule: PWAModule {
     public static let moduleName = "notifications"
-    public static let supportedActions = ["subscribe", "getToken", "getPermissionState", "setBadge"]
+    public static let supportedActions = [
+        "subscribe",
+        "getToken",
+        "getPermissionState",
+        "setBadge",
+        "schedule",
+        "cancel",
+        "cancelAll",
+        "getPending",
+    ]
 
     /// The UserDefaults key used for storing the device token.
     public static let deviceTokenKey = "PWAKit.deviceToken"
@@ -113,6 +122,18 @@ public struct NotificationsModule: PWAModule {
 
         case "setBadge":
             return try await handleSetBadge(payload: payload)
+
+        case "schedule":
+            return try await handleSchedule(payload: payload)
+
+        case "cancel":
+            return try handleCancel(payload: payload)
+
+        case "cancelAll":
+            return handleCancelAll()
+
+        case "getPending":
+            return try await handleGetPending()
 
         default:
             throw BridgeError.unknownAction(action)
@@ -254,6 +275,268 @@ public struct NotificationsModule: PWAModule {
         }
     }
 
+    // MARK: - Schedule
+
+    /// Handles the `schedule` action to schedule a local notification.
+    ///
+    /// - Parameter payload: The schedule notification request.
+    /// - Returns: Success result with the notification ID.
+    /// - Throws: `BridgeError.invalidPayload` if the request is invalid.
+    private func handleSchedule(payload: AnyCodable?) async throws -> AnyCodable {
+        guard let payloadDict = payload?.dictionaryValue else {
+            throw BridgeError.invalidPayload("Missing schedule notification payload")
+        }
+
+        // Decode the request
+        let request = try decodeScheduleRequest(from: payloadDict)
+
+        // Validate the request
+        try validateScheduleRequest(request)
+
+        // Create the notification content
+        let content = UNMutableNotificationContent()
+        content.title = request.title
+
+        if let body = request.body {
+            content.body = body
+        }
+        if let subtitle = request.subtitle {
+            content.subtitle = subtitle
+        }
+        if let badge = request.badge {
+            content.badge = NSNumber(value: badge)
+        }
+        if let sound = request.sound {
+            content.sound = sound == "default" ? .default : UNNotificationSound(named: UNNotificationSoundName(sound))
+        }
+        if let data = request.data {
+            content.userInfo = data.mapValues { $0.value as Any }
+        }
+
+        // Create the trigger
+        let trigger = try createTrigger(from: request.trigger)
+
+        // Create and schedule the request
+        let notificationRequest = UNNotificationRequest(
+            identifier: request.id,
+            content: content,
+            trigger: trigger
+        )
+
+        try await notificationCenter.add(notificationRequest)
+
+        return AnyCodable(["success": AnyCodable(true), "id": AnyCodable(request.id)])
+    }
+
+    /// Decodes a schedule request from a dictionary.
+    private func decodeScheduleRequest(from dict: [String: AnyCodable]) throws -> ScheduleNotificationRequest {
+        guard let id = dict["id"]?.stringValue else {
+            throw BridgeError.invalidPayload("Missing 'id' field")
+        }
+        guard let title = dict["title"]?.stringValue else {
+            throw BridgeError.invalidPayload("Missing 'title' field")
+        }
+        guard let triggerDict = dict["trigger"]?.dictionaryValue else {
+            throw BridgeError.invalidPayload("Missing 'trigger' field")
+        }
+
+        let trigger = try decodeTrigger(from: triggerDict)
+
+        return ScheduleNotificationRequest(
+            id: id,
+            title: title,
+            body: dict["body"]?.stringValue,
+            subtitle: dict["subtitle"]?.stringValue,
+            badge: dict["badge"]?.intValue,
+            sound: dict["sound"]?.stringValue,
+            data: dict["data"]?.dictionaryValue,
+            trigger: trigger
+        )
+    }
+
+    /// Decodes a trigger from a dictionary.
+    private func decodeTrigger(from dict: [String: AnyCodable]) throws -> NotificationTrigger {
+        guard let type = dict["type"]?.stringValue else {
+            throw BridgeError.invalidPayload("Missing trigger 'type' field")
+        }
+
+        switch type {
+        case "timeInterval":
+            guard let seconds = dict["seconds"]?.doubleValue else {
+                throw BridgeError.invalidPayload("Missing 'seconds' field for timeInterval trigger")
+            }
+            let repeats = dict["repeats"]?.boolValue ?? false
+            return .timeInterval(seconds: seconds, repeats: repeats)
+
+        case "date":
+            guard let dateString = dict["date"]?.stringValue else {
+                throw BridgeError.invalidPayload("Missing 'date' field for date trigger")
+            }
+            guard let date = ISO8601DateFormatter().date(from: dateString) else {
+                throw BridgeError.invalidPayload("Invalid ISO8601 date format")
+            }
+            return .date(date)
+
+        case "calendar":
+            let components = NotificationTrigger.CalendarComponents(
+                hour: dict["hour"]?.intValue,
+                minute: dict["minute"]?.intValue,
+                second: dict["second"]?.intValue,
+                weekday: dict["weekday"]?.intValue,
+                day: dict["day"]?.intValue,
+                month: dict["month"]?.intValue,
+                year: dict["year"]?.intValue
+            )
+            let repeats = dict["repeats"]?.boolValue ?? false
+            return .calendar(components: components, repeats: repeats)
+
+        default:
+            throw BridgeError.invalidPayload("Unknown trigger type: \(type)")
+        }
+    }
+
+    /// Validates a schedule request.
+    private func validateScheduleRequest(_ request: ScheduleNotificationRequest) throws {
+        if request.id.isEmpty {
+            throw BridgeError.invalidPayload("Notification ID cannot be empty")
+        }
+        if request.title.isEmpty {
+            throw BridgeError.invalidPayload("Notification title cannot be empty")
+        }
+
+        // Validate trigger-specific constraints
+        switch request.trigger {
+        case let .timeInterval(seconds, repeats):
+            if seconds <= 0 {
+                throw BridgeError.invalidPayload("Time interval must be positive")
+            }
+            if repeats, seconds < 60 {
+                throw BridgeError.invalidPayload("Repeating time interval must be at least 60 seconds")
+            }
+
+        case let .date(date):
+            if date <= Date() {
+                throw BridgeError.invalidPayload("Notification date must be in the future")
+            }
+
+        case let .calendar(components, _):
+            // Validate calendar component ranges
+            if let hour = components.hour, hour < 0 || hour > 23 {
+                throw BridgeError.invalidPayload("Hour must be between 0 and 23")
+            }
+            if let minute = components.minute, minute < 0 || minute > 59 {
+                throw BridgeError.invalidPayload("Minute must be between 0 and 59")
+            }
+            if let second = components.second, second < 0 || second > 59 {
+                throw BridgeError.invalidPayload("Second must be between 0 and 59")
+            }
+            if let weekday = components.weekday, weekday < 1 || weekday > 7 {
+                throw BridgeError.invalidPayload("Weekday must be between 1 (Sunday) and 7 (Saturday)")
+            }
+            if let day = components.day, day < 1 || day > 31 {
+                throw BridgeError.invalidPayload("Day must be between 1 and 31")
+            }
+            if let month = components.month, month < 1 || month > 12 {
+                throw BridgeError.invalidPayload("Month must be between 1 and 12")
+            }
+        }
+    }
+
+    /// Creates a UNNotificationTrigger from a NotificationTrigger.
+    private func createTrigger(from trigger: NotificationTrigger) throws -> UNNotificationTrigger {
+        switch trigger {
+        case let .timeInterval(seconds, repeats):
+            return UNTimeIntervalNotificationTrigger(timeInterval: seconds, repeats: repeats)
+
+        case let .date(date):
+            let components = Calendar.current.dateComponents(
+                [.year, .month, .day, .hour, .minute, .second],
+                from: date
+            )
+            return UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+
+        case let .calendar(components, repeats):
+            var dateComponents = DateComponents()
+            dateComponents.hour = components.hour
+            dateComponents.minute = components.minute
+            dateComponents.second = components.second
+            dateComponents.weekday = components.weekday
+            dateComponents.day = components.day
+            dateComponents.month = components.month
+            dateComponents.year = components.year
+            return UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: repeats)
+        }
+    }
+
+    // MARK: - Cancel
+
+    /// Handles the `cancel` action to cancel a scheduled notification.
+    ///
+    /// - Parameter payload: Dictionary containing the notification ID.
+    /// - Returns: Success indicator.
+    /// - Throws: `BridgeError.invalidPayload` if ID is missing.
+    private func handleCancel(payload: AnyCodable?) throws -> AnyCodable {
+        guard let id = payload?["id"]?.stringValue else {
+            throw BridgeError.invalidPayload("Missing 'id' field")
+        }
+
+        notificationCenter.removePendingNotificationRequests(withIdentifiers: [id])
+
+        return AnyCodable(["success": AnyCodable(true)])
+    }
+
+    // MARK: - Cancel All
+
+    /// Handles the `cancelAll` action to cancel all scheduled notifications.
+    ///
+    /// - Returns: Success indicator.
+    private func handleCancelAll() -> AnyCodable {
+        notificationCenter.removeAllPendingNotificationRequests()
+        return AnyCodable(["success": AnyCodable(true)])
+    }
+
+    // MARK: - Get Pending
+
+    /// Handles the `getPending` action to retrieve all pending notifications.
+    ///
+    /// - Returns: Array of pending notification info.
+    private func handleGetPending() async throws -> AnyCodable {
+        let requests = await notificationCenter.pendingNotificationRequests()
+
+        let notifications = requests.map { request -> [String: AnyCodable] in
+            var info: [String: AnyCodable] = [
+                "id": AnyCodable(request.identifier),
+                "title": AnyCodable(request.content.title),
+            ]
+
+            if !request.content.body.isEmpty {
+                info["body"] = AnyCodable(request.content.body)
+            }
+            if !request.content.subtitle.isEmpty {
+                info["subtitle"] = AnyCodable(request.content.subtitle)
+            }
+
+            // Determine if repeating
+            var repeats = false
+            if let trigger = request.trigger as? UNTimeIntervalNotificationTrigger {
+                repeats = trigger.repeats
+                if let nextDate = trigger.nextTriggerDate() {
+                    info["nextTriggerDate"] = AnyCodable(ISO8601DateFormatter().string(from: nextDate))
+                }
+            } else if let trigger = request.trigger as? UNCalendarNotificationTrigger {
+                repeats = trigger.repeats
+                if let nextDate = trigger.nextTriggerDate() {
+                    info["nextTriggerDate"] = AnyCodable(ISO8601DateFormatter().string(from: nextDate))
+                }
+            }
+            info["repeats"] = AnyCodable(repeats)
+
+            return info
+        }
+
+        return AnyCodable(["notifications": AnyCodable(notifications.map { AnyCodable($0) })])
+    }
+
     // MARK: - Helpers
 
     /// Encodes a subscription result to AnyCodable.
@@ -333,6 +616,18 @@ public protocol NotificationCenterProtocol: Sendable {
 
     /// Gets the current authorization status.
     func getAuthorizationStatus() async -> UNAuthorizationStatus
+
+    /// Adds a notification request.
+    func add(_ request: UNNotificationRequest) async throws
+
+    /// Removes pending notifications with the specified identifiers.
+    func removePendingNotificationRequests(withIdentifiers identifiers: [String])
+
+    /// Removes all pending notification requests.
+    func removeAllPendingNotificationRequests()
+
+    /// Returns all pending notification requests.
+    func pendingNotificationRequests() async -> [UNNotificationRequest]
 }
 
 // MARK: - UNUserNotificationCenterWrapper
@@ -347,6 +642,22 @@ public struct UNUserNotificationCenterWrapper: NotificationCenterProtocol {
 
     public func getAuthorizationStatus() async -> UNAuthorizationStatus {
         await UNUserNotificationCenter.current().notificationSettings().authorizationStatus
+    }
+
+    public func add(_ request: UNNotificationRequest) async throws {
+        try await UNUserNotificationCenter.current().add(request)
+    }
+
+    public func removePendingNotificationRequests(withIdentifiers identifiers: [String]) {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: identifiers)
+    }
+
+    public func removeAllPendingNotificationRequests() {
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+    }
+
+    public func pendingNotificationRequests() async -> [UNNotificationRequest] {
+        await UNUserNotificationCenter.current().pendingNotificationRequests()
     }
 }
 

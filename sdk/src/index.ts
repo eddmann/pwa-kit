@@ -30,6 +30,7 @@
  * - `ios.healthKit` - HealthKit data
  * - `ios.storeKit` - In-app purchases
  * - `ios.app` - App lifecycle
+ * - `ios.notifications` - Local notification scheduling
  *
  * @example
  * ```typescript
@@ -170,6 +171,15 @@ export type {
 } from './ios/storeKit';
 
 export type { AppVersion, ReviewResult } from './ios/app';
+
+export type {
+  TimeIntervalTrigger,
+  DateTrigger,
+  CalendarTrigger,
+  NotificationTrigger,
+  NotificationOptions,
+  PendingNotification,
+} from './ios/notifications';
 
 // =============================================================================
 // Detection Utilities
