@@ -19,6 +19,7 @@ const {
   clipboard,
   share,
   permissions,
+  vibration,
   // Enhanced APIs
   haptics,
   print,
@@ -202,112 +203,67 @@ async function testHapticsSelection() {
   }
 }
 
-// Push Notifications Module
-async function testNotificationsSubscribe() {
+// Vibration Module (Web Vibration API polyfill)
+function testVibrate(duration) {
   try {
-    consoleLog.info('Subscribing to push notifications...');
-    const subscription = await push.subscribe();
-    consoleLog.success('Push subscription:', subscription);
-    showResult('notifications-result', subscription, true);
+    consoleLog.info(`Vibrating for ${duration}ms`);
+    const result = vibration.vibrate(duration);
+    consoleLog.success(`Vibration triggered: ${result}`);
+    showResult('vibration-result', { duration, success: result }, true);
   } catch (err) {
-    consoleLog.error('Push subscription failed:', err.message);
-    showResult('notifications-result', err.message, false);
+    consoleLog.error('Vibration failed:', err.message);
+    showResult('vibration-result', err.message, false);
   }
 }
 
-async function testNotificationsGetToken() {
+function testVibratePattern(pattern) {
   try {
-    consoleLog.info('Getting push subscription...');
-    const subscription = await push.getSubscription();
-    if (subscription) {
-      consoleLog.success('Push subscription:', subscription);
-      showResult('notifications-result', subscription, true);
-    } else {
-      consoleLog.info('No active push subscription');
-      showResult('notifications-result', { token: null, message: 'No active subscription' }, true);
-    }
+    consoleLog.info(`Vibrating pattern: [${pattern.join(', ')}]`);
+    const result = vibration.vibrate(pattern);
+    consoleLog.success(`Vibration pattern triggered: ${result}`);
+    showResult('vibration-result', { pattern, success: result }, true);
   } catch (err) {
-    consoleLog.error('Get subscription failed:', err.message);
-    showResult('notifications-result', err.message, false);
+    consoleLog.error('Vibration pattern failed:', err.message);
+    showResult('vibration-result', err.message, false);
   }
 }
 
-async function testNotificationsPermission() {
+// Local Notification Permission & Badge (uses push.permissionState for notification permission)
+async function testLocalCheckPermission() {
   try {
-    consoleLog.info('Getting push permission state...');
+    consoleLog.info('Checking notification permission...');
     const state = await push.permissionState();
     consoleLog.success('Permission state:', state);
-    showResult('notifications-result', { state }, true);
+    showResult('local-result', { state }, true);
   } catch (err) {
-    consoleLog.error('Get permission failed:', err.message);
-    showResult('notifications-result', err.message, false);
+    consoleLog.error('Check permission failed:', err.message);
+    showResult('local-result', err.message, false);
   }
 }
 
-async function testNotificationsSetBadge() {
+// App Badge (no permissions required)
+async function testBadgeSet() {
   const count = parseInt(document.getElementById('badge-count').value || '0', 10);
   try {
     consoleLog.info(`Setting badge count: ${count}`);
     await badging.setAppBadge(count);
     consoleLog.success(`Badge set to ${count}`);
+    showResult('badge-result', { badge: count }, true);
   } catch (err) {
     consoleLog.error('Set badge failed:', err.message);
+    showResult('badge-result', err.message, false);
   }
 }
 
-async function testNotificationsClearBadge() {
+async function testBadgeClear() {
   try {
     consoleLog.info('Clearing badge...');
     await badging.clearAppBadge();
     consoleLog.success('Badge cleared');
+    showResult('badge-result', { badge: 0 }, true);
   } catch (err) {
     consoleLog.error('Clear badge failed:', err.message);
-  }
-}
-
-// Push Event Listener
-let pushListenerActive = false;
-let pushUnsubscribe = null;
-
-function togglePushListener() {
-  const btn = document.getElementById('push-listen-btn');
-  const eventsDiv = document.getElementById('push-events');
-
-  if (pushListenerActive) {
-    // Stop listening
-    if (pushUnsubscribe) {
-      pushUnsubscribe();
-      pushUnsubscribe = null;
-    }
-    pushListenerActive = false;
-    btn.textContent = 'Start Listening';
-    btn.classList.remove('ios-btn-success');
-    btn.classList.add('ios-btn-secondary');
-    eventsDiv.classList.add('hidden');
-    consoleLog.info('Stopped listening for push events');
-  } else {
-    // Start listening
-    pushListenerActive = true;
-    btn.textContent = 'Listening...';
-    btn.classList.remove('ios-btn-secondary');
-    btn.classList.add('ios-btn-success');
-    eventsDiv.classList.remove('hidden');
-    eventsDiv.textContent = 'Waiting for push events...';
-
-    // Set up listener using the bridge event pattern
-    const handler = (event) => {
-      const data = event.detail;
-      const timestamp = new Date().toLocaleTimeString();
-      eventsDiv.innerHTML = `<strong>${timestamp}</strong> - Push received!\n${JSON.stringify(data, null, 2)}`;
-      consoleLog.success('Push event received', data);
-    };
-    window.addEventListener('pwa:push', handler);
-
-    pushUnsubscribe = () => {
-      window.removeEventListener('pwa:push', handler);
-    };
-
-    consoleLog.info('Listening for push events (pwa:push)');
+    showResult('badge-result', err.message, false);
   }
 }
 
@@ -796,6 +752,41 @@ async function testLocalScheduleCalendar() {
   }
 }
 
+async function testLocalScheduleDate() {
+  const id = `date-${Date.now()}`;
+  const title = document.getElementById('local-title').value || 'Scheduled Reminder';
+  const body = document.getElementById('local-body').value || '';
+  const datetimeInput = document.getElementById('local-datetime').value;
+
+  if (!datetimeInput) {
+    consoleLog.warn('Please select a date and time');
+    return;
+  }
+
+  const date = new Date(datetimeInput);
+  if (date <= new Date()) {
+    consoleLog.warn('Date must be in the future');
+    return;
+  }
+
+  try {
+    consoleLog.info(`Scheduling notification for ${date.toLocaleString()}...`);
+    const resultId = await ios.notifications.schedule({
+      id,
+      title,
+      body: body || undefined,
+      sound: 'default',
+      trigger: { type: 'date', date: date.toISOString() }
+    });
+    consoleLog.success('Notification scheduled', { id: resultId, date: date.toLocaleString() });
+    showResult('local-result', { success: true, id: resultId, scheduledFor: date.toLocaleString() }, true);
+    document.getElementById('local-cancel-id').value = resultId;
+  } catch (err) {
+    consoleLog.error('Schedule failed:', err.message);
+    showResult('local-result', err.message, false);
+  }
+}
+
 async function testLocalGetPending() {
   try {
     consoleLog.info('Getting pending notifications...');
@@ -863,6 +854,30 @@ async function testCameraPermissionRequest() {
   }
 }
 
+async function testMicrophonePermissionCheck() {
+  try {
+    consoleLog.info('Checking microphone permission...');
+    const status = await permissions.query({ name: 'microphone' });
+    consoleLog.success('Microphone permission:', status);
+    showResult('permissions-result', status, true);
+  } catch (err) {
+    consoleLog.error('Microphone permission check failed:', err.message);
+    showResult('permissions-result', err.message, false);
+  }
+}
+
+async function testMicrophonePermissionRequest() {
+  try {
+    consoleLog.info('Requesting microphone permission...');
+    const status = await permissions.request({ name: 'microphone' });
+    consoleLog.success('Microphone permission result:', status);
+    showResult('permissions-result', status, true);
+  } catch (err) {
+    consoleLog.error('Microphone permission request failed:', err.message);
+    showResult('permissions-result', err.message, false);
+  }
+}
+
 async function testLocationPermissionCheck() {
   try {
     consoleLog.info('Checking location permission...');
@@ -900,8 +915,100 @@ function showResult(elementId, data, success) {
   el.classList.remove('hidden');
 }
 
-function toggleModule(cellElement) {
+// ============================================================================
+// Permission Gating
+// ============================================================================
+
+const permissionCheckers = {
+  notifications: async () => {
+    try {
+      const state = await push.permissionState();
+      return { granted: state === 'granted', state };
+    } catch {
+      return { granted: false, state: 'error' };
+    }
+  },
+  biometrics: async () => {
+    try {
+      const result = await ios.biometrics.isAvailable();
+      return { granted: result.available, state: result.available ? 'available' : 'unavailable' };
+    } catch {
+      return { granted: false, state: 'error' };
+    }
+  },
+  healthkit: async () => {
+    try {
+      const result = await ios.healthKit.isAvailable();
+      return { granted: result.available, state: result.available ? 'available' : 'unavailable' };
+    } catch {
+      return { granted: false, state: 'error' };
+    }
+  }
+};
+
+async function checkAndUpdatePermissionGate(cellElement) {
+  const permission = cellElement.dataset.permission;
+  if (!permission) return;
+
+  const checker = permissionCheckers[permission];
+  if (!checker) return;
+
+  const { granted } = await checker();
+  const expandInner = cellElement.nextElementSibling?.querySelector('.ios-cell-expand-inner');
+  const gate = expandInner?.querySelector('.ios-permission-gate');
+
+  if (gate && expandInner) {
+    gate.classList.toggle('hidden', granted);
+    expandInner.classList.toggle('gated', !granted);
+  }
+}
+
+async function toggleModule(cellElement) {
+  const permission = cellElement.dataset.permission;
+  const isExpanding = !cellElement.classList.contains('expanded');
+
+  // Check permission before expanding a gated section
+  if (permission && isExpanding) {
+    await checkAndUpdatePermissionGate(cellElement);
+  }
+
   cellElement.classList.toggle('expanded');
+}
+
+async function requestSectionPermission(button, permissionType) {
+  const cellExpand = button.closest('.ios-cell-expand');
+  const cellElement = cellExpand?.previousElementSibling;
+
+  try {
+    button.classList.add('loading');
+    button.disabled = true;
+
+    if (permissionType === 'notifications') {
+      // Request notification permission
+      consoleLog.info('Requesting notification permission...');
+      const result = await push.requestPermission();
+      consoleLog.success('Permission result:', result);
+
+      if (result === 'granted') {
+        // Permission granted - update the gate
+        await checkAndUpdatePermissionGate(cellElement);
+      } else if (result === 'denied') {
+        // Permission denied - suggest opening settings
+        const gate = cellExpand?.querySelector('.ios-permission-gate');
+        if (gate) {
+          gate.querySelector('.ios-permission-gate-message').textContent =
+            'Notifications are disabled. Enable them in Settings to schedule reminders.';
+          gate.querySelector('.ios-btn').textContent = 'Open Settings';
+          gate.querySelector('.ios-btn').onclick = () => ios.app.openSettings();
+        }
+      }
+    }
+  } catch (err) {
+    consoleLog.error('Permission request failed:', err.message);
+  } finally {
+    button.classList.remove('loading');
+    button.disabled = false;
+  }
 }
 
 function toggleConsole() {
@@ -918,11 +1025,6 @@ function clearConsole() {
 // ============================================================================
 
 function setupEventListeners() {
-  // Push notification events
-  window.addEventListener('pwa:push', (event) => {
-    consoleLog.info('Push notification received', event.detail);
-  });
-
   // Lifecycle events
   window.addEventListener('pwa:lifecycle', (event) => {
     consoleLog.info('Lifecycle event', event.detail);

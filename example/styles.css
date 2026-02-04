@@ -318,6 +318,40 @@ body {
   border-top: 0.5px solid var(--ios-separator);
 }
 
+/* Permission Gate Overlay */
+.ios-permission-gate {
+  text-align: center;
+  padding: 24px 16px;
+  background: var(--ios-tertiary-fill);
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.ios-permission-gate-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.ios-permission-gate-title {
+  font-size: var(--ios-headline-size);
+  font-weight: 600;
+  color: var(--ios-label);
+  margin-bottom: 4px;
+}
+
+.ios-permission-gate-message {
+  color: var(--ios-tertiary-label);
+  font-size: var(--ios-subhead-size);
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+/* Gated state - disable controls behind the gate */
+.ios-cell-expand-inner.gated > *:not(.ios-permission-gate) {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
 /* ============================================================================
    iOS Buttons
    ============================================================================ */

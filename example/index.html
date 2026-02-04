@@ -91,20 +91,14 @@
             </div>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- Notifications Section -->
-    <section class="ios-section">
-      <div class="ios-section-header">Notifications</div>
-      <div class="ios-group">
         <div class="ios-cell" onclick="toggleModule(this)">
-          <div class="ios-cell-icon red">
-            <svg width="17" height="17" fill="none" viewBox="0 0 24 24"><path fill="white" d="M12 2a7 7 0 0 0-7 7v4.38l-1.71 1.7A1 1 0 0 0 4 17h16a1 1 0 0 0 .71-1.71L19 13.59V9a7 7 0 0 0-7-7Zm0 20a3 3 0 0 1-3-3h6a3 3 0 0 1-3 3Z"/></svg>
+          <div class="ios-cell-icon purple">
+            <svg width="17" height="17" fill="none" viewBox="0 0 24 24"><path fill="white" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3Zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22Z"/></svg>
           </div>
           <div class="ios-cell-content">
-            <div class="ios-cell-title">Push Notifications</div>
-            <div class="ios-cell-subtitle">APNs registration & badges</div>
+            <div class="ios-cell-title">Vibration</div>
+            <div class="ios-cell-subtitle">Web Vibration API</div>
           </div>
           <div class="ios-cell-chevron">
             <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -112,31 +106,29 @@
         </div>
         <div class="ios-cell-expand">
           <div class="ios-cell-expand-inner">
+            <div class="ios-label-small">Simple</div>
             <div class="ios-btn-row mb-md">
-              <button class="ios-btn ios-btn-primary" onclick="withLoading(this, testNotificationsSubscribe)">Subscribe</button>
-              <button class="ios-btn ios-btn-secondary" onclick="withLoading(this, testNotificationsPermission)">Check</button>
+              <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, () => testVibrate(100))">Short</button>
+              <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, () => testVibrate(300))">Medium</button>
+              <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, () => testVibrate(500))">Long</button>
             </div>
-            <div class="ios-btn-group">
-              <button class="ios-btn ios-btn-tinted ios-btn-small" onclick="withLoading(this, testNotificationsGetToken)">Get Token</button>
+            <div class="ios-label-small">Pattern</div>
+            <div class="ios-btn-row">
+              <button class="ios-btn ios-btn-primary ios-btn-small" onclick="withLoading(this, () => testVibratePattern([100, 50, 100]))">Double</button>
+              <button class="ios-btn ios-btn-primary ios-btn-small" onclick="withLoading(this, () => testVibratePattern([100, 50, 100, 50, 100]))">Triple</button>
+              <button class="ios-btn ios-btn-primary ios-btn-small" onclick="withLoading(this, () => testVibratePattern([200, 100, 200, 100, 200, 100, 200]))">SOS</button>
             </div>
-            <div class="ios-label-small">Badge</div>
-            <div class="ios-form-group">
-              <div class="ios-input-row">
-                <input type="number" id="badge-count" value="5" min="0" class="ios-input" style="max-width: 80px;">
-                <button class="ios-btn ios-btn-primary ios-btn-small" onclick="withLoading(this, testNotificationsSetBadge)">Set</button>
-                <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, testNotificationsClearBadge)">Clear</button>
-              </div>
-            </div>
-            <div class="ios-label-small">Push Events</div>
-            <div class="ios-btn-group">
-              <button class="ios-btn ios-btn-secondary ios-btn-small" id="push-listen-btn" onclick="togglePushListener()">Start Listening</button>
-            </div>
-            <div id="push-events" class="ios-result hidden"></div>
-            <div id="notifications-result" class="ios-result hidden"></div>
+            <div id="vibration-result" class="ios-result hidden mt-md"></div>
           </div>
         </div>
+      </div>
+    </section>
 
-        <div class="ios-cell" onclick="toggleModule(this)">
+    <!-- Notifications Section -->
+    <section class="ios-section">
+      <div class="ios-section-header">Notifications</div>
+      <div class="ios-group">
+        <div class="ios-cell" onclick="toggleModule(this)" data-permission="notifications">
           <div class="ios-cell-icon orange">
             <svg width="17" height="17" fill="none" viewBox="0 0 24 24"><path fill="white" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Zm1-13h-2v6l5.25 3.15.75-1.23-4-2.42Z"/></svg>
           </div>
@@ -150,6 +142,15 @@
         </div>
         <div class="ios-cell-expand">
           <div class="ios-cell-expand-inner">
+            <div class="ios-permission-gate hidden">
+              <div class="ios-permission-gate-icon">🔔</div>
+              <div class="ios-permission-gate-title">Permission Required</div>
+              <div class="ios-permission-gate-message">Enable notifications to schedule reminders</div>
+              <button class="ios-btn ios-btn-primary" onclick="requestSectionPermission(this, 'notifications')">Enable Notifications</button>
+            </div>
+            <div class="ios-btn-group mb-md">
+              <button class="ios-btn ios-btn-tinted ios-btn-small" onclick="withLoading(this, testLocalCheckPermission)">Check Permission</button>
+            </div>
             <div class="ios-label-small">Quick Schedule</div>
             <div class="ios-form-group">
               <label class="ios-form-label">Title</label>
@@ -182,6 +183,13 @@
             <div class="ios-btn-group mb-md">
               <button class="ios-btn ios-btn-secondary" onclick="withLoading(this, testLocalScheduleCalendar)">Schedule Daily</button>
             </div>
+            <div class="ios-label-small">Specific Date</div>
+            <div class="ios-form-group">
+              <div class="ios-input-row">
+                <input type="datetime-local" id="local-datetime" class="ios-input">
+                <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, testLocalScheduleDate)">Schedule</button>
+              </div>
+            </div>
             <div class="ios-label-small">Management</div>
             <div class="ios-btn-row mb-md">
               <button class="ios-btn ios-btn-tinted ios-btn-small" onclick="withLoading(this, testLocalGetPending)">Get Pending</button>
@@ -195,6 +203,31 @@
               </div>
             </div>
             <div id="local-result" class="ios-result hidden"></div>
+          </div>
+        </div>
+
+        <div class="ios-cell" onclick="toggleModule(this)">
+          <div class="ios-cell-icon red">
+            <svg width="17" height="17" fill="none" viewBox="0 0 24 24"><path fill="white" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm0 13c-.55 0-1-.45-1-1v-3c0-.55.45-1 1-1s1 .45 1 1v3c0 .55-.45 1-1 1Zm1-8h-2V5h2v2Z"/></svg>
+          </div>
+          <div class="ios-cell-content">
+            <div class="ios-cell-title">App Badge</div>
+            <div class="ios-cell-subtitle">Icon badge count</div>
+          </div>
+          <div class="ios-cell-chevron">
+            <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <div class="ios-cell-expand">
+          <div class="ios-cell-expand-inner">
+            <div class="ios-form-group">
+              <div class="ios-input-row">
+                <input type="number" id="badge-count" value="5" min="0" class="ios-input" style="max-width: 80px;">
+                <button class="ios-btn ios-btn-primary ios-btn-small" onclick="withLoading(this, testBadgeSet)">Set</button>
+                <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, testBadgeClear)">Clear</button>
+              </div>
+            </div>
+            <div id="badge-result" class="ios-result hidden"></div>
           </div>
         </div>
       </div>
@@ -252,7 +285,7 @@
     <section class="ios-section">
       <div class="ios-section-header">Security</div>
       <div class="ios-group">
-        <div class="ios-cell" onclick="toggleModule(this)">
+        <div class="ios-cell" onclick="toggleModule(this)" data-permission="biometrics">
           <div class="ios-cell-icon purple">
             <svg width="17" height="17" fill="none" viewBox="0 0 24 24"><path fill="white" d="M12 1a5 5 0 0 0-5 5v4H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5Zm3 9H9V6a3 3 0 1 1 6 0v4Z"/></svg>
           </div>
@@ -266,6 +299,12 @@
         </div>
         <div class="ios-cell-expand">
           <div class="ios-cell-expand-inner">
+            <div class="ios-permission-gate hidden">
+              <div class="ios-permission-gate-icon">🔐</div>
+              <div class="ios-permission-gate-title">Biometrics Unavailable</div>
+              <div class="ios-permission-gate-message">Face ID or Touch ID is not available on this device</div>
+              <button class="ios-btn ios-btn-secondary" onclick="withLoading(this, testBiometricsAvailable)">Check Again</button>
+            </div>
             <div class="ios-btn-group">
               <button class="ios-btn ios-btn-tinted ios-btn-small" onclick="withLoading(this, testBiometricsAvailable)">Check Availability</button>
             </div>
@@ -438,7 +477,7 @@
     <section class="ios-section">
       <div class="ios-section-header">Health & Fitness</div>
       <div class="ios-group">
-        <div class="ios-cell" onclick="toggleModule(this)">
+        <div class="ios-cell" onclick="toggleModule(this)" data-permission="healthkit">
           <div class="ios-cell-icon red">
             <svg width="17" height="17" fill="none" viewBox="0 0 24 24"><path fill="white" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35Z"/></svg>
           </div>
@@ -452,6 +491,12 @@
         </div>
         <div class="ios-cell-expand">
           <div class="ios-cell-expand-inner">
+            <div class="ios-permission-gate hidden">
+              <div class="ios-permission-gate-icon">❤️</div>
+              <div class="ios-permission-gate-title">HealthKit Unavailable</div>
+              <div class="ios-permission-gate-message">HealthKit is not available on this device</div>
+              <button class="ios-btn ios-btn-secondary" onclick="withLoading(this, testHealthKitAvailable)">Check Again</button>
+            </div>
             <div class="ios-btn-row mb-md">
               <button class="ios-btn ios-btn-tinted ios-btn-small" onclick="withLoading(this, testHealthKitAvailable)">Check</button>
               <button class="ios-btn ios-btn-primary" onclick="withLoading(this, testHealthKitAuth)">Authorize</button>
@@ -506,8 +551,8 @@
             <svg width="17" height="17" fill="none" viewBox="0 0 24 24"><path fill="white" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9Z"/></svg>
           </div>
           <div class="ios-cell-content">
-            <div class="ios-cell-title">Camera & Location</div>
-            <div class="ios-cell-subtitle">Permission management</div>
+            <div class="ios-cell-title">Device Permissions</div>
+            <div class="ios-cell-subtitle">Camera, microphone & location</div>
           </div>
           <div class="ios-cell-chevron">
             <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -519,6 +564,11 @@
             <div class="ios-btn-row mb-md">
               <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, testCameraPermissionCheck)">Check</button>
               <button class="ios-btn ios-btn-primary ios-btn-small" onclick="withLoading(this, testCameraPermissionRequest)">Request</button>
+            </div>
+            <div class="ios-label-small">Microphone</div>
+            <div class="ios-btn-row mb-md">
+              <button class="ios-btn ios-btn-secondary ios-btn-small" onclick="withLoading(this, testMicrophonePermissionCheck)">Check</button>
+              <button class="ios-btn ios-btn-primary ios-btn-small" onclick="withLoading(this, testMicrophonePermissionRequest)">Request</button>
             </div>
             <div class="ios-label-small">Location</div>
             <div class="ios-btn-row">
