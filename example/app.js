@@ -943,6 +943,18 @@ const permissionCheckers = {
     } catch {
       return { granted: false, state: 'error' };
     }
+  },
+  share: async () => {
+    try {
+      const available = await share.canShare();
+      return { granted: available, state: available ? 'available' : 'unavailable' };
+    } catch {
+      return { granted: false, state: 'error' };
+    }
+  },
+  storekit: async () => {
+    // StoreKit requires native iOS app
+    return { granted: isNative, state: isNative ? 'available' : 'unavailable' };
   }
 };
 
