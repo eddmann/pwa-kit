@@ -132,7 +132,10 @@ public actor HealthKitManager {
     ///           `HealthKitError.authorizationDenied` if the user denied access.
     public func requestAuthorization(
         read readTypes: [HealthQuantityType],
-        write writeTypes: [HealthQuantityType]
+        write writeTypes: [HealthQuantityType],
+        readWorkouts: Bool = false,
+        readSleep: Bool = false,
+        writeWorkouts: Bool = false
     ) async throws {
         guard isHealthKitAvailable() else {
             throw HealthKitError.notAvailable
@@ -148,11 +151,15 @@ public actor HealthKitManager {
             }
         }
 
-        // Add sleep analysis type if querying sleep
-        readSet.insert(HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!)
+        // Add sleep analysis type if requested
+        if readSleep {
+            readSet.insert(HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!)
+        }
 
-        // Add workout type for reading workouts
-        readSet.insert(HKObjectType.workoutType())
+        // Add workout type for reading if requested
+        if readWorkouts {
+            readSet.insert(HKObjectType.workoutType())
+        }
 
         // Convert quantity types to HKSampleType for writing
         for type in writeTypes {
@@ -161,8 +168,8 @@ public actor HealthKitManager {
             }
         }
 
-        // Always request workout write permission if any write permissions are requested
-        if !writeTypes.isEmpty {
+        // Add workout write permission if requested
+        if writeWorkouts {
             writeSet.insert(HKObjectType.workoutType())
         }
 

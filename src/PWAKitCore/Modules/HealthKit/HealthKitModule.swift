@@ -183,12 +183,21 @@ public struct HealthKitModule: PWAModule {
     private func handleRequestAuthorization(payload: AnyCodable?) async throws -> AnyCodable {
         let readArray = payload?["read"]?.arrayValue ?? []
         let writeArray = payload?["write"]?.arrayValue ?? []
+        let readWorkouts = payload?["readWorkouts"]?.boolValue ?? false
+        let readSleep = payload?["readSleep"]?.boolValue ?? false
+        let writeWorkouts = payload?["writeWorkouts"]?.boolValue ?? false
 
         let readTypes = readArray.compactMap(\.stringValue).compactMap { HealthQuantityType(rawValue: $0) }
         let writeTypes = writeArray.compactMap(\.stringValue).compactMap { HealthQuantityType(rawValue: $0) }
 
         do {
-            try await healthKitManager.requestAuthorization(read: readTypes, write: writeTypes)
+            try await healthKitManager.requestAuthorization(
+                read: readTypes,
+                write: writeTypes,
+                readWorkouts: readWorkouts,
+                readSleep: readSleep,
+                writeWorkouts: writeWorkouts
+            )
             return AnyCodable(["success": AnyCodable(true)])
         } catch let error as HealthKitError {
             throw BridgeError.moduleError(underlying: error)
