@@ -71,6 +71,7 @@ public struct NotificationsModule: PWAModule {
     public static let moduleName = "notifications"
     public static let supportedActions = [
         "subscribe",
+        "requestPermission",
         "getToken",
         "getPermissionState",
         "setBadge",
@@ -113,6 +114,9 @@ public struct NotificationsModule: PWAModule {
         switch action {
         case "subscribe":
             return try await handleSubscribe()
+
+        case "requestPermission":
+            return try await handleRequestPermission()
 
         case "getToken":
             return handleGetToken()
@@ -193,6 +197,24 @@ public struct NotificationsModule: PWAModule {
     @MainActor
     private func registerForRemoteNotifications() {
         UIApplication.shared.registerForRemoteNotifications()
+    }
+
+    // MARK: - Request Permission
+
+    /// Handles the `requestPermission` action to request notification permission only.
+    ///
+    /// Unlike `subscribe`, this does not register for remote notifications.
+    /// Useful for local notifications that only need user permission.
+    ///
+    /// - Returns: The resulting permission state.
+    private func handleRequestPermission() async throws -> AnyCodable {
+        let granted = try await notificationCenter.requestAuthorization(options: [.alert, .badge, .sound])
+        let state = await getPermissionState()
+
+        return AnyCodable([
+            "granted": AnyCodable(granted),
+            "state": AnyCodable(state.rawValue),
+        ])
     }
 
     // MARK: - Get Token

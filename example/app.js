@@ -996,7 +996,7 @@ async function requestSectionPermission(button, permissionType) {
     button.disabled = true;
 
     if (permissionType === 'notifications') {
-      // Request notification permission
+      // Request notification permission only (no APNs registration needed for local notifications)
       consoleLog.info('Requesting notification permission...');
       const result = await push.requestPermission();
       consoleLog.success('Permission result:', result);

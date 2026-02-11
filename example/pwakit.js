@@ -296,13 +296,11 @@ var PWAKit = (function (exports) {
   // src/modules/push.ts
   function mapPermissionState(state) {
     switch (state) {
-      case "authorized":
-      case "provisional":
-      case "ephemeral":
+      case "granted":
         return "granted";
       case "denied":
         return "denied";
-      case "notDetermined":
+      case "not_determined":
       default:
         return "prompt";
     }
@@ -351,6 +349,21 @@ var PWAKit = (function (exports) {
         token: result.token,
         endpoint: `apns://${result.token}`
       };
+    },
+    /**
+     * Requests notification permission without registering for push.
+     *
+     * Use this when you only need local notifications and don't need
+     * an APNs device token. Aligned with Notification.requestPermission().
+     *
+     * @returns Permission state after the request: 'granted', 'denied', or 'prompt'
+     */
+    async requestPermission() {
+      const result = await bridge.call(
+        "notifications",
+        "requestPermission"
+      );
+      return mapPermissionState(result.state);
     },
     /**
      * Gets the current push notification permission state.

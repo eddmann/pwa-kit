@@ -54,30 +54,28 @@ interface SubscribeResult {
 
 /**
  * Internal permission state result.
+ *
+ * The native side sends NotificationPermissionState raw values:
+ * - "not_determined" (not yet asked)
+ * - "denied"
+ * - "granted"
+ * - "unavailable"
+ * - "unknown"
  */
 interface PermissionStateResult {
-  state:
-    | 'notDetermined'
-    | 'denied'
-    | 'authorized'
-    | 'provisional'
-    | 'ephemeral';
+  state: string;
 }
 
 /**
  * Maps native permission states to Web API states.
  */
-function mapPermissionState(
-  state: PermissionStateResult['state']
-): PushPermissionState {
+function mapPermissionState(state: string): PushPermissionState {
   switch (state) {
-    case 'authorized':
-    case 'provisional':
-    case 'ephemeral':
+    case 'granted':
       return 'granted';
     case 'denied':
       return 'denied';
-    case 'notDetermined':
+    case 'not_determined':
     default:
       return 'prompt';
   }
@@ -158,6 +156,23 @@ export const push = {
       token: result.token,
       endpoint: `apns://${result.token}`,
     };
+  },
+
+  /**
+   * Requests notification permission without registering for push.
+   *
+   * Use this when you only need local notifications and don't need
+   * an APNs device token. Aligned with Notification.requestPermission().
+   *
+   * @returns Permission state after the request: 'granted', 'denied', or 'prompt'
+   */
+  async requestPermission(): Promise<PushPermissionState> {
+    const result = await bridge.call<{ granted: boolean; state: string }>(
+      'notifications',
+      'requestPermission'
+    );
+
+    return mapPermissionState(result.state as PermissionStateResult['state']);
   },
 
   /**
