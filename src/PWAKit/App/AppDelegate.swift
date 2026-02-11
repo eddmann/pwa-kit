@@ -2,6 +2,14 @@ import UIKit
 import UserNotifications
 import WebKit
 
+// MARK: - Notification Names
+
+extension Notification.Name {
+    /// Posted when the WebView finishes loading a page.
+    /// Used to flush queued notification events after the JavaScript bridge is ready.
+    static let webViewPageLoaded = Notification.Name("PWAKit.webViewPageLoaded")
+}
+
 // MARK: - AppDelegate
 
 /// Application delegate for handling APNs registration, notification delivery, and other app-level events.
@@ -93,6 +101,17 @@ final class AppDelegate: NSObject, UIApplicationDelegate, WebViewProvider {
         // Set ourselves as the notification center delegate
         UNUserNotificationCenter.current().delegate = self
 
+        // Flush queued notification events when the page finishes loading
+        NotificationCenter.default.addObserver(
+            forName: .webViewPageLoaded,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                await self?.eventDispatcher.handlePageLoaded()
+            }
+        }
+
         #if DEBUG
             print("[AppDelegate] Application did finish launching")
             print("[AppDelegate] Set up notification center delegate")
@@ -134,6 +153,16 @@ final class AppDelegate: NSObject, UIApplicationDelegate, WebViewProvider {
         #if DEBUG
             print("[AppDelegate] Application will enter foreground")
         #endif
+    }
+
+    // MARK: - Notification Event Flushing
+
+    /// Flushes any queued notification events to JavaScript.
+    ///
+    /// Call this when the WebView and page are ready to receive events,
+    /// such as after the page finishes loading or the app returns to the foreground.
+    func flushPendingNotificationEvents() async {
+        await eventDispatcher.flushPendingEvents()
     }
 
     // MARK: - Remote Notifications

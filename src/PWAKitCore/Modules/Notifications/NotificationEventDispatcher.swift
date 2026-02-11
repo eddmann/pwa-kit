@@ -65,6 +65,15 @@ public final class NotificationEventDispatcher {
     /// Provider for the WKWebView instance.
     private weak var webViewProvider: WebViewProvider?
 
+    /// Whether the page has loaded and the JS bridge is ready to receive events.
+    /// Set to `true` only by ``handlePageLoaded()``, triggered by `.webViewPageLoaded`.
+    /// Before this, all events are queued even if the WebView reference is non-nil,
+    /// because `evaluateJavaScript` silently fails on a page that hasn't finished loading.
+    private var isReady = false
+
+    /// Queue of events that arrived before the WebView was available.
+    private var pendingEvents: [NotificationPayload] = []
+
     // MARK: - Initialization
 
     /// Creates a new notification event dispatcher.
@@ -76,6 +85,49 @@ public final class NotificationEventDispatcher {
     }
 
     // MARK: - Public Methods
+
+    /// Marks the JS bridge as ready and flushes any queued events.
+    ///
+    /// Call this exactly once when the page finishes loading (`.webViewPageLoaded`).
+    /// This is separate from ``flushPendingEvents()`` because the scene-phase `.active`
+    /// flush must NOT mark the page as ready — on cold launch it fires before the page
+    /// has loaded, which would cause events to dispatch to an unloaded WebView.
+    public func handlePageLoaded() async {
+        isReady = true
+
+        #if DEBUG
+            print("[NotificationEventDispatcher] Page loaded, isReady = true")
+        #endif
+
+        await flushPendingEvents()
+    }
+
+    /// Flushes any queued events that arrived before the WebView was available.
+    ///
+    /// Only dispatches if the page has already loaded (``isReady``).
+    /// Call this when the app returns to the foreground to drain events
+    /// that were queued while backgrounded.
+    public func flushPendingEvents() async {
+        guard isReady else {
+            #if DEBUG
+                print("[NotificationEventDispatcher] Flush skipped (page not ready)")
+            #endif
+            return
+        }
+        guard !pendingEvents.isEmpty else { return }
+        guard webViewProvider?.webView != nil else { return }
+
+        let events = pendingEvents
+        pendingEvents.removeAll()
+
+        #if DEBUG
+            print("[NotificationEventDispatcher] Flushing \(events.count) pending event(s)")
+        #endif
+
+        for event in events {
+            await dispatchEvent(payload: event)
+        }
+    }
 
     /// Dispatches a foreground notification event to JavaScript.
     ///
@@ -293,10 +345,15 @@ public final class NotificationEventDispatcher {
     ///
     /// - Parameter payload: The notification payload to dispatch.
     private func dispatchEvent(payload: NotificationPayload) async {
-        guard let webView = webViewProvider?.webView else {
+        guard isReady, let webView = webViewProvider?.webView else {
             #if DEBUG
-                print("[NotificationEventDispatcher] No WebView available for event dispatch")
+                if !isReady {
+                    print("[NotificationEventDispatcher] Page not ready, queuing event")
+                } else {
+                    print("[NotificationEventDispatcher] No WebView available, queuing event")
+                }
             #endif
+            pendingEvents.append(payload)
             return
         }
 

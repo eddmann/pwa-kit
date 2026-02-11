@@ -40,17 +40,29 @@ struct PWAKitApp: App {
     /// Whether modules have been registered.
     @State private var modulesRegistered = false
 
+    /// Tracks the current scene phase for flushing queued notification events.
+    @Environment(\.scenePhase) private var scenePhase
+
     var body: some Scene {
         WindowGroup {
-            ContentView(dispatcher: dispatcher)
-                .environmentObject(appState)
-                .task {
-                    await initializeApp()
-                }
-                .onReceive(appState.webViewSubject) { webView in
-                    // Connect WebView to AppDelegate for notification event dispatch
+            ContentView(
+                dispatcher: dispatcher,
+                onWebViewConnected: { webView in
                     appDelegate.webView = webView
                 }
+            )
+            .environmentObject(appState)
+            .task {
+                await initializeApp()
+            }
+            .onChange(of: scenePhase) { newPhase in
+                if newPhase == .active {
+                    // Flush any notification events queued while backgrounded
+                    Task {
+                        await appDelegate.flushPendingNotificationEvents()
+                    }
+                }
+            }
         }
     }
 

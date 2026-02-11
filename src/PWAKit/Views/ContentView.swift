@@ -34,6 +34,10 @@ struct ContentView: View {
     /// The bridge dispatcher for JavaScript communication.
     let dispatcher: BridgeDispatcher
 
+    /// Callback when the WebView is created and ready.
+    /// Used by PWAKitApp to connect the WebView to AppDelegate for notification dispatch.
+    var onWebViewConnected: ((WKWebView) -> Void)?
+
     // MARK: - State
 
     /// Whether the WebView is currently loading content.
@@ -158,6 +162,7 @@ struct ContentView: View {
                 onWebViewCreated: { webView in
                     webViewRef = webView
                     appState.webView = webView
+                    onWebViewConnected?(webView)
                 },
                 onNavigationStarted: {
                     isLoading = true
@@ -169,6 +174,9 @@ struct ContentView: View {
                     loadingProgress = 1.0
                     hasConnectionError = false
                     cancelRetryTimer()
+
+                    // Flush any queued notification events now that the page is loaded
+                    NotificationCenter.default.post(name: .webViewPageLoaded, object: nil)
 
                     // Delay before hiding loading view for smoother transition
                     Task { @MainActor in

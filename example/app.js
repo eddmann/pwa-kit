@@ -1042,6 +1042,14 @@ function setupEventListeners() {
     consoleLog.info('Lifecycle event', event.detail);
   });
 
+  // Push notification events
+  window.addEventListener('pwa:push', (event) => {
+    const { type, title, body } = event.detail;
+    consoleLog.info(`Push event: ${type}`, { title, body });
+    // TODO: remove - temporary alert to verify cold-launch tap events arrive
+    alert(`Push event: ${type}\n${title || ''}${body ? '\n' + body : ''}`);
+  });
+
   // App visibility
   document.addEventListener('visibilitychange', () => {
     consoleLog.info('Visibility changed:', document.visibilityState);
