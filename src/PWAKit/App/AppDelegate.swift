@@ -191,19 +191,22 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     /// Called when a notification is delivered while the app is in the foreground.
     ///
     /// This method:
-    /// 1. Dispatches a "received" event to JavaScript
-    /// 2. Returns presentation options to show the notification banner
+    /// 1. Tells the system to show the notification immediately
+    /// 2. Dispatches a "received" event to JavaScript asynchronously
+    ///
+    /// Uses the completion handler API instead of async to avoid blocking the
+    /// system's UI operations (scene activation, snapshots) with actor hops.
     ///
     /// - Parameters:
     ///   - center: The notification center.
     ///   - notification: The notification being delivered.
-    /// - Returns: Presentation options for displaying the notification.
+    ///   - completionHandler: Handler to call with presentation options.
     nonisolated func userNotificationCenter(
         _: UNUserNotificationCenter,
-        willPresent notification: UNNotification
-    ) async -> UNNotificationPresentationOptions {
-        // Extract notification data before crossing actor boundary
-        // UNNotification is not Sendable, so we extract the values we need
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping @Sendable (UNNotificationPresentationOptions) -> Void
+    ) {
+        // Extract notification data (synchronous, safe from any thread)
         let content = notification.request.content
         let title = content.title
         let body = content.body
@@ -211,7 +214,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         let badge = content.badge
         let identifier = notification.request.identifier
 
-        // Convert userInfo to JSON Data (which is Sendable) for safe transfer
         let userInfoData: Data?
         do {
             userInfoData = try JSONSerialization.data(withJSONObject: content.userInfo)
@@ -223,31 +225,29 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             print("[AppDelegate] Received foreground notification: \(title)")
         #endif
 
-        // Dispatch the notification event to JavaScript on main actor
-        // Using extracted values that are safe to send across actor boundaries
-        await MainActor.run {
-            Task { [eventDispatcher] in
-                // Convert userInfo back from JSON Data
-                var userInfo: [AnyHashable: Any] = [:]
-                if let data = userInfoData,
-                   let decoded = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
-                {
-                    userInfo = decoded
-                }
+        // Tell the system to show the notification immediately — don't block
+        completionHandler([.banner, .sound, .badge])
 
-                await eventDispatcher.dispatchForegroundNotificationData(
-                    title: title,
-                    body: body,
-                    subtitle: subtitle,
-                    userInfo: userInfo,
-                    badge: badge,
-                    identifier: identifier
-                )
+        // Dispatch event to JavaScript asynchronously on the main actor
+        Task { @MainActor [weak self] in
+            guard let dispatcher = self?.eventDispatcher else { return }
+
+            var userInfo: [AnyHashable: Any] = [:]
+            if let data = userInfoData,
+               let decoded = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+            {
+                userInfo = decoded
             }
-        }
 
-        // Show the notification banner, play sound, and update badge
-        return [.banner, .sound, .badge]
+            await dispatcher.dispatchForegroundNotificationData(
+                title: title,
+                body: body,
+                subtitle: subtitle,
+                userInfo: userInfo,
+                badge: badge,
+                identifier: identifier
+            )
+        }
     }
 
     /// Called when the user interacts with a notification (typically by tapping it).
@@ -255,15 +255,19 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     /// This method dispatches a "tapped" event to JavaScript with the notification content,
     /// allowing the web application to handle the user's response appropriately.
     ///
+    /// Uses the completion handler API instead of async to avoid blocking the
+    /// system's scene activation with actor hops, which causes main thread assertions.
+    ///
     /// - Parameters:
     ///   - center: The notification center.
     ///   - response: The user's response to the notification.
+    ///   - completionHandler: Handler to call when processing is complete.
     nonisolated func userNotificationCenter(
         _: UNUserNotificationCenter,
-        didReceive response: UNNotificationResponse
-    ) async {
-        // Extract notification data before crossing actor boundary
-        // UNNotificationResponse is not Sendable, so we extract the values we need
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping @Sendable () -> Void
+    ) {
+        // Extract notification data (synchronous, safe from any thread)
         let content = response.notification.request.content
         let title = content.title
         let body = content.body
@@ -272,7 +276,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         let identifier = response.notification.request.identifier
         let actionIdentifier = response.actionIdentifier
 
-        // Convert userInfo to JSON Data (which is Sendable) for safe transfer
         let userInfoData: Data?
         do {
             userInfoData = try JSONSerialization.data(withJSONObject: content.userInfo)
@@ -284,28 +287,29 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             print("[AppDelegate] User tapped notification: \(title)")
         #endif
 
-        // Dispatch the notification tap event to JavaScript on main actor
-        // Using extracted values that are safe to send across actor boundaries
-        await MainActor.run {
-            Task { [eventDispatcher] in
-                // Convert userInfo back from JSON Data
-                var userInfo: [AnyHashable: Any] = [:]
-                if let data = userInfoData,
-                   let decoded = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
-                {
-                    userInfo = decoded
-                }
+        // Tell the system we're done immediately — don't block scene activation
+        completionHandler()
 
-                await eventDispatcher.dispatchTappedNotificationData(
-                    title: title,
-                    body: body,
-                    subtitle: subtitle,
-                    userInfo: userInfo,
-                    badge: badge,
-                    identifier: identifier,
-                    actionIdentifier: actionIdentifier
-                )
+        // Dispatch event to JavaScript asynchronously on the main actor
+        Task { @MainActor [weak self] in
+            guard let dispatcher = self?.eventDispatcher else { return }
+
+            var userInfo: [AnyHashable: Any] = [:]
+            if let data = userInfoData,
+               let decoded = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+            {
+                userInfo = decoded
             }
+
+            await dispatcher.dispatchTappedNotificationData(
+                title: title,
+                body: body,
+                subtitle: subtitle,
+                userInfo: userInfo,
+                badge: badge,
+                identifier: identifier,
+                actionIdentifier: actionIdentifier
+            )
         }
     }
 }
