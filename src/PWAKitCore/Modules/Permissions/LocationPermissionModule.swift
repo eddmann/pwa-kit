@@ -148,7 +148,7 @@ public struct LocationPermissionModule: PWAModule {
         let permissionStatus = PermissionStatus.from(status)
 
         return AnyCodable([
-            "status": AnyCodable(permissionStatus.rawValue),
+            "state": AnyCodable(permissionStatus.rawValue),
         ])
     }
 
@@ -169,7 +169,7 @@ public struct LocationPermissionModule: PWAModule {
         if currentStatus != .notDetermined {
             let permissionStatus = PermissionStatus.from(currentStatus)
             return AnyCodable([
-                "status": AnyCodable(permissionStatus.rawValue),
+                "state": AnyCodable(permissionStatus.rawValue),
             ])
         }
 
@@ -178,7 +178,7 @@ public struct LocationPermissionModule: PWAModule {
         let permissionStatus = PermissionStatus.from(resultStatus)
 
         return AnyCodable([
-            "status": AnyCodable(permissionStatus.rawValue),
+            "state": AnyCodable(permissionStatus.rawValue),
         ])
     }
 }

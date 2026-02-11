@@ -148,6 +148,10 @@ public enum ModuleRegistration {
         if features.cameraPermission {
             await dispatcher.register(CameraPermissionModule())
             count += 1
+
+            // MicrophonePermissionModule shares the camera permission feature flag
+            await dispatcher.register(MicrophonePermissionModule())
+            count += 1
         }
 
         // LocationPermissionModule is registered conditionally based on feature flag
@@ -262,6 +266,10 @@ public enum ModuleRegistration {
         if features.cameraPermission {
             await registry.register(CameraPermissionModule())
             count += 1
+
+            // MicrophonePermissionModule shares the camera permission feature flag
+            await registry.register(MicrophonePermissionModule())
+            count += 1
         }
 
         // LocationPermissionModule is registered conditionally based on feature flag
@@ -348,6 +356,7 @@ public enum ModuleRegistration {
         // CameraPermissionModule is registered conditionally based on feature flag
         if features.cameraPermission {
             names.append(CameraPermissionModule.moduleName)
+            names.append(MicrophonePermissionModule.moduleName)
         }
 
         // LocationPermissionModule is registered conditionally based on feature flag

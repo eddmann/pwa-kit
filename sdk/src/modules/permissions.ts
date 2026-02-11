@@ -97,8 +97,9 @@ function mapLocationState(state: NativeLocationResult['state']): PermissionState
 function getModuleName(name: PermissionName): string {
   switch (name) {
     case 'camera':
-    case 'microphone':
       return 'cameraPermission';
+    case 'microphone':
+      return 'microphonePermission';
     case 'geolocation':
       return 'locationPermission';
   }

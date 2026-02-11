@@ -143,7 +143,7 @@ public struct CameraPermissionModule: PWAModule {
         let permissionStatus = PermissionStatus.from(status)
 
         return AnyCodable([
-            "status": AnyCodable(permissionStatus.rawValue),
+            "state": AnyCodable(permissionStatus.rawValue),
         ])
     }
 
@@ -162,7 +162,7 @@ public struct CameraPermissionModule: PWAModule {
         if currentStatus != .notDetermined {
             let permissionStatus = PermissionStatus.from(currentStatus)
             return AnyCodable([
-                "status": AnyCodable(permissionStatus.rawValue),
+                "state": AnyCodable(permissionStatus.rawValue),
             ])
         }
 
@@ -171,7 +171,7 @@ public struct CameraPermissionModule: PWAModule {
 
         let status: PermissionStatus = granted ? .granted : .denied
         return AnyCodable([
-            "status": AnyCodable(status.rawValue),
+            "state": AnyCodable(status.rawValue),
         ])
     }
 }

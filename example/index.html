@@ -505,13 +505,9 @@
           <div class="ios-cell-expand-inner">
             <div class="ios-permission-gate hidden">
               <div class="ios-permission-gate-icon">❤️</div>
-              <div class="ios-permission-gate-title">HealthKit Unavailable</div>
-              <div class="ios-permission-gate-message">HealthKit is not available on this device</div>
-              <button class="ios-btn ios-btn-secondary" onclick="withLoading(this, testHealthKitAvailable)">Check Again</button>
-            </div>
-            <div class="ios-btn-row mb-md">
-              <button class="ios-btn ios-btn-tinted ios-btn-small" onclick="withLoading(this, testHealthKitAvailable)">Check</button>
-              <button class="ios-btn ios-btn-primary" onclick="withLoading(this, testHealthKitAuth)">Authorize</button>
+              <div class="ios-permission-gate-title">HealthKit Authorization</div>
+              <div class="ios-permission-gate-message">Authorize access to health data to query steps, heart rate, workouts, and sleep.</div>
+              <button class="ios-btn ios-btn-primary" onclick="requestSectionPermission(this, 'healthkit')">Authorize HealthKit</button>
             </div>
             <div class="ios-label-small">Query Data</div>
             <div class="ios-segment-group mb-md">

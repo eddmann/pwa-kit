@@ -111,6 +111,7 @@
 		A1000046 /* ShareModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000046 /* ShareModule.swift */; };
 		A1000047 /* CameraPermissionModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000047 /* CameraPermissionModule.swift */; };
 		A1000048 /* LocationPermissionModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000048 /* LocationPermissionModule.swift */; };
+		A100004D /* MicrophonePermissionModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100004D /* MicrophonePermissionModule.swift */; };
 		A1000049 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000049 /* Color+Hex.swift */; };
 		A100004A /* WebManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100004A /* WebManifest.swift */; };
 		A100004B /* ManifestLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100004B /* ManifestLoader.swift */; };
@@ -253,6 +254,7 @@
 		B1000046 /* ShareModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareModule.swift; sourceTree = "<group>"; };
 		B1000047 /* CameraPermissionModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPermissionModule.swift; sourceTree = "<group>"; };
 		B1000048 /* LocationPermissionModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPermissionModule.swift; sourceTree = "<group>"; };
+		B100004D /* MicrophonePermissionModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophonePermissionModule.swift; sourceTree = "<group>"; };
 		B1000049 /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
 		B100004A /* WebManifest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebManifest.swift; sourceTree = "<group>"; };
 		B100004B /* ManifestLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManifestLoader.swift; sourceTree = "<group>"; };
@@ -694,6 +696,7 @@
 			children = (
 				B1000047 /* CameraPermissionModule.swift */,
 				B1000048 /* LocationPermissionModule.swift */,
+				B100004D /* MicrophonePermissionModule.swift */,
 			);
 			path = Permissions;
 			sourceTree = "<group>";
@@ -985,6 +988,7 @@
 				A1000046 /* ShareModule.swift in Sources */,
 				A1000047 /* CameraPermissionModule.swift in Sources */,
 				A1000048 /* LocationPermissionModule.swift in Sources */,
+				A100004D /* MicrophonePermissionModule.swift in Sources */,
 				A1000049 /* Color+Hex.swift in Sources */,
 				A100004A /* WebManifest.swift in Sources */,
 				A100004B /* ManifestLoader.swift in Sources */,

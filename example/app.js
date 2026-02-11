@@ -939,7 +939,9 @@ const permissionCheckers = {
   healthkit: async () => {
     try {
       const result = await ios.healthKit.isAvailable();
-      return { granted: result.available, state: result.available ? 'available' : 'unavailable' };
+      if (!result.available) return { granted: false, state: 'unavailable' };
+      // HealthKit doesn't expose read auth status, so track it client-side
+      return { granted: !!window._healthKitAuthorized, state: window._healthKitAuthorized ? 'authorized' : 'not-authorized' };
     } catch {
       return { granted: false, state: 'error' };
     }
@@ -1013,6 +1015,19 @@ async function requestSectionPermission(button, permissionType) {
           gate.querySelector('.ios-btn').textContent = 'Open Settings';
           gate.querySelector('.ios-btn').onclick = () => ios.app.openSettings();
         }
+      }
+    } else if (permissionType === 'healthkit') {
+      consoleLog.info('Requesting HealthKit authorization...');
+      const result = await ios.healthKit.requestAuthorization({
+        read: ['stepCount', 'heartRate'],
+        readWorkouts: true,
+        readSleep: true
+      });
+      consoleLog.success('HealthKit auth result:', result);
+
+      if (result.success) {
+        window._healthKitAuthorized = true;
+        await checkAndUpdatePermissionGate(cellElement);
       }
     }
   } catch (err) {
