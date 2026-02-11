@@ -597,7 +597,8 @@ async function testHealthKitAuth() {
     const result = await ios.healthKit.requestAuthorization({
       read: ['stepCount', 'heartRate'],
       readWorkouts: true,
-      readSleep: true
+      readSleep: true,
+      writeWorkouts: true
     });
     consoleLog.success('HealthKit auth result:', result);
     showResult('healthkit-result', result, result.success);
@@ -1021,7 +1022,8 @@ async function requestSectionPermission(button, permissionType) {
       const result = await ios.healthKit.requestAuthorization({
         read: ['stepCount', 'heartRate'],
         readWorkouts: true,
-        readSleep: true
+        readSleep: true,
+        writeWorkouts: true
       });
       consoleLog.success('HealthKit auth result:', result);
 
