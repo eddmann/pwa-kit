@@ -4,7 +4,10 @@
 # Syncs pwa-config.json values to Info.plist
 #
 # This script reads the origins from pwa-config.json and updates
-# WKAppBoundDomains in Info.plist to match.
+# WKAppBoundDomains in Info.plist to match. It also syncs appearance
+# colors to the Xcode asset catalog colorsets:
+#   - appearance.backgroundColor → LaunchBackground.colorset
+#   - appearance.themeColor → AccentColor.colorset
 #
 # Usage:
 #   ./scripts/sync-config.sh              # Sync config to Info.plist
@@ -60,6 +63,8 @@ Options:
 
 The script syncs:
     - origins.allowed + origins.auth → WKAppBoundDomains
+    - appearance.backgroundColor → LaunchBackground.colorset
+    - appearance.themeColor → AccentColor.colorset
     - Validates privacy descriptions for enabled features
 EOF
     exit 0
@@ -228,6 +233,104 @@ if not domains_match and not dry_run and not validate_only:
     with open(info_plist, 'wb') as f:
         plistlib.dump(plist, f)
     print_success("Info.plist updated successfully")
+
+# --- Color sync ---
+def hex_to_rgb(hex_color):
+    """Convert hex color string to RGB float components (0.0-1.0)."""
+    hex_color = hex_color.lstrip('#')
+    r = int(hex_color[0:2], 16) / 255.0
+    g = int(hex_color[2:4], 16) / 255.0
+    b = int(hex_color[4:6], 16) / 255.0
+    return r, g, b
+
+def make_colorset_json(r, g, b):
+    """Build a colorset Contents.json dict with the given RGB components."""
+    return {
+        "colors": [
+            {
+                "color": {
+                    "color-space": "srgb",
+                    "components": {
+                        "alpha": "1.000",
+                        "blue": f"{b:.3f}",
+                        "green": f"{g:.3f}",
+                        "red": f"{r:.3f}",
+                    }
+                },
+                "idiom": "universal"
+            }
+        ],
+        "info": {
+            "author": "xcode",
+            "version": 1
+        }
+    }
+
+def read_colorset(path):
+    """Read existing colorset and return (r, g, b) or None if no color set."""
+    try:
+        with open(path, 'r') as f:
+            data = json.load(f)
+        color = data.get('colors', [{}])[0].get('color')
+        if not color:
+            return None
+        components = color.get('components', {})
+        return (
+            float(components.get('red', 0)),
+            float(components.get('green', 0)),
+            float(components.get('blue', 0)),
+        )
+    except (FileNotFoundError, json.JSONDecodeError, ValueError, IndexError):
+        return None
+
+def sync_color(hex_value, colorset_path, label):
+    """Sync a hex color to a colorset file. Returns True if changes were made."""
+    r, g, b = hex_to_rgb(hex_value)
+    current = read_colorset(colorset_path)
+    target = (round(r, 3), round(g, 3), round(b, 3))
+
+    if current is not None:
+        current_rounded = (round(current[0], 3), round(current[1], 3), round(current[2], 3))
+    else:
+        current_rounded = None
+
+    if current_rounded == target:
+        print_success(f"{label} is already in sync ({hex_value})")
+        return False
+
+    if dry_run:
+        print_warning(f"Would update {label}: {current_rounded} → {target} ({hex_value})")
+        return False
+    elif validate_only:
+        print_error(f"{label} mismatch!")
+        print(f"   Expected: {target} ({hex_value})")
+        print(f"   Actual: {current_rounded}")
+        errors.append(f"{label} not in sync with pwa-config.json")
+        return False
+    else:
+        colorset_data = make_colorset_json(r, g, b)
+        with open(colorset_path, 'w') as f:
+            json.dump(colorset_data, f, indent=2)
+            f.write('\n')
+        print_success(f"Updated {label}: {hex_value}")
+        return True
+
+assets_dir = os.path.join(project_root, 'src', 'PWAKit', 'Resources', 'Assets.xcassets')
+appearance = config.get('appearance', {})
+
+bg_color = appearance.get('backgroundColor')
+theme_color = appearance.get('themeColor')
+
+if bg_color or theme_color:
+    print_step("Syncing appearance colors...")
+
+if bg_color:
+    launch_bg_path = os.path.join(assets_dir, 'LaunchBackground.colorset', 'Contents.json')
+    sync_color(bg_color, launch_bg_path, 'LaunchBackground.colorset')
+
+if theme_color:
+    accent_path = os.path.join(assets_dir, 'AccentColor.colorset', 'Contents.json')
+    sync_color(theme_color, accent_path, 'AccentColor.colorset')
 
 # Summary
 print()

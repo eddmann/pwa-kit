@@ -25,6 +25,8 @@
 #   --bundle-id, -b   Bundle ID (required)
 #   --allowed, -a     Additional allowed origins (comma-separated)
 #   --auth            Auth origins (comma-separated)
+#   --bg-color        Background color hex (default: #FFFFFF)
+#   --theme-color     Theme/accent color hex (default: #007AFF)
 #   --output, -o      Output file path (default: src/PWAKit/Resources/pwa-config.json)
 #   --force, -f       Overwrite existing config without prompting
 #   --quiet, -q       Suppress non-error output
@@ -97,6 +99,10 @@ Optional flags:
                           (or PWAKIT_ALLOWED)
   --auth <origins>        Auth origins for OAuth, comma-separated
                           (or PWAKIT_AUTH_ORIGINS)
+  --bg-color <hex>        Background color for launch screen
+                          (default: #FFFFFF, or PWAKIT_BG_COLOR)
+  --theme-color <hex>     Theme/accent color
+                          (default: #007AFF, or PWAKIT_THEME_COLOR)
   --output, -o <path>     Output file path
                           (default: src/PWAKit/Resources/pwa-config.json)
   --force, -f             Overwrite existing config without prompting
@@ -153,6 +159,15 @@ extract_domain() {
     local url="$1"
     # Remove protocol and path, keep domain
     echo "$url" | sed -E 's|^https://([^/]+).*|\1|'
+}
+
+# Validate hex color format
+validate_hex_color() {
+    local color="$1"
+    if [[ ! "$color" =~ ^#[0-9A-Fa-f]{6}$ ]]; then
+        return 1
+    fi
+    return 0
 }
 
 # Validate bundle ID format
@@ -409,6 +424,8 @@ parse_args() {
     BUNDLE_ID="${PWAKIT_BUNDLE_ID:-}"
     ALLOWED_ORIGINS="${PWAKIT_ALLOWED:-}"
     AUTH_ORIGINS="${PWAKIT_AUTH_ORIGINS:-}"
+    BG_COLOR="${PWAKIT_BG_COLOR:-#FFFFFF}"
+    THEME_COLOR="${PWAKIT_THEME_COLOR:-#007AFF}"
     OUTPUT_FILE="$DEFAULT_OUTPUT"
     FORCE="false"
     QUIET="false"
@@ -433,6 +450,14 @@ parse_args() {
                 ;;
             --auth)
                 AUTH_ORIGINS="$2"
+                shift 2
+                ;;
+            --bg-color)
+                BG_COLOR="$2"
+                shift 2
+                ;;
+            --theme-color)
+                THEME_COLOR="$2"
                 shift 2
                 ;;
             --output|-o)
@@ -485,6 +510,18 @@ validate_inputs() {
     elif ! validate_bundle_id "$BUNDLE_ID"; then
         log_error "Invalid bundle ID format: $BUNDLE_ID"
         log_error "Bundle ID must be in reverse domain format (e.g., com.example.app)"
+        has_error="true"
+    fi
+
+    if ! validate_hex_color "$BG_COLOR"; then
+        log_error "Invalid background color: $BG_COLOR"
+        log_error "Must be a 6-digit hex color (e.g., #FFFFFF)"
+        has_error="true"
+    fi
+
+    if ! validate_hex_color "$THEME_COLOR"; then
+        log_error "Invalid theme color: $THEME_COLOR"
+        log_error "Must be a 6-digit hex color (e.g., #007AFF)"
         has_error="true"
     fi
 
@@ -545,7 +582,9 @@ generate_config() {
     "displayMode": "standalone",
     "pullToRefresh": true,
     "adaptiveStyle": true,
-    "statusBarStyle": "default"
+    "statusBarStyle": "default",
+    "backgroundColor": "$BG_COLOR",
+    "themeColor": "$THEME_COLOR"
   },
   "notifications": {
     "provider": "apns"
@@ -590,9 +629,11 @@ main() {
 
     # Log what we're doing
     log_info "Configuring PWAKit..."
-    log_info "  App name:   $APP_NAME"
-    log_info "  Start URL:  $START_URL"
-    log_info "  Bundle ID:  $BUNDLE_ID"
+    log_info "  App name:      $APP_NAME"
+    log_info "  Start URL:     $START_URL"
+    log_info "  Bundle ID:     $BUNDLE_ID"
+    log_info "  Background:    $BG_COLOR"
+    log_info "  Theme color:   $THEME_COLOR"
 
     # Generate configuration
     generate_config
@@ -622,6 +663,10 @@ main() {
 
     # Download app icon from web manifest
     download_app_icon "$START_URL"
+
+    # Sync appearance colors to asset catalog
+    log_info "Syncing appearance colors..."
+    "$SCRIPT_DIR/sync-config.sh"
 }
 
 # Run main function

@@ -69,22 +69,31 @@ struct ContentView: View {
 
     // MARK: - Theme Colors
 
-    /// Resolved background color from theme (pwa-config > manifest > system).
+    /// Resolved background color from pwa-config appearance.
     private var themeBackgroundColor: Color? {
-        // Use theme (includes manifest fallback) if available, otherwise fall back to config
-        if let theme = appState.theme {
-            return theme.backgroundColor.flatMap { Color(hex: $0) }
-        }
-        return appState.configuration?.appearance.backgroundColor.flatMap { Color(hex: $0) }
+        appState.configuration?.appearance.backgroundColor.flatMap { Color(hex: $0) }
     }
 
-    /// Resolved accent color from theme (pwa-config > manifest > system).
-    private var themeAccentColor: Color? {
-        // Use theme (includes manifest fallback) if available, otherwise fall back to config
-        if let theme = appState.theme {
-            return theme.themeColor.flatMap { Color(hex: $0) }
+    /// Resolved color scheme from statusBarStyle configuration.
+    ///
+    /// Maps the configured status bar style to a SwiftUI color scheme:
+    /// - `default`: `nil` (system decides)
+    /// - `lightContent`: `.dark` (dark scheme produces white status bar text)
+    /// - `darkContent`: `.light` (light scheme produces dark status bar text)
+    private var statusBarColorScheme: ColorScheme? {
+        switch appState.configuration?.appearance.statusBarStyle ?? .default {
+        case .default:
+            return nil
+        case .lightContent:
+            return .dark
+        case .darkContent:
+            return .light
         }
-        return appState.configuration?.appearance.themeColor.flatMap { Color(hex: $0) }
+    }
+
+    /// Resolved accent color from pwa-config appearance.
+    private var themeAccentColor: Color? {
+        appState.configuration?.appearance.themeColor.flatMap { Color(hex: $0) }
     }
 
     // MARK: - Body
@@ -142,6 +151,7 @@ struct ContentView: View {
             (themeBackgroundColor ?? Color(UIColor.systemBackground))
                 .ignoresSafeArea()
         )
+        .preferredColorScheme(statusBarColorScheme)
         .animation(.easeInOut(duration: 0.3), value: isLoading)
         .animation(.easeInOut(duration: 0.3), value: hasConnectionError)
         .animation(.easeInOut(duration: 0.2), value: isOnAuthOrigin)

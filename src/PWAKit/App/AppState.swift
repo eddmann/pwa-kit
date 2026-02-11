@@ -52,12 +52,6 @@ final class AppState: ObservableObject {
     /// The configuration error, if loading failed.
     @Published private(set) var configurationError: ConfigurationError?
 
-    /// The resolved theme configuration with manifest fallback.
-    @Published private(set) var theme: ThemeConfiguration?
-
-    /// Whether theme is currently being loaded.
-    @Published private(set) var isLoadingTheme = false
-
     // MARK: - WebView Reference
 
     /// Weak reference to the WKWebView instance.
@@ -122,31 +116,6 @@ final class AppState: ObservableObject {
         }
 
         isLoadingConfiguration = false
-
-        // Load theme after configuration
-        if configuration != nil {
-            await loadTheme()
-        }
-    }
-
-    /// Loads and resolves theme configuration with manifest fallback.
-    ///
-    /// This method resolves theme colors from both pwa-config and web manifest.
-    /// Colors from pwa-config take priority over manifest values.
-    ///
-    /// - Parameter fetchManifest: If `true`, fetches the web manifest for fallback colors.
-    func loadTheme(fetchManifest: Bool = true) async {
-        guard let config = configuration else { return }
-        guard !isLoadingTheme else { return }
-
-        isLoadingTheme = true
-
-        theme = await ThemeResolver.shared.resolve(
-            for: config,
-            fetchManifest: fetchManifest
-        )
-
-        isLoadingTheme = false
     }
 
     /// Checks if a feature is enabled in the current configuration.

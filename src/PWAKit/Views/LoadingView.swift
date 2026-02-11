@@ -164,13 +164,12 @@ public struct LoadingView: View {
             }
             .frame(height: 6)
 
-            // Progress text (optional, shown when progress > 0)
-            if progress > 0 {
-                Text("\(Int(progress * 100))%")
-                    .font(.caption)
-                    .foregroundColor(accentColor ?? Color(UIColor.secondaryLabel))
-                    .animation(.easeInOut(duration: 0.2), value: progress)
-            }
+            // Progress text (always present for stable layout, hidden when 0%)
+            Text("\(Int(progress * 100))%")
+                .font(.caption)
+                .foregroundColor(accentColor ?? Color(UIColor.secondaryLabel))
+                .opacity(progress > 0 ? 1 : 0)
+                .animation(.easeInOut(duration: 0.2), value: progress)
         }
         .frame(maxWidth: 100)
     }

@@ -113,9 +113,6 @@
 		A1000048 /* LocationPermissionModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000048 /* LocationPermissionModule.swift */; };
 		A100004D /* MicrophonePermissionModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100004D /* MicrophonePermissionModule.swift */; };
 		A1000049 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000049 /* Color+Hex.swift */; };
-		A100004A /* WebManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100004A /* WebManifest.swift */; };
-		A100004B /* ManifestLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100004B /* ManifestLoader.swift */; };
-		A100004C /* ThemeConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100004C /* ThemeConfiguration.swift */; };
 		A2363050749A127D0095C093 /* NotificationTypesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880883326817623CA69E7350 /* NotificationTypesTests.swift */; };
 		A3608745A2BA318F26BCA01A /* ConfigurationStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2EECC4C55A029C5B769CBA /* ConfigurationStoreTests.swift */; };
 		A62C71C91ED0B267EFD3C0F6 /* LocationPermissionModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB322D5B7DD705E83669240A /* LocationPermissionModuleTests.swift */; };
@@ -256,9 +253,6 @@
 		B1000048 /* LocationPermissionModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPermissionModule.swift; sourceTree = "<group>"; };
 		B100004D /* MicrophonePermissionModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophonePermissionModule.swift; sourceTree = "<group>"; };
 		B1000049 /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
-		B100004A /* WebManifest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebManifest.swift; sourceTree = "<group>"; };
-		B100004B /* ManifestLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManifestLoader.swift; sourceTree = "<group>"; };
-		B100004C /* ThemeConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeConfiguration.swift; sourceTree = "<group>"; };
 		BB322D5B7DD705E83669240A /* LocationPermissionModuleTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LocationPermissionModuleTests.swift; path = tests/PWAKitCoretests/Modules/LocationPermissionModuleTests.swift; sourceTree = SOURCE_ROOT; };
 		BD61600E33373EE4DE502BCF /* AppStateTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppStateTests.swift; path = tests/PWAKitCoretests/AppStateTests.swift; sourceTree = SOURCE_ROOT; };
 		BEC8062767A9F899644D622C /* PWAConfigurationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PWAConfigurationTests.swift; path = tests/PWAKitCoretests/Configuration/PWAConfigurationTests.swift; sourceTree = SOURCE_ROOT; };
@@ -447,7 +441,6 @@
 				E100000D /* Files */,
 				E100000E /* Settings */,
 				E100001C /* Utilities */,
-				E100001D /* Manifest */,
 			);
 			path = PWAKitCore;
 			sourceTree = "<group>";
@@ -498,7 +491,6 @@
 				B1000016 /* ConfigurationLoader.swift */,
 				B1000017 /* ConfigurationValidator.swift */,
 				B1000018 /* ConfigurationStore.swift */,
-				B100004C /* ThemeConfiguration.swift */,
 			);
 			path = Configuration;
 			sourceTree = "<group>";
@@ -707,15 +699,6 @@
 				B1000049 /* Color+Hex.swift */,
 			);
 			path = Utilities;
-			sourceTree = "<group>";
-		};
-		E100001D /* Manifest */ = {
-			isa = PBXGroup;
-			children = (
-				B100004A /* WebManifest.swift */,
-				B100004B /* ManifestLoader.swift */,
-			);
-			path = Manifest;
 			sourceTree = "<group>";
 		};
 		E154468345D99C9E9AAFF663 /* Settings */ = {
@@ -990,9 +973,6 @@
 				A1000048 /* LocationPermissionModule.swift in Sources */,
 				A100004D /* MicrophonePermissionModule.swift in Sources */,
 				A1000049 /* Color+Hex.swift in Sources */,
-				A100004A /* WebManifest.swift in Sources */,
-				A100004B /* ManifestLoader.swift in Sources */,
-				A100004C /* ThemeConfiguration.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
