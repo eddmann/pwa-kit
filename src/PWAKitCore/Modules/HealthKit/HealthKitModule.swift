@@ -90,6 +90,7 @@ public struct HealthKitModule: PWAModule {
         "isAvailable",
         "requestAuthorization",
         "querySteps",
+        "queryStepCount",
         "queryHeartRate",
         "queryWorkouts",
         "querySleep",
@@ -143,6 +144,9 @@ public struct HealthKitModule: PWAModule {
 
         case "querySteps":
             return try await handleQuerySteps(payload: payload)
+
+        case "queryStepCount":
+            return try await handleQueryStepCount(payload: payload)
 
         case "queryHeartRate":
             return try await handleQueryHeartRate(payload: payload)
@@ -219,6 +223,30 @@ public struct HealthKitModule: PWAModule {
         do {
             let samples = try await healthKitManager.querySteps(startDate: startDate, endDate: endDate)
             let response = HealthSamplesResponse(samples: samples)
+            return encodeResponse(response)
+        } catch let error as HealthKitError {
+            throw BridgeError.moduleError(underlying: error)
+        } catch {
+            throw BridgeError.moduleError(underlying: error)
+        }
+    }
+
+    // MARK: - Query Step Count Action
+
+    /// Handles the `queryStepCount` action to query deduplicated total step count.
+    ///
+    /// Uses `HKStatisticsQuery` to automatically deduplicate samples from
+    /// multiple sources (e.g. iPhone + Apple Watch).
+    ///
+    /// - Parameter payload: Dictionary containing `startDate` and `endDate`.
+    /// - Returns: A `StepCountResponse` encoded as `AnyCodable`.
+    /// - Throws: `BridgeError.invalidPayload` if dates are missing or invalid.
+    private func handleQueryStepCount(payload: AnyCodable?) async throws -> AnyCodable {
+        let (startDate, endDate) = try parseDateRange(from: payload)
+
+        do {
+            let totalSteps = try await healthKitManager.queryStepCount(startDate: startDate, endDate: endDate)
+            let response = StepCountResponse(totalSteps: totalSteps)
             return encodeResponse(response)
         } catch let error as HealthKitError {
             throw BridgeError.moduleError(underlying: error)

@@ -250,6 +250,51 @@ public actor HealthKitManager {
         )
     }
 
+    // MARK: - Query Step Count (Deduplicated)
+
+    /// Queries the total step count for a date range using statistics, which
+    /// automatically deduplicates samples from multiple sources (e.g. iPhone + Apple Watch).
+    ///
+    /// - Parameters:
+    ///   - startDate: The start of the date range.
+    ///   - endDate: The end of the date range.
+    /// - Returns: The total deduplicated step count.
+    /// - Throws: `HealthKitError.notAvailable` if HealthKit is not available,
+    ///           `HealthKitError.unsupportedDataType` if step count is not supported.
+    public func queryStepCount(startDate: Date, endDate: Date) async throws -> Double {
+        guard isHealthKitAvailable() else {
+            throw HealthKitError.notAvailable
+        }
+
+        guard let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount) else {
+            throw HealthKitError.unsupportedDataType("stepCount")
+        }
+
+        let predicate = HKQuery.predicateForSamples(
+            withStart: startDate,
+            end: endDate,
+            options: .strictStartDate
+        )
+
+        return try await withCheckedThrowingContinuation { continuation in
+            let query = HKStatisticsQuery(
+                quantityType: stepType,
+                quantitySamplePredicate: predicate,
+                options: .cumulativeSum
+            ) { _, statistics, error in
+                if let error {
+                    continuation.resume(throwing: HealthKitError.unknown(error.localizedDescription))
+                    return
+                }
+
+                let total = statistics?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0
+                continuation.resume(returning: total)
+            }
+
+            healthStore.execute(query)
+        }
+    }
+
     // MARK: - Query Heart Rate
 
     /// Queries heart rate data for a date range.

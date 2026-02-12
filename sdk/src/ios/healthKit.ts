@@ -274,6 +274,24 @@ export const healthKit = {
   },
 
   /**
+   * Queries the total deduplicated step count for a date range.
+   *
+   * Unlike `querySteps` which returns raw samples (which may overlap across
+   * sources like iPhone + Apple Watch), this method uses `HKStatisticsQuery`
+   * to return the correct deduplicated total.
+   *
+   * @param options - Query options with date range
+   * @returns Object with totalSteps
+   */
+  async queryStepCount(options: QueryOptions): Promise<{ totalSteps: number }> {
+    return bridge.call<{ totalSteps: number }>(
+      'healthkit',
+      'queryStepCount',
+      options
+    );
+  },
+
+  /**
    * Queries heart rate data.
    *
    * @param options - Query options with date range

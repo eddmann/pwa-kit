@@ -553,6 +553,29 @@ public struct AuthorizationRequest: Codable, Sendable, Equatable {
     }
 }
 
+// MARK: - StepCountResponse
+
+/// Response containing a deduplicated total step count.
+///
+/// ## Example
+///
+/// ```json
+/// {
+///   "totalSteps": 6509
+/// }
+/// ```
+public struct StepCountResponse: Codable, Sendable, Equatable {
+    /// The total deduplicated step count.
+    public let totalSteps: Double
+
+    /// Creates a step count response.
+    ///
+    /// - Parameter totalSteps: The total step count.
+    public init(totalSteps: Double) {
+        self.totalSteps = totalSteps
+    }
+}
+
 // MARK: - HealthSamplesResponse
 
 /// Response containing health samples.
