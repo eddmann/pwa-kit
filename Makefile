@@ -62,7 +62,7 @@ prereq: ## Check prerequisites
 	@./scripts/check-prerequisites.sh
 
 setup: ## Run interactive setup wizard
-	@./scripts/setup.sh
+	@./scripts/configure.sh --interactive
 
 configure: ## Run non-interactive configuration (use with environment variables)
 	@./scripts/configure.sh

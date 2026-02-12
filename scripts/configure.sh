@@ -1,20 +1,22 @@
 #!/bin/bash
 #
 # configure.sh
-# Non-interactive CLI configuration script for PWAKit
+# Configuration script for PWAKit (interactive wizard or CLI flags)
 #
-# This script configures PWAKit using command-line flags or environment
-# variables, making it suitable for CI/CD pipelines and scripted setups.
+# This script produces the two sources of truth:
+#   1. pwa-config.json — all app configuration
+#   2. AppIcon-source.png — source icon (downloaded from manifest)
+#
+# Then calls sync-config.sh to derive everything else (pbxproj, Info.plist,
+# colorsets, icon variants).
 #
 # Usage:
-#   ./scripts/configure.sh --url "https://my-pwa.example.com"
+#   ./scripts/configure.sh --interactive       # Interactive wizard
+#   ./scripts/configure.sh --url "https://..."  # Non-interactive CLI
+#   ./scripts/configure.sh -i                   # Short form
 #
-# Environment Variable Fallbacks:
-#   PWAKIT_APP_NAME      - App display name
-#   PWAKIT_START_URL     - Start URL (HTTPS required)
-#   PWAKIT_BUNDLE_ID     - Bundle identifier
-#   PWAKIT_ALLOWED       - Comma-separated allowed origins
-#   PWAKIT_AUTH_ORIGINS  - Comma-separated auth origins
+# When no --url is provided and stdin is a TTY, interactive mode is used
+# automatically.
 #
 # Auto-detected from web manifest (if available):
 #   - App name (from manifest name/short_name)
@@ -25,7 +27,8 @@
 #   - App icon (from manifest icons)
 #
 # All flags:
-#   --url, -u         Start URL (required, must be HTTPS)
+#   --interactive, -i Auto-detect when no --url + TTY (default in that case)
+#   --url, -u         Start URL (required in non-interactive mode, must be HTTPS)
 #   --name, -n        App name (auto-detected from manifest, or required)
 #   --bundle-id, -b   Bundle ID (default: reversed URL domain)
 #   --allowed, -a     Additional allowed origins (comma-separated)
@@ -47,6 +50,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 DEFAULT_OUTPUT="$PROJECT_ROOT/src/PWAKit/Resources/pwa-config.json"
+ICON_SOURCE="$PROJECT_ROOT/src/PWAKit/Resources/AppIcon-source.png"
 
 # Colors (disabled in quiet mode or non-TTY)
 setup_colors() {
@@ -55,6 +59,7 @@ setup_colors() {
         GREEN='\033[0;32m'
         YELLOW='\033[1;33m'
         CYAN='\033[0;36m'
+        BLUE='\033[0;34m'
         BOLD='\033[1m'
         NC='\033[0m'
     else
@@ -62,6 +67,7 @@ setup_colors() {
         GREEN=''
         YELLOW=''
         CYAN=''
+        BLUE=''
         BOLD=''
         NC=''
     fi
@@ -97,33 +103,31 @@ Usage: configure.sh [OPTIONS]
 
 Configure PWAKit with the specified settings.
 
-Required options (or environment variables):
-  --url, -u <url>         Start URL, HTTPS required (or PWAKIT_START_URL)
+Modes:
+  --interactive, -i         Interactive wizard (auto-detected when no --url)
+
+Required options (non-interactive):
+  --url, -u <url>         Start URL (HTTPS required)
 
 Auto-detected (override with flags):
-  --name, -n <name>       App display name (or PWAKIT_APP_NAME)
-                          Auto-detected from manifest name/short_name
-  --bundle-id, -b <id>    Bundle identifier (or PWAKIT_BUNDLE_ID)
-                          Auto-generated from reversed URL domain
+  --name, -n <name>       App display name (auto-detected from manifest)
+  --bundle-id, -b <id>    Bundle identifier (auto-generated from reversed URL domain)
   --bg-color <hex>        Background color for launch screen
-                          (default: from manifest or #FFFFFF, or PWAKIT_BG_COLOR)
+                          (default: from manifest or #FFFFFF)
   --theme-color <hex>     Theme/accent color
-                          (default: from manifest or #007AFF, or PWAKIT_THEME_COLOR)
+                          (default: from manifest or #007AFF)
   --orientation <lock>    Orientation lock: any, portrait, landscape
-                          (default: from manifest or any, or PWAKIT_ORIENTATION)
+                          (default: from manifest or any)
   --display <mode>        Display mode: standalone, fullscreen
-                          (default: from manifest or standalone, or PWAKIT_DISPLAY_MODE)
+                          (default: from manifest or standalone)
 
 Other optional flags:
   --features <list>       Comma-separated list of enabled features
-                          (or PWAKIT_FEATURES)
                           Available: notifications,haptics,biometrics,
                           secureStorage,healthkit,iap,share,print,clipboard
                           Default: none (opt-in to what you need)
   --allowed, -a <origins> Additional allowed origins, comma-separated
-                          (or PWAKIT_ALLOWED)
   --auth <origins>        Auth origins for OAuth, comma-separated
-                          (or PWAKIT_AUTH_ORIGINS)
   --output, -o <path>     Output file path
                           (default: src/PWAKit/Resources/pwa-config.json)
   --force, -f             Overwrite existing config without prompting
@@ -131,6 +135,9 @@ Other optional flags:
   --help, -h              Show this help message
 
 Examples:
+  # Interactive wizard
+  ./scripts/configure.sh --interactive
+
   # Minimal - just a URL, everything else auto-detected
   ./scripts/configure.sh --url "https://my-pwa.example.com"
 
@@ -150,6 +157,8 @@ Examples:
   ./scripts/configure.sh --force --url "https://my-pwa.example.com"
 EOF
 }
+
+# ─── Validation helpers ──────────────────────────────────────────────────────
 
 # Validate HTTPS URL
 validate_url() {
@@ -197,7 +206,7 @@ validate_bundle_id() {
 }
 
 # Generate bundle ID by reversing the domain segments
-# e.g. step-wars.eddmann.workers.dev → dev.workers.eddmann.step-wars
+# e.g. step-wars.eddmann.workers.dev -> dev.workers.eddmann.step-wars
 reverse_domain() {
     local domain="$1"
     echo "$domain" | tr '.' '\n' | tail -r | paste -sd '.' -
@@ -228,78 +237,248 @@ to_json_array() {
     echo "[$result]"
 }
 
-# Update Xcode project with bundle ID and app name
-update_xcode_project() {
-    local bundle_id="$1"
-    local app_name="$2"
-    local pbxproj="$PROJECT_ROOT/PWAKitApp.xcodeproj/project.pbxproj"
+# ─── Interactive mode ─────────────────────────────────────────────────────────
 
-    if [[ ! -f "$pbxproj" ]]; then
-        log_warn "Xcode project not found, skipping project update"
-        return
-    fi
-
-    # Update PRODUCT_BUNDLE_IDENTIFIER
-    sed -i '' "s/PRODUCT_BUNDLE_IDENTIFIER = [^;]*;/PRODUCT_BUNDLE_IDENTIFIER = $bundle_id;/g" "$pbxproj"
-
-    # Update INFOPLIST_KEY_CFBundleDisplayName if present
-    if grep -q "INFOPLIST_KEY_CFBundleDisplayName" "$pbxproj"; then
-        sed -i '' "s/INFOPLIST_KEY_CFBundleDisplayName = \"[^\"]*\"/INFOPLIST_KEY_CFBundleDisplayName = \"$app_name\"/g" "$pbxproj"
-    fi
-
-    # Update PRODUCT_NAME if it's set to PWAKitApp
-    sed -i '' "s/PRODUCT_NAME = \"PWAKitApp\"/PRODUCT_NAME = \"$app_name\"/g" "$pbxproj"
-
-    log_success "Xcode project updated with bundle ID: $bundle_id"
+# Display welcome banner
+show_banner() {
+    echo ""
+    echo -e "${BOLD}+---------------------------------------------------------------+${NC}"
+    echo -e "${BOLD}|                                                               |${NC}"
+    echo -e "${BOLD}|              ${CYAN}PWAKit - Interactive Setup Wizard${NC}${BOLD}              |${NC}"
+    echo -e "${BOLD}|                                                               |${NC}"
+    echo -e "${BOLD}|   This wizard will help you configure your PWA wrapper app.   |${NC}"
+    echo -e "${BOLD}|                                                               |${NC}"
+    echo -e "${BOLD}+---------------------------------------------------------------+${NC}"
+    echo ""
 }
 
-# Update Info.plist with WKAppBoundDomains
-update_info_plist() {
-    local allowed_origins="$1"
-    local auth_origins="$2"
-    local info_plist="$PROJECT_ROOT/src/PWAKit/Info.plist"
+# Prompt for input with default value
+prompt_input() {
+    local prompt="$1"
+    local default="$2"
+    local result
 
-    if [[ ! -f "$info_plist" ]]; then
-        log_warn "Info.plist not found, skipping update"
-        return
-    fi
-
-    # Use Python to update plist (available on macOS)
-    python3 << PYTHON_SCRIPT
-import plistlib
-
-info_plist = "$info_plist"
-allowed = "$allowed_origins"
-auth = "$auth_origins"
-
-# Parse domains from comma-separated lists
-domains = set()
-for origins in [allowed, auth]:
-    for domain in origins.split(','):
-        domain = domain.strip()
-        if domain:
-            domains.add(domain)
-
-# Read existing plist
-with open(info_plist, 'rb') as f:
-    plist = plistlib.load(f)
-
-# Update WKAppBoundDomains
-plist['WKAppBoundDomains'] = sorted(list(domains))
-
-# Write updated plist
-with open(info_plist, 'wb') as f:
-    plistlib.dump(plist, f)
-
-print(f"Updated WKAppBoundDomains with {len(domains)} domain(s)")
-PYTHON_SCRIPT
-
-    if [[ $? -eq 0 ]]; then
-        log_success "Info.plist updated with WKAppBoundDomains"
+    if [[ -n "$default" ]]; then
+        echo -en "${BOLD}$prompt${NC} [${CYAN}$default${NC}]: " >&2
     else
-        log_error "Failed to update Info.plist"
+        echo -en "${BOLD}$prompt${NC}: " >&2
     fi
+
+    read -r result
+
+    if [[ -z "$result" && -n "$default" ]]; then
+        result="$default"
+    fi
+
+    echo "$result"
 }
+
+# Prompt for yes/no confirmation
+prompt_confirm() {
+    local prompt="$1"
+    local default="$2"
+    local result
+
+    local hint="y/n"
+    if [[ "$default" == "y" ]]; then
+        hint="Y/n"
+    elif [[ "$default" == "n" ]]; then
+        hint="y/N"
+    fi
+
+    echo -en "${BOLD}$prompt${NC} [$hint]: " >&2
+    read -r result
+
+    if [[ -z "$result" ]]; then
+        result="$default"
+    fi
+
+    case "$result" in
+        [Yy]|[Yy][Ee][Ss])
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+# Run the interactive wizard to populate global variables
+run_interactive() {
+    show_banner
+
+    # Verify we're in the right directory
+    if [[ ! -d "$PROJECT_ROOT/PWAKitApp.xcodeproj" ]]; then
+        log_error "PWAKitApp.xcodeproj not found. Run this script from the project root."
+        exit 1
+    fi
+
+    # Check if config already exists
+    if [[ -f "$OUTPUT_FILE" ]] && [[ "$FORCE" != "true" ]]; then
+        log_warn "Configuration file already exists at:"
+        echo "  $OUTPUT_FILE"
+        echo ""
+        if ! prompt_confirm "Do you want to overwrite it?" "n"; then
+            log_info "Setup cancelled. Existing configuration preserved."
+            exit 0
+        fi
+        echo ""
+        FORCE="true"
+    fi
+
+    echo -e "${BLUE}==>${NC} Let's configure your PWA wrapper app"
+    echo ""
+
+    # Step 1: Start URL
+    echo -e "${BOLD}Step 1 of 5: Start URL${NC}"
+    echo -e "${CYAN}info:${NC} The HTTPS URL of your PWA (must use HTTPS for security)."
+    while [[ -z "$START_URL" ]]; do
+        START_URL=$(prompt_input "Enter start URL" "")
+        if [[ -z "$START_URL" ]]; then
+            log_error "Start URL cannot be empty"
+            START_URL=""
+            continue
+        fi
+        if ! validate_url "$START_URL"; then
+            log_error "Invalid URL. Must be a valid HTTPS URL (e.g., https://app.example.com)"
+            START_URL=""
+        fi
+    done
+    log_success "Start URL: $START_URL"
+
+    # Extract domain
+    local domain
+    domain=$(extract_domain "$START_URL")
+    log_info "Detected domain: $domain"
+    echo ""
+
+    # Fetch manifest early so we can pre-fill name
+    log_info "Checking for web manifest..."
+    fetch_manifest "$START_URL" || true
+    extract_manifest_values
+
+    # Step 2: App Name (pre-filled from manifest)
+    echo -e "${BOLD}Step 2 of 5: App Name${NC}"
+    echo -e "${CYAN}info:${NC} This is the display name of your app (shown on home screen)."
+    local default_name="$MANIFEST_NAME"
+    while [[ -z "$APP_NAME" ]]; do
+        APP_NAME=$(prompt_input "Enter app name" "$default_name")
+        if [[ -z "$APP_NAME" ]]; then
+            log_error "App name cannot be empty"
+        fi
+    done
+    log_success "App name: $APP_NAME"
+    echo ""
+
+    # Step 3: Bundle ID (pre-filled from reversed domain)
+    echo -e "${BOLD}Step 3 of 5: Bundle ID${NC}"
+    echo -e "${CYAN}info:${NC} Unique identifier for your app in reverse domain format."
+    local suggested_bundle_id
+    suggested_bundle_id=$(reverse_domain "$domain")
+    while [[ -z "$BUNDLE_ID" ]]; do
+        BUNDLE_ID=$(prompt_input "Enter bundle ID" "$suggested_bundle_id")
+        if [[ -z "$BUNDLE_ID" ]]; then
+            log_error "Bundle ID cannot be empty"
+            BUNDLE_ID=""
+            continue
+        fi
+        if ! validate_bundle_id "$BUNDLE_ID"; then
+            log_error "Invalid bundle ID format. Use reverse domain format (e.g., com.example.myapp)"
+            BUNDLE_ID=""
+        fi
+    done
+    log_success "Bundle ID: $BUNDLE_ID"
+    echo ""
+
+    # Step 4: Allowed Origins
+    echo -e "${BOLD}Step 4 of 5: Allowed Origins${NC}"
+    echo -e "${CYAN}info:${NC} Domains your app can navigate to (comma-separated for multiple)."
+    echo -e "${CYAN}info:${NC} The domain from your start URL ($domain) will always be included."
+
+    ALLOWED_ORIGINS=$(prompt_input "Additional allowed domains (optional)" "")
+    log_success "Allowed origins configured"
+    echo ""
+
+    # Step 5: Features
+    echo -e "${BOLD}Step 5 of 5: Features${NC}"
+    echo -e "${CYAN}info:${NC} Enable native capabilities your PWA can access via the JavaScript bridge."
+    echo ""
+    echo "  1) notifications   - Push notifications (APNS)"
+    echo "  2) haptics         - Haptic feedback"
+    echo "  3) biometrics      - Face ID / Touch ID"
+    echo "  4) secureStorage   - Keychain storage"
+    echo "  5) healthkit       - HealthKit data"
+    echo "  6) iap             - In-App Purchases"
+    echo "  7) share           - Native share sheet"
+    echo "  8) print           - Print support"
+    echo "  9) clipboard       - Clipboard access"
+    echo ""
+    echo -e "${CYAN}info:${NC} Enter comma-separated numbers, 'all', or 'none' (default: none)"
+
+    local feature_input
+    feature_input=$(prompt_input "Enable features" "none")
+
+    local all_features=("notifications" "haptics" "biometrics" "secureStorage" "healthkit" "iap" "share" "print" "clipboard")
+
+    if [[ "$feature_input" == "all" ]]; then
+        FEATURES=$(IFS=','; echo "${all_features[*]}")
+    elif [[ "$feature_input" == "none" || -z "$feature_input" ]]; then
+        FEATURES=""
+    else
+        # Parse comma-separated numbers
+        local selected_features=""
+        IFS=',' read -ra nums <<< "$feature_input"
+        for num in "${nums[@]}"; do
+            num=$(echo "$num" | xargs)
+            if [[ "$num" =~ ^[1-9]$ ]] && [[ "$num" -le ${#all_features[@]} ]]; then
+                local idx=$((num - 1))
+                if [[ -n "$selected_features" ]]; then
+                    selected_features="$selected_features,"
+                fi
+                selected_features="$selected_features${all_features[$idx]}"
+            else
+                log_warn "Ignoring invalid feature number: $num"
+            fi
+        done
+        FEATURES="$selected_features"
+    fi
+
+    if [[ -n "$FEATURES" ]]; then
+        log_success "Features: $FEATURES"
+    else
+        log_success "Features: none"
+    fi
+    echo ""
+
+    # Use manifest defaults for appearance if available
+    [[ -z "$BG_COLOR" ]] && BG_COLOR="${MANIFEST_BG_COLOR:-#FFFFFF}"
+    [[ -z "$THEME_COLOR" ]] && THEME_COLOR="${MANIFEST_THEME_COLOR:-#007AFF}"
+    [[ -z "$ORIENTATION" ]] && ORIENTATION="${MANIFEST_ORIENTATION:-any}"
+    [[ -z "$DISPLAY_MODE" ]] && DISPLAY_MODE="${MANIFEST_DISPLAY:-standalone}"
+
+    # Summary
+    echo ""
+    echo -e "${BOLD}Configuration Summary${NC}"
+    echo "---------------------"
+    echo -e "  App Name:       ${CYAN}$APP_NAME${NC}"
+    echo -e "  Start URL:      ${CYAN}$START_URL${NC}"
+    echo -e "  Bundle ID:      ${CYAN}$BUNDLE_ID${NC}"
+    echo -e "  Background:     ${CYAN}$BG_COLOR${NC}"
+    echo -e "  Theme color:    ${CYAN}$THEME_COLOR${NC}"
+    echo -e "  Orientation:    ${CYAN}$ORIENTATION${NC}"
+    echo -e "  Display mode:   ${CYAN}$DISPLAY_MODE${NC}"
+    echo -e "  Features:       ${CYAN}${FEATURES:-none}${NC}"
+    echo ""
+
+    if ! prompt_confirm "Generate configuration with these settings?" "y"; then
+        log_info "Setup cancelled."
+        exit 0
+    fi
+
+    echo ""
+}
+
+# ─── Manifest fetching ────────────────────────────────────────────────────────
 
 # Try to fetch a manifest URL and validate it as JSON
 # Returns 0 and sets MANIFEST_CONTENT on success
@@ -455,17 +634,15 @@ except:
     [[ -n "$MANIFEST_DISPLAY" ]] && log_info "Manifest display: $MANIFEST_DISPLAY"
 }
 
-# Download and install app icon from web manifest
+# ─── Icon download ────────────────────────────────────────────────────────────
+
+# Download app icon from web manifest to AppIcon-source.png
 # Requires fetch_manifest to have been called first
 download_app_icon() {
     if [[ -z "$MANIFEST_CONTENT" ]]; then
         log_warn "No manifest available, skipping icon download"
         return
     fi
-
-    local assets_dir="$PROJECT_ROOT/src/PWAKit/Resources/Assets.xcassets"
-    local appicon_dir="$assets_dir/AppIcon.appiconset"
-    local launchicon_dir="$assets_dir/LaunchIcon.imageset"
 
     # Extract best icon URL using Python
     local icon_url
@@ -536,53 +713,42 @@ except:
         return
     fi
 
-    # Copy to AppIcon (needs to be 1024x1024 for App Store)
-    log_info "Installing app icon..."
-
-    # Resize to 1024x1024 for AppIcon using sips (macOS built-in)
-    sips -z 1024 1024 "$temp_icon" --out "$appicon_dir/AppIcon.png" >/dev/null 2>&1
-
-    if [[ -f "$appicon_dir/AppIcon.png" ]]; then
-        log_success "App icon installed"
-    else
-        log_warn "Failed to install app icon"
-    fi
-
-    # Create LaunchIcon versions (centered, smaller)
-    log_info "Creating launch screen icons..."
-
-    # LaunchIcon should be smaller (centered on launch screen)
-    sips -z 100 100 "$temp_icon" --out "$launchicon_dir/LaunchIcon.png" >/dev/null 2>&1
-    sips -z 200 200 "$temp_icon" --out "$launchicon_dir/LaunchIcon@2x.png" >/dev/null 2>&1
-    sips -z 300 300 "$temp_icon" --out "$launchicon_dir/LaunchIcon@3x.png" >/dev/null 2>&1
-
-    if [[ -f "$launchicon_dir/LaunchIcon@2x.png" ]]; then
-        log_success "Launch icons installed"
-    fi
-
-    # Cleanup
+    # Save as the source icon
+    cp "$temp_icon" "$ICON_SOURCE"
     rm -f "$temp_icon"
+
+    if [[ -f "$ICON_SOURCE" ]]; then
+        log_success "Source icon saved to: $ICON_SOURCE"
+    else
+        log_warn "Failed to save source icon"
+    fi
 }
+
+# ─── Argument parsing ─────────────────────────────────────────────────────────
 
 # Parse command line arguments
 parse_args() {
-    # Set defaults from environment variables
-    APP_NAME="${PWAKIT_APP_NAME:-}"
-    START_URL="${PWAKIT_START_URL:-}"
-    BUNDLE_ID="${PWAKIT_BUNDLE_ID:-}"
-    ALLOWED_ORIGINS="${PWAKIT_ALLOWED:-}"
-    AUTH_ORIGINS="${PWAKIT_AUTH_ORIGINS:-}"
-    BG_COLOR="${PWAKIT_BG_COLOR:-}"
-    THEME_COLOR="${PWAKIT_THEME_COLOR:-}"
-    ORIENTATION="${PWAKIT_ORIENTATION:-}"
-    DISPLAY_MODE="${PWAKIT_DISPLAY_MODE:-}"
-    FEATURES="${PWAKIT_FEATURES:-}"
+    APP_NAME=""
+    START_URL=""
+    BUNDLE_ID=""
+    ALLOWED_ORIGINS=""
+    AUTH_ORIGINS=""
+    BG_COLOR=""
+    THEME_COLOR=""
+    ORIENTATION=""
+    DISPLAY_MODE=""
+    FEATURES=""
     OUTPUT_FILE="$DEFAULT_OUTPUT"
     FORCE="false"
     QUIET="false"
+    INTERACTIVE="false"
 
     while [[ $# -gt 0 ]]; do
         case "$1" in
+            --interactive|-i)
+                INTERACTIVE="true"
+                shift
+                ;;
             --name|-n)
                 APP_NAME="$2"
                 shift 2
@@ -646,9 +812,14 @@ parse_args() {
                 ;;
         esac
     done
+
+    # Auto-detect interactive mode: no --url provided and stdin is a TTY
+    if [[ "$INTERACTIVE" != "true" && -z "$START_URL" && -t 0 ]]; then
+        INTERACTIVE="true"
+    fi
 }
 
-# Validate all required inputs
+# Validate all required inputs (non-interactive mode)
 validate_inputs() {
     local has_error="false"
 
@@ -699,6 +870,8 @@ validate_inputs() {
         exit 1
     fi
 }
+
+# ─── Config generation ────────────────────────────────────────────────────────
 
 # Check if a feature is enabled
 # Uses the FEATURES variable (comma-separated list of enabled features)
@@ -788,49 +961,55 @@ validate_json() {
     return 1
 }
 
-# Main function
+# ─── Main ─────────────────────────────────────────────────────────────────────
+
 main() {
     parse_args "$@"
     setup_colors
 
-    # Validate inputs before proceeding
-    validate_inputs
+    if [[ "$INTERACTIVE" == "true" ]]; then
+        # Interactive mode: wizard populates all variables
+        run_interactive
+    else
+        # Non-interactive mode: validate CLI inputs
+        validate_inputs
 
-    # Check for existing config
-    if [[ -f "$OUTPUT_FILE" ]] && [[ "$FORCE" != "true" ]]; then
-        log_error "Configuration file already exists: $OUTPUT_FILE"
-        log_error "Use --force to overwrite"
-        exit 1
-    fi
+        # Check for existing config
+        if [[ -f "$OUTPUT_FILE" ]] && [[ "$FORCE" != "true" ]]; then
+            log_error "Configuration file already exists: $OUTPUT_FILE"
+            log_error "Use --force to overwrite"
+            exit 1
+        fi
 
-    # Fetch web manifest and extract values (icon, name, colors, orientation)
-    fetch_manifest "$START_URL" || true
-    extract_manifest_values
+        # Fetch web manifest and extract values (icon, name, colors, orientation)
+        fetch_manifest "$START_URL" || true
+        extract_manifest_values
 
-    # Fill in blanks from manifest, then hardcoded defaults
-    # Priority: CLI/env > manifest > auto-generated/default
-    [[ -z "$APP_NAME" ]] && APP_NAME="$MANIFEST_NAME"
-    [[ -z "$BG_COLOR" ]] && BG_COLOR="${MANIFEST_BG_COLOR:-#FFFFFF}"
-    [[ -z "$THEME_COLOR" ]] && THEME_COLOR="${MANIFEST_THEME_COLOR:-#007AFF}"
-    [[ -z "$ORIENTATION" ]] && ORIENTATION="${MANIFEST_ORIENTATION:-any}"
-    [[ -z "$DISPLAY_MODE" ]] && DISPLAY_MODE="${MANIFEST_DISPLAY:-standalone}"
-    # Features default to none — opt-in to what you need
-    [[ -z "$FEATURES" ]] && FEATURES=""
+        # Fill in blanks from manifest, then hardcoded defaults
+        # Priority: CLI/env > manifest > auto-generated/default
+        [[ -z "$APP_NAME" ]] && APP_NAME="$MANIFEST_NAME"
+        [[ -z "$BG_COLOR" ]] && BG_COLOR="${MANIFEST_BG_COLOR:-#FFFFFF}"
+        [[ -z "$THEME_COLOR" ]] && THEME_COLOR="${MANIFEST_THEME_COLOR:-#007AFF}"
+        [[ -z "$ORIENTATION" ]] && ORIENTATION="${MANIFEST_ORIENTATION:-any}"
+        [[ -z "$DISPLAY_MODE" ]] && DISPLAY_MODE="${MANIFEST_DISPLAY:-standalone}"
+        # Features default to none -- opt-in to what you need
+        [[ -z "$FEATURES" ]] && FEATURES=""
 
-    # Auto-generate bundle ID from reversed domain if not provided
-    if [[ -z "$BUNDLE_ID" ]]; then
-        local domain
-        domain=$(extract_domain "$START_URL")
-        BUNDLE_ID=$(reverse_domain "$domain")
-        log_info "Bundle ID from URL: $BUNDLE_ID"
-    fi
+        # Auto-generate bundle ID from reversed domain if not provided
+        if [[ -z "$BUNDLE_ID" ]]; then
+            local domain
+            domain=$(extract_domain "$START_URL")
+            BUNDLE_ID=$(reverse_domain "$domain")
+            log_info "Bundle ID from URL: $BUNDLE_ID"
+        fi
 
-    # Validate app name (may have come from manifest)
-    if [[ -z "$APP_NAME" ]]; then
-        log_error "App name is required (--name, PWAKIT_APP_NAME, or manifest name)"
-        echo "" >&2
-        echo "Use --help for usage information" >&2
-        exit 1
+        # Validate app name (may have come from manifest)
+        if [[ -z "$APP_NAME" ]]; then
+            log_error "App name is required (--name, PWAKIT_APP_NAME, or manifest name)"
+            echo "" >&2
+            echo "Use --help for usage information" >&2
+            exit 1
+        fi
     fi
 
     # Log what we're doing
@@ -842,7 +1021,7 @@ main() {
     log_info "  Theme color:   $THEME_COLOR"
     log_info "  Orientation:   $ORIENTATION"
     log_info "  Display mode:  $DISPLAY_MODE"
-    log_info "  Features:      $FEATURES"
+    log_info "  Features:      ${FEATURES:-none}"
 
     # Generate configuration
     generate_config
@@ -856,26 +1035,38 @@ main() {
 
     log_success "Configuration saved to: $OUTPUT_FILE"
 
-    # Update Xcode project settings
-    log_info "Updating Xcode project..."
-    update_xcode_project "$BUNDLE_ID" "$APP_NAME"
-
-    # Update Info.plist with WKAppBoundDomains
-    local domain
-    domain=$(extract_domain "$START_URL")
-    local all_origins="$domain"
-    if [[ -n "$ALLOWED_ORIGINS" ]]; then
-        all_origins="$all_origins,$ALLOWED_ORIGINS"
-    fi
-    log_info "Updating Info.plist..."
-    update_info_plist "$all_origins" "$AUTH_ORIGINS"
-
-    # Download app icon from web manifest
+    # Download app icon from web manifest -> AppIcon-source.png
     download_app_icon
 
-    # Sync appearance colors to asset catalog
-    log_info "Syncing appearance colors..."
+    # Sync everything to Xcode project (pbxproj, Info.plist, colors, icons)
+    log_info "Syncing to Xcode project..."
     "$SCRIPT_DIR/sync-config.sh"
+
+    # Next steps (interactive mode only)
+    if [[ "$INTERACTIVE" == "true" ]]; then
+        echo ""
+        echo -e "${BOLD}Next Steps${NC}"
+        echo "----------"
+        echo ""
+        echo "  1. Review and customize your configuration:"
+        echo -e "     ${CYAN}cat $OUTPUT_FILE${NC}"
+        echo ""
+        echo "  2. Add authentication domains if needed:"
+        echo "     Edit the 'origins.auth' array in pwa-config.json"
+        echo "     (e.g., accounts.google.com, auth0.com)"
+        echo "     Then run: ${CYAN}./scripts/sync-config.sh${NC}"
+        echo ""
+        echo "  3. Open in Xcode and run:"
+        echo -e "     ${CYAN}open PWAKitApp.xcodeproj${NC}"
+        echo "     Select your simulator or device, then press Cmd+R"
+        echo ""
+        echo "  4. For device deployment:"
+        echo "     - Set your Development Team in Xcode"
+        echo "     - Signing & Capabilities tab"
+        echo ""
+        log_success "Setup complete!"
+        echo ""
+    fi
 }
 
 # Run main function

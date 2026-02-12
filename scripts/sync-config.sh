@@ -1,18 +1,23 @@
 #!/bin/bash
 #
 # sync-config.sh
-# Syncs pwa-config.json values to Info.plist
+# Syncs pwa-config.json + AppIcon-source.png to the Xcode project
 #
-# This script reads the origins from pwa-config.json and updates
-# WKAppBoundDomains in Info.plist to match. It also syncs appearance
-# colors to the Xcode asset catalog colorsets and orientation lock
-# to UISupportedInterfaceOrientations:
+# This script derives all Xcode project state from two sources of truth:
+#   1. pwa-config.json → pbxproj, Info.plist, colorsets
+#   2. AppIcon-source.png → AppIcon + LaunchIcon variants
+#
+# What it syncs:
+#   - app.bundleId → PRODUCT_BUNDLE_IDENTIFIER in project.pbxproj (4x)
+#   - app.name → INFOPLIST_KEY_CFBundleDisplayName in project.pbxproj
+#   - origins.allowed + origins.auth → WKAppBoundDomains in Info.plist
+#   - appearance.orientationLock → UISupportedInterfaceOrientations in Info.plist
 #   - appearance.backgroundColor → LaunchBackground.colorset
 #   - appearance.themeColor → AccentColor.colorset
-#   - appearance.orientationLock → UISupportedInterfaceOrientations
+#   - AppIcon-source.png → AppIcon (1024x1024) + LaunchIcon (1x/2x/3x)
 #
 # Usage:
-#   ./scripts/sync-config.sh              # Sync config to Info.plist
+#   ./scripts/sync-config.sh              # Sync everything
 #   ./scripts/sync-config.sh --validate   # Validate without modifying
 #   ./scripts/sync-config.sh --dry-run    # Show what would change
 #
@@ -24,6 +29,9 @@ PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 CONFIG_FILE="$PROJECT_ROOT/src/PWAKit/Resources/pwa-config.json"
 INFO_PLIST="$PROJECT_ROOT/src/PWAKit/Info.plist"
+PBXPROJ="$PROJECT_ROOT/PWAKitApp.xcodeproj/project.pbxproj"
+ICON_SOURCE="$PROJECT_ROOT/src/PWAKit/Resources/AppIcon-source.png"
+ASSETS_DIR="$PROJECT_ROOT/src/PWAKit/Resources/Assets.xcassets"
 
 # Colors
 RED='\033[0;31m'
@@ -56,7 +64,7 @@ usage() {
     cat <<EOF
 Usage: $(basename "$0") [OPTIONS]
 
-Sync pwa-config.json values to Info.plist.
+Sync pwa-config.json + AppIcon-source.png to the Xcode project.
 
 Options:
     -v, --validate      Validate configuration without modifying files
@@ -64,10 +72,13 @@ Options:
     -h, --help          Show this help message
 
 The script syncs:
-    - origins.allowed + origins.auth → WKAppBoundDomains
+    - app.bundleId → PRODUCT_BUNDLE_IDENTIFIER in project.pbxproj
+    - app.name → INFOPLIST_KEY_CFBundleDisplayName in project.pbxproj
+    - origins.allowed + origins.auth → WKAppBoundDomains in Info.plist
+    - appearance.orientationLock → UISupportedInterfaceOrientations in Info.plist
     - appearance.backgroundColor → LaunchBackground.colorset
     - appearance.themeColor → AccentColor.colorset
-    - appearance.orientationLock → UISupportedInterfaceOrientations
+    - AppIcon-source.png → AppIcon + LaunchIcon variants
     - Validates privacy descriptions for enabled features
 EOF
     exit 0
@@ -106,7 +117,7 @@ if [[ ! -f "$INFO_PLIST" ]]; then
 fi
 
 # Export for Python
-export PROJECT_ROOT CONFIG_FILE INFO_PLIST
+export PROJECT_ROOT CONFIG_FILE INFO_PLIST PBXPROJ ASSETS_DIR ICON_SOURCE
 if [[ "$VALIDATE_ONLY" == "true" ]]; then
     export VALIDATE_ONLY="true"
 else
@@ -118,17 +129,22 @@ else
     export DRY_RUN="false"
 fi
 
-# Use Python for JSON/plist manipulation (available on macOS)
+# Use Python for JSON/plist/pbxproj manipulation (available on macOS)
 python3 << 'PYTHON_SCRIPT'
 import json
 import plistlib
+import re
 import sys
 import os
+import subprocess
 
 # Get paths from environment
 project_root = os.environ.get('PROJECT_ROOT', '.')
 config_file = os.environ.get('CONFIG_FILE', '')
 info_plist = os.environ.get('INFO_PLIST', '')
+pbxproj = os.environ.get('PBXPROJ', '')
+assets_dir = os.environ.get('ASSETS_DIR', '')
+icon_source = os.environ.get('ICON_SOURCE', '')
 validate_only = os.environ.get('VALIDATE_ONLY', 'false') == 'true'
 dry_run = os.environ.get('DRY_RUN', 'false') == 'true'
 
@@ -164,6 +180,80 @@ print_step("Reading Info.plist...")
 with open(info_plist, 'rb') as f:
     plist = plistlib.load(f)
 
+plist_modified = False
+
+# ─── pbxproj sync (bundle ID + display name) ────────────────────────────────
+
+print_step("Syncing project.pbxproj...")
+
+app_config = config.get('app', {})
+target_bundle_id = app_config.get('bundleId', '')
+target_app_name = app_config.get('name', '')
+
+pbxproj_modified = False
+
+if os.path.isfile(pbxproj) and target_bundle_id:
+    with open(pbxproj, 'r') as f:
+        pbx_content = f.read()
+
+    # Find current bundle IDs
+    current_ids = re.findall(r'PRODUCT_BUNDLE_IDENTIFIER = ([^;]+);', pbx_content)
+    unique_current_ids = set(current_ids)
+
+    if unique_current_ids == {target_bundle_id}:
+        print_success(f"PRODUCT_BUNDLE_IDENTIFIER is already in sync ({target_bundle_id})")
+    elif dry_run:
+        print_warning(f"Would update PRODUCT_BUNDLE_IDENTIFIER: {unique_current_ids} → {target_bundle_id} ({len(current_ids)} occurrences)")
+    elif validate_only:
+        print_error(f"PRODUCT_BUNDLE_IDENTIFIER mismatch!")
+        print(f"   Expected: {target_bundle_id}")
+        print(f"   Actual: {unique_current_ids}")
+        errors.append("PRODUCT_BUNDLE_IDENTIFIER not in sync with pwa-config.json")
+    else:
+        pbx_content = re.sub(
+            r'PRODUCT_BUNDLE_IDENTIFIER = [^;]+;',
+            f'PRODUCT_BUNDLE_IDENTIFIER = {target_bundle_id};',
+            pbx_content
+        )
+        pbxproj_modified = True
+        print_success(f"Updated PRODUCT_BUNDLE_IDENTIFIER: {target_bundle_id} ({len(current_ids)} occurrences)")
+
+    # Sync display name
+    if target_app_name:
+        current_names = re.findall(r'INFOPLIST_KEY_CFBundleDisplayName = "([^"]+)"', pbx_content)
+        unique_current_names = set(current_names)
+
+        if not current_names:
+            print_warning(f"INFOPLIST_KEY_CFBundleDisplayName not found in pbxproj, skipping")
+        elif unique_current_names == {target_app_name}:
+            print_success(f"CFBundleDisplayName is already in sync ({target_app_name})")
+        elif dry_run:
+            print_warning(f"Would update CFBundleDisplayName: {unique_current_names} → {target_app_name}")
+        elif validate_only:
+            print_error(f"CFBundleDisplayName mismatch!")
+            print(f"   Expected: {target_app_name}")
+            print(f"   Actual: {unique_current_names}")
+            errors.append("CFBundleDisplayName not in sync with pwa-config.json")
+        else:
+            pbx_content = re.sub(
+                r'INFOPLIST_KEY_CFBundleDisplayName = "[^"]+"',
+                f'INFOPLIST_KEY_CFBundleDisplayName = "{target_app_name}"',
+                pbx_content
+            )
+            pbxproj_modified = True
+            print_success(f"Updated CFBundleDisplayName: {target_app_name}")
+
+    if pbxproj_modified:
+        with open(pbxproj, 'w') as f:
+            f.write(pbx_content)
+        print_success("project.pbxproj written")
+elif not os.path.isfile(pbxproj):
+    print_warning("project.pbxproj not found, skipping")
+
+# ─── WKAppBoundDomains sync ─────────────────────────────────────────────────
+
+print_step("Syncing WKAppBoundDomains...")
+
 # Extract origins
 allowed_origins = config.get('origins', {}).get('allowed', [])
 auth_origins = config.get('origins', {}).get('auth', [])
@@ -192,9 +282,11 @@ else:
         errors.append("WKAppBoundDomains not in sync with pwa-config.json")
     else:
         plist['WKAppBoundDomains'] = all_origins
+        plist_modified = True
         print_success(f"Updated WKAppBoundDomains: {all_origins}")
 
-# Validate privacy descriptions for enabled features
+# ─── Privacy descriptions validation ────────────────────────────────────────
+
 print_step("Validating privacy descriptions...")
 
 features = config.get('features', {})
@@ -230,9 +322,8 @@ if features.get('notifications', False):
     else:
         print_success("UIBackgroundModes includes remote-notification")
 
-plist_modified = not domains_match and not dry_run and not validate_only
+# ─── Color sync ──────────────────────────────────────────────────────────────
 
-# --- Color sync ---
 def hex_to_rgb(hex_color):
     """Convert hex color string to RGB float components (0.0-1.0)."""
     hex_color = hex_color.lstrip('#')
@@ -313,7 +404,6 @@ def sync_color(hex_value, colorset_path, label):
         print_success(f"Updated {label}: {hex_value}")
         return True
 
-assets_dir = os.path.join(project_root, 'src', 'PWAKit', 'Resources', 'Assets.xcassets')
 appearance = config.get('appearance', {})
 
 bg_color = appearance.get('backgroundColor')
@@ -330,7 +420,8 @@ if theme_color:
     accent_path = os.path.join(assets_dir, 'AccentColor.colorset', 'Contents.json')
     sync_color(theme_color, accent_path, 'AccentColor.colorset')
 
-# --- Orientation sync ---
+# ─── Orientation sync ────────────────────────────────────────────────────────
+
 print_step("Syncing orientation lock...")
 
 orientation_lock = appearance.get('orientationLock', 'any')
@@ -377,7 +468,60 @@ if plist_modified:
         plistlib.dump(plist, f)
     print_success("Info.plist updated successfully")
 
-# Summary
+# ─── Icon sync ───────────────────────────────────────────────────────────────
+
+print_step("Syncing app icons...")
+
+if os.path.isfile(icon_source):
+    appicon_dir = os.path.join(assets_dir, 'AppIcon.appiconset')
+    launchicon_dir = os.path.join(assets_dir, 'LaunchIcon.imageset')
+
+    icon_targets = [
+        (1024, 1024, os.path.join(appicon_dir, 'AppIcon.png')),
+        (100, 100, os.path.join(launchicon_dir, 'LaunchIcon.png')),
+        (200, 200, os.path.join(launchicon_dir, 'LaunchIcon@2x.png')),
+        (300, 300, os.path.join(launchicon_dir, 'LaunchIcon@3x.png')),
+    ]
+
+    # Check if source is newer than all targets (skip if all up-to-date)
+    source_mtime = os.path.getmtime(icon_source)
+    all_up_to_date = all(
+        os.path.isfile(path) and os.path.getmtime(path) >= source_mtime
+        for _, _, path in icon_targets
+    )
+
+    if all_up_to_date:
+        print_success("App icons are already up to date")
+    elif dry_run:
+        for w, h, path in icon_targets:
+            basename = os.path.basename(path)
+            print_warning(f"Would resize icon to {w}x{h} → {basename}")
+    elif validate_only:
+        outdated = [
+            os.path.basename(path) for _, _, path in icon_targets
+            if not os.path.isfile(path) or os.path.getmtime(path) < source_mtime
+        ]
+        if outdated:
+            print_error(f"Icon variants out of date: {', '.join(outdated)}")
+            errors.append("App icon variants not in sync with AppIcon-source.png")
+    else:
+        for w, h, path in icon_targets:
+            basename = os.path.basename(path)
+            result = subprocess.run(
+                ['sips', '-z', str(h), str(w), icon_source, '--out', path],
+                capture_output=True, text=True
+            )
+            if result.returncode == 0:
+                print_success(f"Resized icon to {w}x{h} → {basename}")
+            else:
+                print_error(f"Failed to resize icon to {w}x{h}: {result.stderr.strip()}")
+                errors.append(f"Failed to create {basename}")
+else:
+    print_warning("AppIcon-source.png not found, skipping icon sync")
+    print(f"   Place a source icon at: {icon_source}")
+
+# ─── Summary ─────────────────────────────────────────────────────────────────
+
 print()
 if errors:
     print_error(f"Validation failed with {len(errors)} error(s)")
