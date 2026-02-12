@@ -83,11 +83,11 @@ struct ContentView: View {
     private var statusBarColorScheme: ColorScheme? {
         switch appState.configuration?.appearance.statusBarStyle ?? .default {
         case .default:
-            return nil
+            nil
         case .lightContent:
-            return .dark
+            .dark
         case .darkContent:
-            return .light
+            .light
         }
     }
 

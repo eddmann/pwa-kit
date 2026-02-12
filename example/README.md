@@ -30,7 +30,16 @@ A comprehensive demonstration app showcasing **every PWAKit capability**. This "
 
 2. Configure PWAKit to use the example:
    ```bash
-   ./scripts/configure.sh --name "PWAKit Example" --url "https://localhost:8443" --bundle-id "com.example.pwakit"
+   # Local development (against localhost server)
+   ./scripts/configure.sh --force \
+     --url "https://localhost:8443" \
+     --name "PWAKit" \
+     --features "notifications,haptics,biometrics,secureStorage,healthkit,iap,share,print,clipboard"
+
+   # Or against the deployed Cloudflare Workers version
+   ./scripts/configure.sh --force \
+     --url "https://pwakit-example.eddmann.workers.dev" \
+     --features "notifications,haptics,biometrics,secureStorage,healthkit,iap,share,print,clipboard"
    ```
 
 3. Build and run in Xcode (`Cmd+R`)

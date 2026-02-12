@@ -5,9 +5,11 @@
 #
 # This script reads the origins from pwa-config.json and updates
 # WKAppBoundDomains in Info.plist to match. It also syncs appearance
-# colors to the Xcode asset catalog colorsets:
+# colors to the Xcode asset catalog colorsets and orientation lock
+# to UISupportedInterfaceOrientations:
 #   - appearance.backgroundColor → LaunchBackground.colorset
 #   - appearance.themeColor → AccentColor.colorset
+#   - appearance.orientationLock → UISupportedInterfaceOrientations
 #
 # Usage:
 #   ./scripts/sync-config.sh              # Sync config to Info.plist
@@ -65,6 +67,7 @@ The script syncs:
     - origins.allowed + origins.auth → WKAppBoundDomains
     - appearance.backgroundColor → LaunchBackground.colorset
     - appearance.themeColor → AccentColor.colorset
+    - appearance.orientationLock → UISupportedInterfaceOrientations
     - Validates privacy descriptions for enabled features
 EOF
     exit 0
@@ -227,12 +230,7 @@ if features.get('notifications', False):
     else:
         print_success("UIBackgroundModes includes remote-notification")
 
-# Write updated plist if changes were made
-if not domains_match and not dry_run and not validate_only:
-    print_step("Writing updated Info.plist...")
-    with open(info_plist, 'wb') as f:
-        plistlib.dump(plist, f)
-    print_success("Info.plist updated successfully")
+plist_modified = not domains_match and not dry_run and not validate_only
 
 # --- Color sync ---
 def hex_to_rgb(hex_color):
@@ -331,6 +329,53 @@ if bg_color:
 if theme_color:
     accent_path = os.path.join(assets_dir, 'AccentColor.colorset', 'Contents.json')
     sync_color(theme_color, accent_path, 'AccentColor.colorset')
+
+# --- Orientation sync ---
+print_step("Syncing orientation lock...")
+
+orientation_lock = appearance.get('orientationLock', 'any')
+
+orientation_map = {
+    'portrait': ['UIInterfaceOrientationPortrait'],
+    'landscape': ['UIInterfaceOrientationLandscapeLeft', 'UIInterfaceOrientationLandscapeRight'],
+    'any': ['UIInterfaceOrientationPortrait', 'UIInterfaceOrientationLandscapeLeft', 'UIInterfaceOrientationLandscapeRight'],
+}
+
+if orientation_lock not in orientation_map:
+    print_error(f"Unknown orientationLock value: {orientation_lock}")
+    errors.append(f"Invalid orientationLock: {orientation_lock}")
+else:
+    target_orientations = orientation_map[orientation_lock]
+    current_orientations = plist.get('UISupportedInterfaceOrientations', [])
+    current_ipad = plist.get('UISupportedInterfaceOrientations~ipad', [])
+
+    orientations_match = (
+        set(current_orientations) == set(target_orientations)
+        and set(current_ipad) == set(target_orientations)
+    )
+
+    if orientations_match:
+        print_success(f"UISupportedInterfaceOrientations is already in sync ({orientation_lock})")
+    elif dry_run:
+        print_warning(f"Would update UISupportedInterfaceOrientations: {current_orientations} → {target_orientations}")
+        print_warning(f"Would update UISupportedInterfaceOrientations~ipad: {current_ipad} → {target_orientations}")
+    elif validate_only:
+        print_error("UISupportedInterfaceOrientations mismatch!")
+        print(f"   Expected: {target_orientations}")
+        print(f"   Actual: {current_orientations}")
+        errors.append("UISupportedInterfaceOrientations not in sync with pwa-config.json")
+    else:
+        plist['UISupportedInterfaceOrientations'] = target_orientations
+        plist['UISupportedInterfaceOrientations~ipad'] = target_orientations
+        plist_modified = True
+        print_success(f"Updated UISupportedInterfaceOrientations: {target_orientations} ({orientation_lock})")
+
+# Write updated plist if any changes were made
+if plist_modified:
+    print_step("Writing updated Info.plist...")
+    with open(info_plist, 'wb') as f:
+        plistlib.dump(plist, f)
+    print_success("Info.plist updated successfully")
 
 # Summary
 print()

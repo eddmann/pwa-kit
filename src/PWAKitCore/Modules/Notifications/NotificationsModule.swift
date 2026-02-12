@@ -398,8 +398,8 @@ public struct NotificationsModule: PWAModule {
             formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
             // Fall back to without fractional seconds if needed
             guard let date = formatter.date(from: dateString)
-                ?? ISO8601DateFormatter().date(from: dateString)
-            else {
+                ?? ISO8601DateFormatter().date(from: dateString) else
+            {
                 throw BridgeError.invalidPayload("Invalid ISO8601 date format")
             }
             return .date(date)

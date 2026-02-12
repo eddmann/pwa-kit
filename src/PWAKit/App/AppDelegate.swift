@@ -80,6 +80,9 @@ final class AppDelegate: NSObject, UIApplicationDelegate, WebViewProvider {
     /// Event dispatcher for sending notification events to JavaScript.
     private lazy var eventDispatcher = NotificationEventDispatcher(webViewProvider: self)
 
+    /// Cached orientation mask from pwa-config.json to avoid re-reading on every call.
+    private var cachedOrientationMask: UIInterfaceOrientationMask?
+
     /// Weak reference to the WKWebView for event dispatching.
     ///
     /// This property is set by the app when the WebView is created.
@@ -153,6 +156,39 @@ final class AppDelegate: NSObject, UIApplicationDelegate, WebViewProvider {
         #if DEBUG
             print("[AppDelegate] Application will enter foreground")
         #endif
+    }
+
+    // MARK: - Orientation
+
+    /// Returns the supported interface orientations based on the bundled pwa-config.json.
+    ///
+    /// The orientation mask is decoded once from the configuration file and cached
+    /// to avoid re-reading the file on every call (UIKit calls this frequently).
+    func application(
+        _: UIApplication,
+        supportedInterfaceOrientationsFor _: UIWindow?
+    ) -> UIInterfaceOrientationMask {
+        if let cached = cachedOrientationMask {
+            return cached
+        }
+
+        guard
+            let url = Bundle.main.url(forResource: "pwa-config", withExtension: "json"),
+            let data = try? Data(contentsOf: url),
+            let config = try? JSONDecoder().decode(PWAConfiguration.self, from: data) else
+        {
+            cachedOrientationMask = .all
+            return .all
+        }
+
+        let mask: UIInterfaceOrientationMask = switch config.appearance.orientationLock {
+        case .portrait: .portrait
+        case .landscape: .landscape
+        case .any: .all
+        }
+
+        cachedOrientationMask = mask
+        return mask
     }
 
     // MARK: - Notification Event Flushing

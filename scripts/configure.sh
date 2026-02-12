@@ -7,10 +7,7 @@
 # variables, making it suitable for CI/CD pipelines and scripted setups.
 #
 # Usage:
-#   ./scripts/configure.sh \
-#     --name "My App" \
-#     --url "https://app.example.com" \
-#     --bundle-id "com.example.app"
+#   ./scripts/configure.sh --url "https://my-pwa.example.com"
 #
 # Environment Variable Fallbacks:
 #   PWAKIT_APP_NAME      - App display name
@@ -19,14 +16,25 @@
 #   PWAKIT_ALLOWED       - Comma-separated allowed origins
 #   PWAKIT_AUTH_ORIGINS  - Comma-separated auth origins
 #
+# Auto-detected from web manifest (if available):
+#   - App name (from manifest name/short_name)
+#   - Background color (from manifest background_color)
+#   - Theme color (from manifest theme_color)
+#   - Orientation lock (from manifest orientation)
+#   - Display mode (from manifest display)
+#   - App icon (from manifest icons)
+#
 # All flags:
-#   --name, -n        App name (required)
 #   --url, -u         Start URL (required, must be HTTPS)
-#   --bundle-id, -b   Bundle ID (required)
+#   --name, -n        App name (auto-detected from manifest, or required)
+#   --bundle-id, -b   Bundle ID (default: reversed URL domain)
 #   --allowed, -a     Additional allowed origins (comma-separated)
 #   --auth            Auth origins (comma-separated)
-#   --bg-color        Background color hex (default: #FFFFFF)
-#   --theme-color     Theme/accent color hex (default: #007AFF)
+#   --bg-color        Background color hex (default: from manifest or #FFFFFF)
+#   --theme-color     Theme/accent color hex (default: from manifest or #007AFF)
+#   --orientation     Orientation lock: any, portrait, landscape (default: from manifest or any)
+#   --display         Display mode: standalone, fullscreen (default: from manifest or standalone)
+#   --features        Comma-separated enabled features (default: none)
 #   --output, -o      Output file path (default: src/PWAKit/Resources/pwa-config.json)
 #   --force, -f       Overwrite existing config without prompting
 #   --quiet, -q       Suppress non-error output
@@ -90,19 +98,32 @@ Usage: configure.sh [OPTIONS]
 Configure PWAKit with the specified settings.
 
 Required options (or environment variables):
-  --name, -n <name>       App display name (or PWAKIT_APP_NAME)
   --url, -u <url>         Start URL, HTTPS required (or PWAKIT_START_URL)
-  --bundle-id, -b <id>    Bundle identifier (or PWAKIT_BUNDLE_ID)
 
-Optional flags:
+Auto-detected (override with flags):
+  --name, -n <name>       App display name (or PWAKIT_APP_NAME)
+                          Auto-detected from manifest name/short_name
+  --bundle-id, -b <id>    Bundle identifier (or PWAKIT_BUNDLE_ID)
+                          Auto-generated from reversed URL domain
+  --bg-color <hex>        Background color for launch screen
+                          (default: from manifest or #FFFFFF, or PWAKIT_BG_COLOR)
+  --theme-color <hex>     Theme/accent color
+                          (default: from manifest or #007AFF, or PWAKIT_THEME_COLOR)
+  --orientation <lock>    Orientation lock: any, portrait, landscape
+                          (default: from manifest or any, or PWAKIT_ORIENTATION)
+  --display <mode>        Display mode: standalone, fullscreen
+                          (default: from manifest or standalone, or PWAKIT_DISPLAY_MODE)
+
+Other optional flags:
+  --features <list>       Comma-separated list of enabled features
+                          (or PWAKIT_FEATURES)
+                          Available: notifications,haptics,biometrics,
+                          secureStorage,healthkit,iap,share,print,clipboard
+                          Default: none (opt-in to what you need)
   --allowed, -a <origins> Additional allowed origins, comma-separated
                           (or PWAKIT_ALLOWED)
   --auth <origins>        Auth origins for OAuth, comma-separated
                           (or PWAKIT_AUTH_ORIGINS)
-  --bg-color <hex>        Background color for launch screen
-                          (default: #FFFFFF, or PWAKIT_BG_COLOR)
-  --theme-color <hex>     Theme/accent color
-                          (default: #007AFF, or PWAKIT_THEME_COLOR)
   --output, -o <path>     Output file path
                           (default: src/PWAKit/Resources/pwa-config.json)
   --force, -f             Overwrite existing config without prompting
@@ -110,30 +131,23 @@ Optional flags:
   --help, -h              Show this help message
 
 Examples:
-  # Basic configuration
-  ./scripts/configure.sh \
-    --name "My App" \
-    --url "https://app.example.com" \
-    --bundle-id "com.example.app"
+  # Minimal - just a URL, everything else auto-detected
+  ./scripts/configure.sh --url "https://my-pwa.example.com"
 
-  # With auth origins for OAuth
+  # With features enabled
   ./scripts/configure.sh \
-    --name "My App" \
-    --url "https://app.example.com" \
-    --bundle-id "com.example.app" \
-    --auth "accounts.google.com,auth0.com"
+    --url "https://my-pwa.example.com" \
+    --features "notifications,haptics,share"
 
-  # Using environment variables (CI/CD)
-  export PWAKIT_APP_NAME="My App"
-  export PWAKIT_START_URL="https://app.example.com"
-  export PWAKIT_BUNDLE_ID="com.example.app"
-  ./scripts/configure.sh --quiet
+  # Override auto-detected values
+  ./scripts/configure.sh \
+    --url "https://my-pwa.example.com" \
+    --name "My App" \
+    --bg-color "#1a1a2e" \
+    --orientation portrait
 
   # Force overwrite existing config
-  ./scripts/configure.sh --force \
-    --name "My App" \
-    --url "https://app.example.com" \
-    --bundle-id "com.example.app"
+  ./scripts/configure.sh --force --url "https://my-pwa.example.com"
 EOF
 }
 
@@ -180,6 +194,13 @@ validate_bundle_id() {
     fi
 
     return 0
+}
+
+# Generate bundle ID by reversing the domain segments
+# e.g. step-wars.eddmann.workers.dev → dev.workers.eddmann.step-wars
+reverse_domain() {
+    local domain="$1"
+    echo "$domain" | tr '.' '\n' | tail -r | paste -sd '.' -
 }
 
 # Convert comma-separated string to JSON array
@@ -280,53 +301,184 @@ PYTHON_SCRIPT
     fi
 }
 
-# Download and install app icon from web manifest
-download_app_icon() {
+# Try to fetch a manifest URL and validate it as JSON
+# Returns 0 and sets MANIFEST_CONTENT on success
+try_manifest_url() {
+    local url="$1"
+    local content
+    content=$(curl -sL --max-time 10 "$url" 2>/dev/null)
+    if echo "$content" | python3 -c "import json,sys; json.load(sys.stdin)" 2>/dev/null; then
+        MANIFEST_CONTENT="$content"
+        log_success "Found manifest at: $url"
+        return 0
+    fi
+    return 1
+}
+
+# Fetch web manifest by parsing <link rel="manifest"> from the start URL,
+# then falling back to well-known paths.
+# Sets MANIFEST_CONTENT and MANIFEST_BASE_URL globals
+fetch_manifest() {
     local start_url="$1"
+
+    log_info "Fetching web manifest..."
+
+    # Extract base URL
+    MANIFEST_BASE_URL=$(echo "$start_url" | sed -E 's|(https?://[^/]+).*|\1|')
+    MANIFEST_CONTENT=""
+
+    # First: parse <link rel="manifest"> from the start URL HTML
+    local html
+    html=$(curl -sL --max-time 10 "$start_url" 2>/dev/null)
+    if [[ -n "$html" ]]; then
+        local manifest_href
+        manifest_href=$(echo "$html" | python3 -c "
+import sys, re, html
+
+content = sys.stdin.read()
+# Match <link rel=\"manifest\" href=\"...\"> in any attribute order
+match = re.search(r'<link\b[^>]*\brel=[\"'\'']manifest[\"'\''][^>]*\bhref=[\"'\'']([^\"'\'']+)[\"'\'']', content, re.IGNORECASE)
+if not match:
+    # Try reverse order: href before rel
+    match = re.search(r'<link\b[^>]*\bhref=[\"'\'']([^\"'\'']+)[\"'\''][^>]*\brel=[\"'\'']manifest[\"'\'']', content, re.IGNORECASE)
+if match:
+    print(html.unescape(match.group(1)))
+" 2>/dev/null)
+
+        if [[ -n "$manifest_href" ]]; then
+            # Make manifest URL absolute
+            local manifest_url
+            if [[ "$manifest_href" == http* ]]; then
+                manifest_url="$manifest_href"
+            elif [[ "$manifest_href" == /* ]]; then
+                manifest_url="${MANIFEST_BASE_URL}${manifest_href}"
+            else
+                manifest_url="${MANIFEST_BASE_URL}/${manifest_href}"
+            fi
+
+            log_info "Found <link rel=\"manifest\"> pointing to: $manifest_url"
+            if try_manifest_url "$manifest_url"; then
+                return 0
+            fi
+        fi
+    fi
+
+    # Fallback: try well-known paths
+    for path in "/manifest.json" "/manifest.webmanifest" "/site.webmanifest"; do
+        if try_manifest_url "${MANIFEST_BASE_URL}${path}"; then
+            return 0
+        fi
+    done
+
+    log_warn "Could not find web manifest"
+    return 1
+}
+
+# Extract values from the fetched manifest into MANIFEST_* variables
+# Sets: MANIFEST_NAME, MANIFEST_BG_COLOR, MANIFEST_THEME_COLOR, MANIFEST_ORIENTATION, MANIFEST_DISPLAY
+extract_manifest_values() {
+    MANIFEST_NAME=""
+    MANIFEST_BG_COLOR=""
+    MANIFEST_THEME_COLOR=""
+    MANIFEST_ORIENTATION=""
+    MANIFEST_DISPLAY=""
+
+    if [[ -z "$MANIFEST_CONTENT" ]]; then
+        return
+    fi
+
+    # Extract all values in a single Python call
+    local values
+    values=$(python3 -c "
+import json, sys
+
+try:
+    manifest = json.loads(sys.argv[1])
+
+    # Name: prefer short_name, fall back to name
+    name = manifest.get('short_name', '') or manifest.get('name', '')
+    print(name)
+
+    # Background color (CSS hex)
+    print(manifest.get('background_color', ''))
+
+    # Theme color (CSS hex)
+    print(manifest.get('theme_color', ''))
+
+    # Orientation: map W3C values to PWAKit values
+    orientation = manifest.get('orientation', '')
+    if orientation in ('portrait', 'portrait-primary', 'portrait-secondary', 'natural'):
+        print('portrait')
+    elif orientation in ('landscape', 'landscape-primary', 'landscape-secondary'):
+        print('landscape')
+    elif orientation == 'any':
+        print('any')
+    else:
+        print('')
+
+    # Display mode: only accept values PWAKit supports
+    display = manifest.get('display', '')
+    if display in ('standalone', 'fullscreen'):
+        print(display)
+    else:
+        print('')
+except:
+    print('')
+    print('')
+    print('')
+    print('')
+    print('')
+" "$MANIFEST_CONTENT")
+
+    # Read the five lines into variables
+    MANIFEST_NAME=$(echo "$values" | sed -n '1p')
+    MANIFEST_BG_COLOR=$(echo "$values" | sed -n '2p')
+    MANIFEST_THEME_COLOR=$(echo "$values" | sed -n '3p')
+    MANIFEST_ORIENTATION=$(echo "$values" | sed -n '4p')
+    MANIFEST_DISPLAY=$(echo "$values" | sed -n '5p')
+
+    # Validate manifest colors are valid hex (manifest may use shorthand or named colors)
+    if [[ -n "$MANIFEST_BG_COLOR" ]] && ! validate_hex_color "$MANIFEST_BG_COLOR"; then
+        log_warn "Manifest background_color '$MANIFEST_BG_COLOR' is not a valid 6-digit hex, ignoring"
+        MANIFEST_BG_COLOR=""
+    fi
+    if [[ -n "$MANIFEST_THEME_COLOR" ]] && ! validate_hex_color "$MANIFEST_THEME_COLOR"; then
+        log_warn "Manifest theme_color '$MANIFEST_THEME_COLOR' is not a valid 6-digit hex, ignoring"
+        MANIFEST_THEME_COLOR=""
+    fi
+
+    # Log what we found
+    [[ -n "$MANIFEST_NAME" ]] && log_info "Manifest name: $MANIFEST_NAME"
+    [[ -n "$MANIFEST_BG_COLOR" ]] && log_info "Manifest background_color: $MANIFEST_BG_COLOR"
+    [[ -n "$MANIFEST_THEME_COLOR" ]] && log_info "Manifest theme_color: $MANIFEST_THEME_COLOR"
+    [[ -n "$MANIFEST_ORIENTATION" ]] && log_info "Manifest orientation: $MANIFEST_ORIENTATION"
+    [[ -n "$MANIFEST_DISPLAY" ]] && log_info "Manifest display: $MANIFEST_DISPLAY"
+}
+
+# Download and install app icon from web manifest
+# Requires fetch_manifest to have been called first
+download_app_icon() {
+    if [[ -z "$MANIFEST_CONTENT" ]]; then
+        log_warn "No manifest available, skipping icon download"
+        return
+    fi
+
     local assets_dir="$PROJECT_ROOT/src/PWAKit/Resources/Assets.xcassets"
     local appicon_dir="$assets_dir/AppIcon.appiconset"
     local launchicon_dir="$assets_dir/LaunchIcon.imageset"
 
-    log_info "Fetching app icon from web manifest..."
-
-    # Extract base URL
-    local base_url
-    base_url=$(echo "$start_url" | sed -E 's|(https?://[^/]+).*|\1|')
-
-    # Try to fetch manifest.json from common locations
-    local manifest_url=""
-    local manifest_content=""
-
-    for path in "/manifest.json" "/manifest.webmanifest" "/site.webmanifest"; do
-        local try_url="${base_url}${path}"
-        manifest_content=$(curl -sL --max-time 10 "$try_url" 2>/dev/null)
-        if echo "$manifest_content" | python3 -c "import json,sys; json.load(sys.stdin)" 2>/dev/null; then
-            manifest_url="$try_url"
-            break
-        fi
-    done
-
-    if [[ -z "$manifest_url" ]]; then
-        log_warn "Could not find web manifest, skipping icon download"
-        return
-    fi
-
-    log_success "Found manifest at: $manifest_url"
-
     # Extract best icon URL using Python
     local icon_url
-    icon_url=$(echo "$manifest_content" | python3 << 'PYTHON_SCRIPT'
-import json
-import sys
+    icon_url=$(python3 -c "
+import json, sys
 
 try:
-    manifest = json.load(sys.stdin)
+    manifest = json.loads(sys.argv[1])
     icons = manifest.get('icons', [])
 
     if not icons:
         sys.exit(1)
 
-    # Find the best icon (largest, prefer square, prefer png)
     best_icon = None
     best_size = 0
 
@@ -335,19 +487,16 @@ try:
         sizes = icon.get('sizes', '0x0')
         purpose = icon.get('purpose', 'any')
 
-        # Skip maskable-only icons
         if purpose == 'maskable':
             continue
 
-        # Parse size (take first if multiple)
         size_str = sizes.split()[0] if sizes else '0x0'
         try:
             w, h = size_str.lower().split('x')
-            size = min(int(w), int(h))  # Use smaller dimension
+            size = min(int(w), int(h))
         except:
             size = 0
 
-        # Prefer larger icons, prefer png
         if size > best_size or (size == best_size and '.png' in src.lower()):
             best_size = size
             best_icon = src
@@ -356,8 +505,7 @@ try:
         print(best_icon)
 except:
     sys.exit(1)
-PYTHON_SCRIPT
-)
+" "$MANIFEST_CONTENT")
 
     if [[ -z "$icon_url" ]]; then
         log_warn "No suitable icon found in manifest"
@@ -366,9 +514,9 @@ PYTHON_SCRIPT
 
     # Make icon URL absolute
     if [[ "$icon_url" == /* ]]; then
-        icon_url="${base_url}${icon_url}"
+        icon_url="${MANIFEST_BASE_URL}${icon_url}"
     elif [[ "$icon_url" != http* ]]; then
-        icon_url="${base_url}/${icon_url}"
+        icon_url="${MANIFEST_BASE_URL}/${icon_url}"
     fi
 
     log_info "Downloading icon: $icon_url"
@@ -424,8 +572,11 @@ parse_args() {
     BUNDLE_ID="${PWAKIT_BUNDLE_ID:-}"
     ALLOWED_ORIGINS="${PWAKIT_ALLOWED:-}"
     AUTH_ORIGINS="${PWAKIT_AUTH_ORIGINS:-}"
-    BG_COLOR="${PWAKIT_BG_COLOR:-#FFFFFF}"
-    THEME_COLOR="${PWAKIT_THEME_COLOR:-#007AFF}"
+    BG_COLOR="${PWAKIT_BG_COLOR:-}"
+    THEME_COLOR="${PWAKIT_THEME_COLOR:-}"
+    ORIENTATION="${PWAKIT_ORIENTATION:-}"
+    DISPLAY_MODE="${PWAKIT_DISPLAY_MODE:-}"
+    FEATURES="${PWAKIT_FEATURES:-}"
     OUTPUT_FILE="$DEFAULT_OUTPUT"
     FORCE="false"
     QUIET="false"
@@ -460,6 +611,18 @@ parse_args() {
                 THEME_COLOR="$2"
                 shift 2
                 ;;
+            --orientation)
+                ORIENTATION="$2"
+                shift 2
+                ;;
+            --display)
+                DISPLAY_MODE="$2"
+                shift 2
+                ;;
+            --features)
+                FEATURES="$2"
+                shift 2
+                ;;
             --output|-o)
                 OUTPUT_FILE="$2"
                 shift 2
@@ -489,11 +652,7 @@ parse_args() {
 validate_inputs() {
     local has_error="false"
 
-    # Check required fields
-    if [[ -z "$APP_NAME" ]]; then
-        log_error "App name is required (--name or PWAKIT_APP_NAME)"
-        has_error="true"
-    fi
+    # Note: APP_NAME and BUNDLE_ID validated after manifest fetch (can be auto-generated)
 
     if [[ -z "$START_URL" ]]; then
         log_error "Start URL is required (--url or PWAKIT_START_URL)"
@@ -504,24 +663,33 @@ validate_inputs() {
         has_error="true"
     fi
 
-    if [[ -z "$BUNDLE_ID" ]]; then
-        log_error "Bundle ID is required (--bundle-id or PWAKIT_BUNDLE_ID)"
-        has_error="true"
-    elif ! validate_bundle_id "$BUNDLE_ID"; then
+    if [[ -n "$BUNDLE_ID" ]] && ! validate_bundle_id "$BUNDLE_ID"; then
         log_error "Invalid bundle ID format: $BUNDLE_ID"
         log_error "Bundle ID must be in reverse domain format (e.g., com.example.app)"
         has_error="true"
     fi
 
-    if ! validate_hex_color "$BG_COLOR"; then
+    if [[ -n "$BG_COLOR" ]] && ! validate_hex_color "$BG_COLOR"; then
         log_error "Invalid background color: $BG_COLOR"
         log_error "Must be a 6-digit hex color (e.g., #FFFFFF)"
         has_error="true"
     fi
 
-    if ! validate_hex_color "$THEME_COLOR"; then
+    if [[ -n "$THEME_COLOR" ]] && ! validate_hex_color "$THEME_COLOR"; then
         log_error "Invalid theme color: $THEME_COLOR"
         log_error "Must be a 6-digit hex color (e.g., #007AFF)"
+        has_error="true"
+    fi
+
+    if [[ -n "$ORIENTATION" && "$ORIENTATION" != "any" && "$ORIENTATION" != "portrait" && "$ORIENTATION" != "landscape" ]]; then
+        log_error "Invalid orientation: $ORIENTATION"
+        log_error "Must be one of: any, portrait, landscape"
+        has_error="true"
+    fi
+
+    if [[ -n "$DISPLAY_MODE" && "$DISPLAY_MODE" != "standalone" && "$DISPLAY_MODE" != "fullscreen" ]]; then
+        log_error "Invalid display mode: $DISPLAY_MODE"
+        log_error "Must be one of: standalone, fullscreen"
         has_error="true"
     fi
 
@@ -530,6 +698,13 @@ validate_inputs() {
         echo "Use --help for usage information" >&2
         exit 1
     fi
+}
+
+# Check if a feature is enabled
+# Uses the FEATURES variable (comma-separated list of enabled features)
+feature_enabled() {
+    local feature="$1"
+    echo ",$FEATURES," | grep -q ",$feature,"
 }
 
 # Generate the configuration file
@@ -568,21 +743,22 @@ generate_config() {
     "external": []
   },
   "features": {
-    "notifications": true,
-    "haptics": true,
-    "biometrics": true,
-    "secureStorage": true,
-    "healthkit": false,
-    "iap": false,
-    "share": true,
-    "print": true,
-    "clipboard": true
+    "notifications": $(feature_enabled notifications && echo true || echo false),
+    "haptics": $(feature_enabled haptics && echo true || echo false),
+    "biometrics": $(feature_enabled biometrics && echo true || echo false),
+    "secureStorage": $(feature_enabled secureStorage && echo true || echo false),
+    "healthkit": $(feature_enabled healthkit && echo true || echo false),
+    "iap": $(feature_enabled iap && echo true || echo false),
+    "share": $(feature_enabled share && echo true || echo false),
+    "print": $(feature_enabled print && echo true || echo false),
+    "clipboard": $(feature_enabled clipboard && echo true || echo false)
   },
   "appearance": {
-    "displayMode": "standalone",
+    "displayMode": "$DISPLAY_MODE",
     "pullToRefresh": true,
     "adaptiveStyle": true,
     "statusBarStyle": "default",
+    "orientationLock": "$ORIENTATION",
     "backgroundColor": "$BG_COLOR",
     "themeColor": "$THEME_COLOR"
   },
@@ -627,6 +803,36 @@ main() {
         exit 1
     fi
 
+    # Fetch web manifest and extract values (icon, name, colors, orientation)
+    fetch_manifest "$START_URL" || true
+    extract_manifest_values
+
+    # Fill in blanks from manifest, then hardcoded defaults
+    # Priority: CLI/env > manifest > auto-generated/default
+    [[ -z "$APP_NAME" ]] && APP_NAME="$MANIFEST_NAME"
+    [[ -z "$BG_COLOR" ]] && BG_COLOR="${MANIFEST_BG_COLOR:-#FFFFFF}"
+    [[ -z "$THEME_COLOR" ]] && THEME_COLOR="${MANIFEST_THEME_COLOR:-#007AFF}"
+    [[ -z "$ORIENTATION" ]] && ORIENTATION="${MANIFEST_ORIENTATION:-any}"
+    [[ -z "$DISPLAY_MODE" ]] && DISPLAY_MODE="${MANIFEST_DISPLAY:-standalone}"
+    # Features default to none — opt-in to what you need
+    [[ -z "$FEATURES" ]] && FEATURES=""
+
+    # Auto-generate bundle ID from reversed domain if not provided
+    if [[ -z "$BUNDLE_ID" ]]; then
+        local domain
+        domain=$(extract_domain "$START_URL")
+        BUNDLE_ID=$(reverse_domain "$domain")
+        log_info "Bundle ID from URL: $BUNDLE_ID"
+    fi
+
+    # Validate app name (may have come from manifest)
+    if [[ -z "$APP_NAME" ]]; then
+        log_error "App name is required (--name, PWAKIT_APP_NAME, or manifest name)"
+        echo "" >&2
+        echo "Use --help for usage information" >&2
+        exit 1
+    fi
+
     # Log what we're doing
     log_info "Configuring PWAKit..."
     log_info "  App name:      $APP_NAME"
@@ -634,6 +840,9 @@ main() {
     log_info "  Bundle ID:     $BUNDLE_ID"
     log_info "  Background:    $BG_COLOR"
     log_info "  Theme color:   $THEME_COLOR"
+    log_info "  Orientation:   $ORIENTATION"
+    log_info "  Display mode:  $DISPLAY_MODE"
+    log_info "  Features:      $FEATURES"
 
     # Generate configuration
     generate_config
@@ -662,7 +871,7 @@ main() {
     update_info_plist "$all_origins" "$AUTH_ORIGINS"
 
     # Download app icon from web manifest
-    download_app_icon "$START_URL"
+    download_app_icon
 
     # Sync appearance colors to asset catalog
     log_info "Syncing appearance colors..."

@@ -25,6 +25,20 @@ public enum StatusBarStyle: String, Codable, Sendable {
     case darkContent
 }
 
+// MARK: - OrientationLock
+
+/// Orientation lock for the application.
+public enum OrientationLock: String, Codable, Sendable {
+    /// Allow all orientations.
+    case any
+
+    /// Lock to portrait orientation.
+    case portrait
+
+    /// Lock to landscape orientation.
+    case landscape
+}
+
 // MARK: - AppearanceConfiguration
 
 /// Configuration for UI behavior and styling.
@@ -45,6 +59,9 @@ public struct AppearanceConfiguration: Codable, Sendable, Equatable {
 
     /// Status bar appearance.
     public let statusBarStyle: StatusBarStyle
+
+    /// Orientation lock for the application.
+    public let orientationLock: OrientationLock
 
     /// Background color for the loading screen (hex format).
     ///
@@ -69,6 +86,7 @@ public struct AppearanceConfiguration: Codable, Sendable, Equatable {
     ///   - pullToRefresh: Enable pull-to-refresh. Defaults to `true`.
     ///   - adaptiveStyle: Match system theme to web. Defaults to `true`.
     ///   - statusBarStyle: Status bar style. Defaults to `.default`.
+    ///   - orientationLock: Orientation lock. Defaults to `.any`.
     ///   - backgroundColor: Background color hex string. Defaults to `nil` (system color).
     ///   - themeColor: Theme/accent color hex string. Defaults to `nil` (system color).
     public init(
@@ -76,6 +94,7 @@ public struct AppearanceConfiguration: Codable, Sendable, Equatable {
         pullToRefresh: Bool = true,
         adaptiveStyle: Bool = true,
         statusBarStyle: StatusBarStyle = .default,
+        orientationLock: OrientationLock = .any,
         backgroundColor: String? = nil,
         themeColor: String? = nil
     ) {
@@ -83,6 +102,7 @@ public struct AppearanceConfiguration: Codable, Sendable, Equatable {
         self.pullToRefresh = pullToRefresh
         self.adaptiveStyle = adaptiveStyle
         self.statusBarStyle = statusBarStyle
+        self.orientationLock = orientationLock
         self.backgroundColor = backgroundColor
         self.themeColor = themeColor
     }
@@ -97,6 +117,7 @@ public struct AppearanceConfiguration: Codable, Sendable, Equatable {
         case pullToRefresh
         case adaptiveStyle
         case statusBarStyle
+        case orientationLock
         case backgroundColor
         case themeColor
     }
@@ -107,6 +128,7 @@ public struct AppearanceConfiguration: Codable, Sendable, Equatable {
         self.pullToRefresh = try container.decodeIfPresent(Bool.self, forKey: .pullToRefresh) ?? true
         self.adaptiveStyle = try container.decodeIfPresent(Bool.self, forKey: .adaptiveStyle) ?? true
         self.statusBarStyle = try container.decodeIfPresent(StatusBarStyle.self, forKey: .statusBarStyle) ?? .default
+        self.orientationLock = try container.decodeIfPresent(OrientationLock.self, forKey: .orientationLock) ?? .any
         self.backgroundColor = try container.decodeIfPresent(String.self, forKey: .backgroundColor)
         self.themeColor = try container.decodeIfPresent(String.self, forKey: .themeColor)
     }

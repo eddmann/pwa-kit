@@ -28,6 +28,7 @@
     "pullToRefresh": true,
     "adaptiveStyle": true,
     "statusBarStyle": "default",
+    "orientationLock": "any",
     "backgroundColor": "#FFFFFF",
     "themeColor": "#007AFF"
   },

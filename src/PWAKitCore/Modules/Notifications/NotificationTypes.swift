@@ -341,8 +341,8 @@ public enum NotificationTrigger: Codable, Sendable, Equatable {
             let fractionalFormatter = ISO8601DateFormatter()
             fractionalFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
             guard let date = fractionalFormatter.date(from: dateValue)
-                ?? ISO8601DateFormatter().date(from: dateValue)
-            else {
+                ?? ISO8601DateFormatter().date(from: dateValue) else
+            {
                 throw DecodingError.dataCorruptedError(
                     forKey: .date,
                     in: container,
