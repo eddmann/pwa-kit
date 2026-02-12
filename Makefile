@@ -99,6 +99,12 @@ test: ## Run tests
 example: ## Run kitchen sink demo server
 	@./scripts/run-example.sh --server-only
 
+deploy-example: ## Deploy kitchen sink demo to Cloudflare Workers
+	@echo "$(BLUE)==>$(NC) Deploying example..."
+	@cp example/manifest.json example/icon-1024.png example/dist/
+	@cd example && npx wrangler deploy
+	@echo "$(GREEN)✓$(NC) Deployed to https://pwakit-example.eddmann.workers.dev"
+
 #==============================================================================
 # Code Quality
 #==============================================================================
