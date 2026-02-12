@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    name: Build & Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Package template
+        run: |
+          tar -czf pwakit-template.tar.gz \
+            kit/PWAKitApp.xcodeproj/ \
+            kit/src/PWAKit/ \
+            kit/src/PWAKitCore/ \
+            --exclude='kit/src/PWAKit/Resources/pwa-config.json'
+
+      - name: Build CLI
+        working-directory: cli
+        run: npm ci && npm run build
+
+      - name: Publish CLI
+        working-directory: cli
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build SDK
+        working-directory: sdk
+        run: npm ci && npm run build
+
+      - name: Publish SDK
+        working-directory: sdk
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: pwakit-template.tar.gz
+          generate_release_notes: true

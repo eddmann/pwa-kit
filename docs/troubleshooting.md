@@ -91,10 +91,10 @@ rm -rf ~/Library/Developer/Xcode/DerivedData/PWAKitApp-*
 
 ```bash
 # Check JSON syntax
-cat src/PWAKit/Resources/pwa-config.json | python3 -m json.tool
+cat kit/src/PWAKit/Resources/pwa-config.json | python3 -m json.tool
 
 # Check if file exists
-ls -la src/PWAKit/Resources/pwa-config.json
+ls -la kit/src/PWAKit/Resources/pwa-config.json
 ```
 
 ### View Logs

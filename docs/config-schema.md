@@ -312,14 +312,14 @@ All other fields use their default values.
 The configuration file should be placed at:
 
 ```
-src/PWAKit/Resources/pwa-config.json
+kit/src/PWAKit/Resources/pwa-config.json
 ```
 
 For development, you can copy the example file:
 
 ```bash
-cp src/PWAKit/Resources/pwa-config.example.json \
-   src/PWAKit/Resources/pwa-config.json
+cp kit/src/PWAKit/Resources/pwa-config.example.json \
+   kit/src/PWAKit/Resources/pwa-config.json
 ```
 
 ---

@@ -1,136 +1,92 @@
-# PWAKit Makefile
-#
-# A simple interface for common development commands.
-#
-# Usage:
-#   make help     - Show available commands
-#   make setup    - Run interactive setup wizard
-#   make open     - Open Xcode project
-#   make example  - Run the kitchen sink demo
-#   make lint     - Run linters
-#   make format   - Format code
-#   make clean    - Clean build artifacts
-#
-
-.PHONY: help setup configure open example lint format clean check prereq sync build test
-
-# Default target
+.PHONY: *
 .DEFAULT_GOAL := help
 
-# Colors for terminal output
-BLUE := \033[0;34m
-GREEN := \033[0;32m
-YELLOW := \033[1;33m
-NC := \033[0m # No Color
+SHELL := /bin/bash
 
-#==============================================================================
-# Help
-#==============================================================================
+CLI_BIN = node cli/dist/index.js
 
-help: ## Show available commands
-	@echo ""
-	@echo "$(BLUE)PWAKit - Development Commands$(NC)"
-	@echo "=============================="
-	@echo ""
-	@echo "$(GREEN)Usage:$(NC) make <target>"
-	@echo ""
-	@echo "$(GREEN)Getting Started:$(NC)"
-	@echo "  $(BLUE)prereq$(NC)        Check prerequisites"
-	@echo "  $(BLUE)setup$(NC)         Run interactive setup wizard"
-	@echo "  $(BLUE)open$(NC)          Open Xcode project"
-	@echo ""
-	@echo "$(GREEN)Development:$(NC)"
-	@echo "  $(BLUE)build$(NC)         Build iOS app"
-	@echo "  $(BLUE)test$(NC)          Run tests"
-	@echo "  $(BLUE)example$(NC)       Run kitchen sink demo server"
-	@echo "  $(BLUE)sync$(NC)          Sync pwa-config.json to Info.plist"
-	@echo "  $(BLUE)lint$(NC)          Run SwiftLint"
-	@echo "  $(BLUE)format$(NC)        Format code with SwiftFormat"
-	@echo "  $(BLUE)clean$(NC)         Clean build artifacts"
-	@echo ""
-	@echo "$(GREEN)Quick Start:$(NC)"
-	@echo "  1. make prereq     # Verify tools are installed"
-	@echo "  2. make setup      # Configure your PWA"
-	@echo "  3. make open       # Open in Xcode, then Cmd+R to run"
-	@echo ""
+help:
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_\-\/]+:.*?##/ { printf "  \033[36m%-25s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
-#==============================================================================
-# Setup & Configuration
-#==============================================================================
+##@ Kit (iOS)
 
-prereq: ## Check prerequisites
-	@./scripts/check-prerequisites.sh
+kit/can-release: kit/fmt/check kit/lint kit/build kit/test ## All kit checks
 
-setup: ## Run interactive setup wizard
-	@./scripts/configure.sh --interactive
+kit/setup: cli/build ## Interactive setup wizard
+	@$(CLI_BIN) init
 
-configure: ## Run non-interactive configuration (use with environment variables)
-	@./scripts/configure.sh
+kit/sync: cli/build ## Sync pwa-config.json to Xcode project
+	@$(CLI_BIN) sync
 
-sync: ## Sync pwa-config.json to Info.plist
-	@./scripts/sync-config.sh
+kit/open: ## Open Xcode project
+	@open kit/PWAKitApp.xcodeproj
 
-#==============================================================================
-# Development
-#==============================================================================
-
-open: ## Open Xcode project
-	@echo "$(BLUE)==>$(NC) Opening PWAKitApp.xcodeproj..."
-	@open PWAKitApp.xcodeproj
-
-build: ## Build iOS app
-	@echo "$(BLUE)==>$(NC) Building PWAKitApp..."
+kit/build: ## Build iOS app
 	@xcodebuild build \
-		-project PWAKitApp.xcodeproj \
+		-project kit/PWAKitApp.xcodeproj \
 		-scheme PWAKitApp \
 		-destination 'platform=iOS Simulator,name=iPhone 15' \
 		-quiet
-	@echo "$(GREEN)✓$(NC) Build complete"
 
-test: ## Run tests
-	@echo "$(BLUE)==>$(NC) Running tests..."
+kit/test: ## Run Swift tests
 	@xcodebuild test \
-		-project PWAKitApp.xcodeproj \
+		-project kit/PWAKitApp.xcodeproj \
 		-scheme PWAKitApp \
 		-destination 'platform=iOS Simulator,name=iPhone 15' \
 		-quiet
-	@echo "$(GREEN)✓$(NC) Tests complete"
 
-example: ## Run kitchen sink demo server
-	@./scripts/run-example.sh --server-only
+kit/lint: ## Run SwiftLint
+	@./kit/scripts/lint.sh
 
-deploy-example: ## Deploy kitchen sink demo to Cloudflare Workers
-	@echo "$(BLUE)==>$(NC) Deploying example..."
+kit/lint/fix: ## Auto-fix lint issues
+	@./kit/scripts/lint.sh --fix
+
+kit/fmt: ## Format Swift code
+	@./kit/scripts/format.sh
+
+kit/fmt/check: ## Check Swift formatting
+	@./kit/scripts/format.sh --check
+
+kit/clean: ## Clean Xcode derived data
+	@rm -rf ~/Library/Developer/Xcode/DerivedData/PWAKitApp-*
+
+##@ CLI
+
+cli/can-release: cli/build cli/typecheck cli/test ## All CLI checks
+
+cli/build: ## Build CLI
+	@cd cli && npm run build
+
+cli/test: ## Run CLI tests
+	@cd cli && npm test
+
+cli/typecheck: ## Type check CLI
+	@cd cli && npm run typecheck
+
+cli/clean: ## Remove CLI dist
+	@rm -rf cli/dist
+
+##@ SDK
+
+sdk/can-release: sdk/build sdk/typecheck sdk/test ## All SDK checks
+
+sdk/build: ## Build SDK
+	@cd sdk && npm run build
+
+sdk/test: ## Run SDK tests
+	@cd sdk && npm test
+
+sdk/typecheck: ## Type check SDK
+	@cd sdk && npm run typecheck
+
+sdk/clean: ## Remove SDK dist
+	@rm -rf sdk/dist
+
+##@ Example
+
+example/serve: ## Run kitchen sink demo server
+	@./example/run-example.sh --server-only
+
+example/deploy: ## Deploy to Cloudflare Workers
 	@cp example/manifest.json example/icon-1024.png example/dist/
 	@cd example && npx wrangler deploy
-	@echo "$(GREEN)✓$(NC) Deployed to https://pwakit-example.eddmann.workers.dev"
-
-#==============================================================================
-# Code Quality
-#==============================================================================
-
-lint: ## Run linters (SwiftLint)
-	@./scripts/lint.sh
-
-lint-fix: ## Run linters and auto-fix issues
-	@./scripts/lint.sh --fix
-
-format: ## Format code (SwiftFormat)
-	@./scripts/format.sh
-
-format-check: ## Check code formatting without making changes
-	@./scripts/format.sh --check
-
-check: format-check lint ## Check formatting and lint
-
-#==============================================================================
-# Maintenance
-#==============================================================================
-
-clean: ## Clean build artifacts
-	@echo "$(BLUE)==>$(NC) Cleaning build artifacts..."
-	@rm -rf .build
-	@rm -rf .build-cache
-	@rm -rf .coverage
-	@rm -rf ~/Library/Developer/Xcode/DerivedData/PWAKitApp-*
-	@echo "$(GREEN)✓$(NC) Clean complete"

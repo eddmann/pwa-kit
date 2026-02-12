@@ -1,0 +1,55 @@
+{
+  "name": "@eddmann/pwa-kit",
+  "version": "0.1.0",
+  "description": "CLI for creating and configuring PWAKit iOS apps",
+  "bin": {
+    "pwa-kit": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "pwa",
+    "ios",
+    "xcode",
+    "cli",
+    "native",
+    "webview"
+  ],
+  "author": "Edd Mann",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^13.1.0",
+    "plist": "^3.1.0",
+    "prompts": "^2.4.2",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@types/plist": "^3.0.5",
+    "@types/prompts": "^2.4.9",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.17"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eddmann/pwa-kit.git",
+    "directory": "cli"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  }
+}

@@ -7,20 +7,20 @@ PWAKit wraps Progressive Web Apps in native iOS shells with JavaScript bridge ac
 ## Setup
 
 ```bash
-# Verify prerequisites
-./scripts/check-prerequisites.sh
-
 # Install tools (if missing)
 brew install swiftformat swiftlint
 
+# Install CLI dependencies
+cd cli && npm install && cd ..
+
 # Configure PWA (interactive)
-make setup
+make kit/setup
 
 # OR non-interactive
-./scripts/configure.sh --name "App Name" --url "https://app.example.com" --bundle-id "com.example.app"
+node cli/dist/index.js init --url "https://app.example.com" --name "App Name" --bundle-id "com.example.app"
 
 # Open Xcode
-make open
+make kit/open
 # Then Cmd+R to build and run
 ```
 
@@ -31,20 +31,17 @@ cd sdk && npm install
 
 ## Common Commands
 
+Run `make` to see all targets. Key workflows:
+
 | Task | Command |
 |------|---------|
-| Build iOS | `make open` then Cmd+R in Xcode |
-| Build SDK | `cd sdk && npm run build` |
-| Test Swift | Cmd+U in Xcode |
-| Test SDK | `cd sdk && npm test` |
-| Lint | `make lint` |
-| Lint + fix | `make lint-fix` |
-| Format | `make format` |
-| Format check | `make format-check` |
-| Type check SDK | `cd sdk && npm run typecheck` |
-| Run example | `make example` |
-| Sync config | `./scripts/sync-config.sh` |
-| Clean | `make clean` |
+| Setup | `make kit/setup` |
+| Open Xcode | `make kit/open`, then Cmd+R |
+| Run example | `make example/serve` |
+| Sync config | `make kit/sync` |
+| Kit CI gate | `make kit/can-release` |
+| SDK CI gate | `make sdk/can-release` |
+| CLI CI gate | `make cli/can-release` |
 
 ## Code Conventions
 
@@ -52,9 +49,9 @@ cd sdk && npm install
 - Swift 6.0 with strict concurrency (`SWIFT_STRICT_CONCURRENCY = complete`)
 - 4-space indentation, 120-char line width
 - SwiftFormat handles: imports (alphabetical), trailing commas, self insertion
-- SwiftLint enforces: no force unwrapping, documentation on public APIs, complexity limits
-- File structure: `src/PWAKit/` (app), `src/PWAKitCore/` (framework)
-- Modules in `src/PWAKitCore/Modules/` follow `PWAModule` protocol
+- SwiftLint enforces: unused declarations/imports, complexity limits, closure/operator formatting
+- File structure: `kit/src/PWAKit/` (app), `kit/src/PWAKitCore/` (framework)
+- Modules in `kit/src/PWAKitCore/Modules/` follow `PWAModule` protocol
 
 **TypeScript (SDK):**
 - Strict mode enabled
@@ -64,7 +61,7 @@ cd sdk && npm install
 **Naming:**
 - Swift: PascalCase types, camelCase functions/properties
 - Files match primary type name
-- Test files: `*Tests.swift` in `tests/` mirroring source structure
+- Test files: `*Tests.swift` in `kit/tests/` mirroring source structure
 
 ## Tests & CI
 
@@ -78,15 +75,15 @@ cd sdk && npm test
 cd sdk && npm run test:watch  # watch mode
 ```
 
-**CI runs on push/PR to main:**
-1. `swift-build` (macOS-14): `swift build && swift test`
-2. `lint` (macOS-14): SwiftLint + SwiftFormat --lint
-3. `sdk-build` (Ubuntu): `npm ci && npm run typecheck && npm run build && npm test`
+**CI runs on push/PR to main — each component has a `can-release` gate:**
+- `kit` (macOS): `make kit/can-release` — fmt check, lint, build, test
+- `sdk` (Ubuntu): `make sdk/can-release` — build, typecheck, test
+- `cli` (Ubuntu): `make cli/can-release` — build, typecheck, test
 
 **Quality thresholds (SwiftLint):**
-- Cyclomatic complexity: warn 15, error 25
-- Function body: warn 50, error 100 lines
-- File length: warn 500, error 1200 lines
+- Cyclomatic complexity: warn 20, error 120
+- Function body: warn 150, error 300 lines
+- File length: warn 1500, error 2500 lines
 
 ## PR & Workflow Rules
 
@@ -95,7 +92,7 @@ cd sdk && npm run test:watch  # watch mode
 <type>(<scope>): <subject>
 
 Types: feat, fix, refactor, docs, chore, ci
-Scopes: sdk, core, scripts, config, build, example
+Scopes: sdk, cli, core, scripts, config, build, example
 ```
 
 **Examples:**
@@ -110,19 +107,20 @@ docs: update configuration guide
 ## Security & Gotchas
 
 **Never commit:**
-- `src/PWAKit/Resources/pwa-config.json` - generated config
+- `kit/src/PWAKit/Resources/pwa-config.json` - generated config
 - `*.key`, `*.pem` - certificates
 - `.env*` - environment files
 - `credentials.json`, `secrets.json`
 
 **Configuration flow:**
-1. Run `make setup` or `./scripts/configure.sh`
-2. Generates `pwa-config.json` (gitignored)
-3. Run `./scripts/sync-config.sh` to update Info.plist
+- Run `make kit/setup` (or `node cli/dist/index.js init`)
+- Generates `pwa-config.json` (gitignored) + downloads icon
+- Automatically syncs to Xcode project (pbxproj, Info.plist, colorsets, icons)
+- After manual edits to `pwa-config.json`, run `make kit/sync`
 
 **Gotchas:**
-- All URLs must be HTTPS (validated in setup scripts)
-- After changing `pwa-config.json`, run `./scripts/sync-config.sh`
+- All URLs must be HTTPS (validated by CLI)
+- After changing `pwa-config.json`, run `make kit/sync`
 - `WKAppBoundDomains` in Info.plist must match `origins.allowed` + `origins.auth`
 - Set Development Team in Xcode before building
 - No SwiftPM dependencies - pure Xcode project

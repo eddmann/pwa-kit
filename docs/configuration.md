@@ -12,7 +12,7 @@ This document explains how to configure PWAKit for your Progressive Web App, inc
 
 ## pwa-config.json
 
-The primary configuration file located at `src/PWAKit/Resources/pwa-config.json`.
+The primary configuration file located at `kit/src/PWAKit/Resources/pwa-config.json`.
 
 ```json
 {
@@ -70,7 +70,7 @@ The primary configuration file located at `src/PWAKit/Resources/pwa-config.json`
 
 ## Info.plist Requirements
 
-The Info.plist file is located at `src/PWAKit/Info.plist`.
+The Info.plist file is located at `kit/src/PWAKit/Info.plist`.
 
 ### Required for All Apps
 
@@ -136,7 +136,7 @@ Required for push notifications:
 
 ## Entitlements (PWAKit.entitlements)
 
-The entitlements file is located at `src/PWAKit/PWAKit.entitlements`.
+The entitlements file is located at `kit/src/PWAKit/PWAKit.entitlements`.
 
 ### Complete Example
 

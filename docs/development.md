@@ -168,32 +168,35 @@ codesign -d --entitlements :- /path/to/PWAKit.app
 ### Validating Configuration
 
 ```bash
-cat src/PWAKit/Resources/pwa-config.json | python3 -m json.tool
+cat kit/src/PWAKit/Resources/pwa-config.json | python3 -m json.tool
 ```
 
 ## Project Structure
 
 ```
 pwa-kit/
-├── src/
-│   ├── PWAKit/                  # iOS app target
-│   │   ├── App/                 # App entry point, delegates
-│   │   ├── Views/               # SwiftUI views
-│   │   └── Resources/           # Assets, pwa-config.json
-│   └── PWAKitCore/              # Core library
-│       ├── Bridge/              # JavaScript bridge
-│       ├── Configuration/       # Config loading/validation
-│       ├── Modules/             # Native modules
-│       ├── Navigation/          # URL handling, deep links
-│       ├── WebView/             # WKWebView setup
-│       └── Files/               # Downloads, document preview
-├── tests/
-│   └── PWAKitCoreTests/         # Unit tests
+├── kit/                         # iOS Xcode project + Swift tooling
+│   ├── PWAKitApp.xcodeproj/     # Xcode project
+│   ├── src/
+│   │   ├── PWAKit/              # iOS app target
+│   │   │   ├── App/             # App entry point, delegates
+│   │   │   ├── Views/           # SwiftUI views
+│   │   │   └── Resources/       # Assets, pwa-config.json
+│   │   └── PWAKitCore/          # Core library
+│   │       ├── Bridge/          # JavaScript bridge
+│   │       ├── Configuration/   # Config loading/validation
+│   │       ├── Modules/         # Native modules
+│   │       ├── Navigation/      # URL handling, deep links
+│   │       ├── WebView/         # WKWebView setup
+│   │       └── Files/           # Downloads, document preview
+│   ├── tests/
+│   │   └── PWAKitCoreTests/     # Unit tests
+│   └── scripts/                 # lint.sh, format.sh
+├── cli/                         # TypeScript CLI
 ├── sdk/                         # JavaScript SDK
 │   ├── src/                     # TypeScript source
 │   └── dist/                    # Compiled output
 ├── example/                     # Kitchen sink demo
-├── scripts/                     # Setup and utility scripts
 └── docs/                        # Documentation
 ```
 
@@ -201,7 +204,7 @@ pwa-kit/
 
 ### Adding a New Feature
 
-1. Create the Swift module in `src/PWAKitCore/Modules/`
+1. Create the Swift module in `kit/src/PWAKitCore/Modules/`
 2. Register it in `ModuleRegistration.swift`
 3. Add feature flag to `FeaturesConfiguration.swift` if needed
 4. Create SDK wrapper in `sdk/src/`
@@ -210,7 +213,7 @@ pwa-kit/
 
 ### Updating Configuration Schema
 
-1. Modify types in `src/PWAKitCore/Configuration/`
+1. Modify types in `kit/src/PWAKitCore/Configuration/`
 2. Update `pwa-config.example.json`
 3. Update `docs/config-schema.md`
 4. Update `docs/configuration.md`

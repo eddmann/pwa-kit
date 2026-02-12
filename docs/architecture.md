@@ -50,13 +50,13 @@ The `BridgeDispatcher` is the central routing hub implemented as a Swift actor f
 - Routes to the appropriate module
 - Returns responses back to JavaScript
 
-**Location:** `src/PWAKitCore/Bridge/BridgeDispatcher.swift`
+**Location:** `kit/src/PWAKitCore/Bridge/BridgeDispatcher.swift`
 
 ### ModuleRegistry
 
 Thread-safe registry for looking up modules by name. Each module registers itself with a unique name (e.g., "haptics", "biometrics").
 
-**Location:** `src/PWAKitCore/Bridge/ModuleRegistry.swift`
+**Location:** `kit/src/PWAKitCore/Bridge/ModuleRegistry.swift`
 
 ### PWAModule Protocol
 
@@ -75,7 +75,7 @@ public protocol PWAModule: Sendable {
 }
 ```
 
-**Location:** `src/PWAKitCore/Modules/PWAModule.swift`
+**Location:** `kit/src/PWAKitCore/Modules/PWAModule.swift`
 
 ## Bridge Protocol
 
@@ -183,10 +183,10 @@ PWAKit uses Swift 6's strict concurrency model:
 
 | Component | Location |
 |-----------|----------|
-| App Entry | `src/PWAKit/App/PWAKitApp.swift` |
-| WebView Container | `src/PWAKit/Views/WebViewContainer.swift` |
-| Bridge Dispatcher | `src/PWAKitCore/Bridge/BridgeDispatcher.swift` |
-| Module Registry | `src/PWAKitCore/Bridge/ModuleRegistry.swift` |
-| Module Protocol | `src/PWAKitCore/Modules/PWAModule.swift` |
-| Module Registration | `src/PWAKitCore/Modules/ModuleRegistration.swift` |
-| Configuration Loader | `src/PWAKitCore/Configuration/ConfigurationLoader.swift` |
+| App Entry | `kit/src/PWAKit/App/PWAKitApp.swift` |
+| WebView Container | `kit/src/PWAKit/Views/WebViewContainer.swift` |
+| Bridge Dispatcher | `kit/src/PWAKitCore/Bridge/BridgeDispatcher.swift` |
+| Module Registry | `kit/src/PWAKitCore/Bridge/ModuleRegistry.swift` |
+| Module Protocol | `kit/src/PWAKitCore/Modules/PWAModule.swift` |
+| Module Registration | `kit/src/PWAKitCore/Modules/ModuleRegistration.swift` |
+| Configuration Loader | `kit/src/PWAKitCore/Configuration/ConfigurationLoader.swift` |

@@ -11,24 +11,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  swift-build:
-    name: Build & Test Swift
-    runs-on: macos-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Show Xcode version
-        run: xcodebuild -version
-
-      - name: Build
-        run: make build
-
-      - name: Run tests
-        run: make test
-
-  lint:
-    name: Lint
+  kit:
+    name: Kit
     runs-on: macos-latest
     steps:
       - name: Checkout
@@ -40,15 +24,15 @@ jobs:
       - name: Install SwiftFormat
         run: brew install swiftformat
 
-      - name: Check formatting and lint
-        run: make check
+      - name: Show Xcode version
+        run: xcodebuild -version
 
-  sdk-build:
-    name: Build SDK
+      - name: Can release
+        run: make kit/can-release
+
+  sdk:
+    name: SDK
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: sdk
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -61,13 +45,27 @@ jobs:
           cache-dependency-path: sdk/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: cd sdk && npm ci
 
-      - name: Type check
-        run: npm run typecheck
+      - name: Can release
+        run: make sdk/can-release
 
-      - name: Build
-        run: npm run build
+  cli:
+    name: CLI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
 
-      - name: Run tests
-        run: npm test
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: cli/package-lock.json
+
+      - name: Install dependencies
+        run: cd cli && npm ci
+
+      - name: Can release
+        run: make cli/can-release

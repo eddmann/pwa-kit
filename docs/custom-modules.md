@@ -43,7 +43,7 @@ public protocol PWAModule: Sendable {
 
 ### Swift Module
 
-Create a new file `src/PWAKitCore/Modules/HelloWorld/HelloWorldModule.swift`:
+Create a new file `kit/src/PWAKitCore/Modules/HelloWorld/HelloWorldModule.swift`:
 
 ```swift
 import Foundation
@@ -143,7 +143,7 @@ try {
 
 ### Option 1: Add to ModuleRegistration (Recommended)
 
-Edit `src/PWAKitCore/Modules/ModuleRegistration.swift`:
+Edit `kit/src/PWAKitCore/Modules/ModuleRegistration.swift`:
 
 ```swift
 // In registerDefaultModules(in:features:)
@@ -433,7 +433,7 @@ JavaScript                     Swift
 
 ## Complete Example Module
 
-See `src/PWAKitCore/Modules/Clipboard/ClipboardModule.swift` for a real-world example showing:
+See `kit/src/PWAKitCore/Modules/Clipboard/ClipboardModule.swift` for a real-world example showing:
 
 - Action validation
 - Payload parsing
