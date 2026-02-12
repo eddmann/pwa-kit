@@ -10,6 +10,9 @@ help:
 
 ##@ Kit (iOS)
 
+kit/deps: ## Install Kit dependencies (SwiftFormat, SwiftLint)
+	@brew install swiftformat swiftlint 2>/dev/null || brew upgrade swiftformat swiftlint 2>/dev/null || true
+
 kit/can-release: kit/fmt/check kit/lint kit/build kit/test ## All kit checks
 
 kit/setup: cli/build ## Interactive setup wizard
@@ -52,6 +55,9 @@ kit/clean: ## Clean Xcode derived data
 
 ##@ CLI
 
+cli/deps: ## Install CLI dependencies
+	@cd cli && npm ci
+
 cli/can-release: cli/build cli/typecheck cli/test ## All CLI checks
 
 cli/build: ## Build CLI
@@ -68,6 +74,9 @@ cli/clean: ## Remove CLI dist
 
 ##@ SDK
 
+sdk/deps: ## Install SDK dependencies
+	@cd sdk && npm ci
+
 sdk/can-release: sdk/build sdk/typecheck sdk/test ## All SDK checks
 
 sdk/build: ## Build SDK
@@ -83,6 +92,9 @@ sdk/clean: ## Remove SDK dist
 	@rm -rf sdk/dist
 
 ##@ Example
+
+example/deps: ## Install example dependencies
+	@cd example && npm install
 
 example/serve: ## Run kitchen sink demo server
 	@./example/run-example.sh --server-only

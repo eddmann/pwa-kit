@@ -25,14 +25,14 @@ The `version` field allows for future schema migrations while maintaining backwa
 }
 ```
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `version` | `integer` | Yes | Schema version number |
-| `app` | `object` | Yes | App metadata configuration |
-| `origins` | `object` | Yes | URL handling rules |
-| `features` | `object` | No | Feature flags for modules |
-| `appearance` | `object` | No | UI customization settings |
-| `notifications` | `object` | No | Push notification settings |
+| Field           | Type      | Required | Description                |
+| --------------- | --------- | -------- | -------------------------- |
+| `version`       | `integer` | Yes      | Schema version number      |
+| `app`           | `object`  | Yes      | App metadata configuration |
+| `origins`       | `object`  | Yes      | URL handling rules         |
+| `features`      | `object`  | No       | Feature flags for modules  |
+| `appearance`    | `object`  | No       | UI customization settings  |
+| `notifications` | `object`  | No       | Push notification settings |
 
 ---
 
@@ -52,11 +52,11 @@ The `app` object contains core application metadata.
 
 ### Fields
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `name` | `string` | Yes | Display name of the application |
-| `bundleId` | `string` | Yes | iOS bundle identifier (e.g., `com.example.app`) |
-| `startUrl` | `string` | Yes | The initial URL to load (must be HTTPS) |
+| Field      | Type     | Required | Description                                     |
+| ---------- | -------- | -------- | ----------------------------------------------- |
+| `name`     | `string` | Yes      | Display name of the application                 |
+| `bundleId` | `string` | Yes      | iOS bundle identifier (e.g., `com.example.app`) |
+| `startUrl` | `string` | Yes      | The initial URL to load (must be HTTPS)         |
 
 ### Validation Rules
 
@@ -82,22 +82,22 @@ The `origins` object controls how URLs are handled within the app.
 
 ### Fields
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `allowed` | `[string]` | Yes | - | Origins that load within the WebView |
-| `auth` | `[string]` | No | `[]` | Origins that show the "Done" toolbar |
-| `external` | `[string]` | No | `[]` | URLs that open in Safari/external browser |
+| Field      | Type       | Required | Default | Description                               |
+| ---------- | ---------- | -------- | ------- | ----------------------------------------- |
+| `allowed`  | `[string]` | Yes      | -       | Origins that load within the WebView      |
+| `auth`     | `[string]` | No       | `[]`    | Origins that show the "Done" toolbar      |
+| `external` | `[string]` | No       | `[]`    | URLs that open in Safari/external browser |
 
 ### Origin Patterns
 
 Origins support wildcard patterns:
 
-| Pattern | Matches |
-|---------|---------|
-| `example.com` | Exact domain match |
-| `*.example.com` | Any subdomain of example.com |
-| `example.com/path/*` | Any path starting with /path/ |
-| `*.example.com/api/*` | Subdomain with path pattern |
+| Pattern               | Matches                       |
+| --------------------- | ----------------------------- |
+| `example.com`         | Exact domain match            |
+| `*.example.com`       | Any subdomain of example.com  |
+| `example.com/path/*`  | Any path starting with /path/ |
+| `*.example.com/api/*` | Subdomain with path pattern   |
 
 ### Behavior
 
@@ -142,19 +142,19 @@ The `features` object enables or disables individual bridge modules.
 
 ### Available Features
 
-| Feature | Default | Description |
-|---------|---------|-------------|
-| `notifications` | `true` | Push notification support (APNs) |
-| `haptics` | `true` | Haptic feedback (UIImpactFeedbackGenerator) |
-| `biometrics` | `true` | Face ID / Touch ID authentication |
-| `secureStorage` | `true` | Keychain-based secure storage |
-| `healthkit` | `false` | HealthKit data access |
-| `iap` | `false` | In-app purchases (StoreKit 2) |
-| `share` | `true` | Native share sheet |
-| `print` | `true` | AirPrint support |
-| `clipboard` | `true` | System clipboard access |
-| `cameraPermission` | `true` | Camera permission requests |
-| `locationPermission` | `true` | Location permission requests |
+| Feature              | Default | Description                                 |
+| -------------------- | ------- | ------------------------------------------- |
+| `notifications`      | `true`  | Push notification support (APNs)            |
+| `haptics`            | `true`  | Haptic feedback (UIImpactFeedbackGenerator) |
+| `biometrics`         | `true`  | Face ID / Touch ID authentication           |
+| `secureStorage`      | `true`  | Keychain-based secure storage               |
+| `healthkit`          | `false` | HealthKit data access                       |
+| `iap`                | `false` | In-app purchases (StoreKit 2)               |
+| `share`              | `true`  | Native share sheet                          |
+| `print`              | `true`  | AirPrint support                            |
+| `clipboard`          | `true`  | System clipboard access                     |
+| `cameraPermission`   | `true`  | Camera permission requests                  |
+| `locationPermission` | `true`  | Location permission requests                |
 
 ### Notes
 
@@ -183,29 +183,29 @@ The `appearance` object controls UI behavior and styling.
 
 ### Fields
 
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `displayMode` | `string` | `"standalone"` | How the app displays content |
-| `pullToRefresh` | `boolean` | `true` | Enable pull-to-refresh gesture |
-| `adaptiveStyle` | `boolean` | `true` | Match system theme to web background |
-| `statusBarStyle` | `string` | `"default"` | Status bar appearance |
-| `backgroundColor` | `string` | `null` | App background color (hex, e.g., `"#FFFFFF"`) |
-| `themeColor` | `string` | `null` | Theme/accent color (hex, e.g., `"#007AFF"`) |
+| Field             | Type      | Default        | Description                                   |
+| ----------------- | --------- | -------------- | --------------------------------------------- |
+| `displayMode`     | `string`  | `"standalone"` | How the app displays content                  |
+| `pullToRefresh`   | `boolean` | `true`         | Enable pull-to-refresh gesture                |
+| `adaptiveStyle`   | `boolean` | `true`         | Match system theme to web background          |
+| `statusBarStyle`  | `string`  | `"default"`    | Status bar appearance                         |
+| `backgroundColor` | `string`  | `null`         | App background color (hex, e.g., `"#FFFFFF"`) |
+| `themeColor`      | `string`  | `null`         | Theme/accent color (hex, e.g., `"#007AFF"`)   |
 
 ### Display Modes
 
-| Mode | Description |
-|------|-------------|
-| `standalone` | Hides browser UI, app appears native |
+| Mode         | Description                            |
+| ------------ | -------------------------------------- |
+| `standalone` | Hides browser UI, app appears native   |
 | `fullscreen` | Hides status bar, maximum screen space |
 
 ### Status Bar Styles
 
-| Style | Description |
-|-------|-------------|
-| `default` | Automatic based on content |
-| `lightContent` | White text (for dark backgrounds) |
-| `darkContent` | Black text (for light backgrounds) |
+| Style          | Description                        |
+| -------------- | ---------------------------------- |
+| `default`      | Automatic based on content         |
+| `lightContent` | White text (for dark backgrounds)  |
+| `darkContent`  | Black text (for light backgrounds) |
 
 ### Adaptive Style
 
@@ -227,15 +227,15 @@ The `notifications` object configures push notification behavior.
 
 ### Fields
 
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
+| Field      | Type     | Default  | Description                |
+| ---------- | -------- | -------- | -------------------------- |
 | `provider` | `string` | `"apns"` | Push notification provider |
 
 ### Providers
 
-| Provider | Description |
-|----------|-------------|
-| `apns` | Apple Push Notification service (native) |
+| Provider | Description                              |
+| -------- | ---------------------------------------- |
+| `apns`   | Apple Push Notification service (native) |
 
 PWAKit uses native APNs exclusively. The device token is provided to your web app via the bridge for server-side registration.
 

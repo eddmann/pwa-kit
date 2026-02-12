@@ -88,7 +88,7 @@ window.webkit.messageHandlers.pwakit.postMessage({
   id: "uuid-string",
   module: "haptics",
   action: "impact",
-  payload: { style: "medium" }
+  payload: { style: "medium" },
 });
 ```
 
@@ -101,20 +101,20 @@ Responses are sent back via JavaScript evaluation:
 window.pwakit._handleResponse({
   id: "uuid-string",
   success: true,
-  data: { triggered: true }
+  data: { triggered: true },
 });
 
 // Error response
 window.pwakit._handleResponse({
   id: "uuid-string",
   success: false,
-  error: "Unknown action"
+  error: "Unknown action",
 });
 
 // Event dispatch (unsolicited)
 window.pwakit._handleEvent({
   type: "push",
-  data: { title: "New Message", body: "..." }
+  data: { title: "New Message", body: "..." },
 });
 ```
 
@@ -181,12 +181,12 @@ PWAKit uses Swift 6's strict concurrency model:
 
 ## Key Files
 
-| Component | Location |
-|-----------|----------|
-| App Entry | `kit/src/PWAKit/App/PWAKitApp.swift` |
-| WebView Container | `kit/src/PWAKit/Views/WebViewContainer.swift` |
-| Bridge Dispatcher | `kit/src/PWAKitCore/Bridge/BridgeDispatcher.swift` |
-| Module Registry | `kit/src/PWAKitCore/Bridge/ModuleRegistry.swift` |
-| Module Protocol | `kit/src/PWAKitCore/Modules/PWAModule.swift` |
-| Module Registration | `kit/src/PWAKitCore/Modules/ModuleRegistration.swift` |
+| Component            | Location                                                     |
+| -------------------- | ------------------------------------------------------------ |
+| App Entry            | `kit/src/PWAKit/App/PWAKitApp.swift`                         |
+| WebView Container    | `kit/src/PWAKit/Views/WebViewContainer.swift`                |
+| Bridge Dispatcher    | `kit/src/PWAKitCore/Bridge/BridgeDispatcher.swift`           |
+| Module Registry      | `kit/src/PWAKitCore/Bridge/ModuleRegistry.swift`             |
+| Module Protocol      | `kit/src/PWAKitCore/Modules/PWAModule.swift`                 |
+| Module Registration  | `kit/src/PWAKitCore/Modules/ModuleRegistration.swift`        |
 | Configuration Loader | `kit/src/PWAKitCore/Configuration/ConfigurationLoader.swift` |

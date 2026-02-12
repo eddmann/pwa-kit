@@ -115,27 +115,29 @@ public struct HelloWorldModule: PWAModule {
 ### JavaScript Usage
 
 ```javascript
-import { bridge } from '@eddmann/pwa-kit-sdk';
+import { bridge } from "@eddmann/pwa-kit-sdk";
 
 // Simple greeting
-const greeting = await bridge.call('helloWorld', 'greet', { name: 'Developer' });
-console.log(greeting.message);     // "Hello, Developer!"
-console.log(greeting.timestamp);   // 1704067200.0
+const greeting = await bridge.call("helloWorld", "greet", {
+  name: "Developer",
+});
+console.log(greeting.message); // "Hello, Developer!"
+console.log(greeting.timestamp); // 1704067200.0
 
 // Echo with validation
-const echo = await bridge.call('helloWorld', 'echo', { text: 'Testing 123' });
-console.log(echo.echoed);  // "Testing 123"
-console.log(echo.length);  // 11
+const echo = await bridge.call("helloWorld", "echo", { text: "Testing 123" });
+console.log(echo.echoed); // "Testing 123"
+console.log(echo.length); // 11
 
 // Math operation
-const sum = await bridge.call('helloWorld', 'add', { a: 5, b: 3 });
-console.log(sum.result);   // 8
+const sum = await bridge.call("helloWorld", "add", { a: 5, b: 3 });
+console.log(sum.result); // 8
 
 // Error handling
 try {
-    await bridge.call('helloWorld', 'echo', {}); // Missing 'text'
+  await bridge.call("helloWorld", "echo", {}); // Missing 'text'
 } catch (error) {
-    console.error(error.message); // "Invalid payload: Missing required 'text' field"
+  console.error(error.message); // "Invalid payload: Missing required 'text' field"
 }
 ```
 
@@ -294,9 +296,9 @@ Errors are automatically returned to JavaScript as error responses:
 
 ```javascript
 try {
-    await bridge.call('myModule', 'action', {});
+  await bridge.call("myModule", "action", {});
 } catch (error) {
-    // error.message contains the localized error description
+  // error.message contains the localized error description
 }
 ```
 
@@ -410,6 +412,7 @@ return AnyCodable([
 ### 6. Document Your Module
 
 Add documentation comments explaining:
+
 - What the module does
 - What actions it supports
 - What payload fields each action expects

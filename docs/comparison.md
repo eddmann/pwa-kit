@@ -20,15 +20,15 @@ Unlike frameworks that generate native code or require you to learn new language
 
 ## Quick Comparison
 
-| Aspect | PWAKit | Capacitor | React Native | Flutter | Native Swift |
-|--------|--------|-----------|--------------|---------|--------------|
-| **Your Code** | Web only | Web only | JS + Native | Dart | Swift |
-| **Runtime** | WKWebView | WKWebView | JSC + Native Views | Skia Renderer | Native |
-| **UI Rendering** | Browser | Browser | Native components | Custom painted | Native |
-| **Learning Curve** | None | Low | Medium | High | High |
-| **App Size** | ~2-5 MB | ~2-5 MB | ~20-50 MB | ~15-25 MB | ~5-15 MB |
-| **PWA Compatible** | Yes | Yes | No | No | No |
-| **iOS Features** | Via bridge | Via plugins | Native modules | Platform channels | Direct |
+| Aspect             | PWAKit     | Capacitor   | React Native       | Flutter           | Native Swift |
+| ------------------ | ---------- | ----------- | ------------------ | ----------------- | ------------ |
+| **Your Code**      | Web only   | Web only    | JS + Native        | Dart              | Swift        |
+| **Runtime**        | WKWebView  | WKWebView   | JSC + Native Views | Skia Renderer     | Native       |
+| **UI Rendering**   | Browser    | Browser     | Native components  | Custom painted    | Native       |
+| **Learning Curve** | None       | Low         | Medium             | High              | High         |
+| **App Size**       | ~2-5 MB    | ~2-5 MB     | ~20-50 MB          | ~15-25 MB         | ~5-15 MB     |
+| **PWA Compatible** | Yes        | Yes         | No                 | No                | No           |
+| **iOS Features**   | Via bridge | Via plugins | Native modules     | Platform channels | Direct       |
 
 ---
 
@@ -45,15 +45,15 @@ Unlike frameworks that generate native code or require you to learn new language
 
 ### Key Differences
 
-| Aspect | PWAKit | Capacitor |
-|--------|--------|-----------|
-| **Focus** | PWA wrapping specifically | General hybrid app platform |
-| **Platforms** | iOS only (focused) | iOS, Android, Web |
-| **Native Code** | Zero required | Sometimes needed for plugins |
-| **Configuration** | JSON only | JSON + native project files |
-| **Plugin System** | 13 built-in modules | Large community ecosystem |
-| **Project Structure** | Xcode project | Xcode project + CocoaPods/SPM |
-| **Swift Version** | Swift 6 with actors | Varies by plugin |
+| Aspect                | PWAKit                    | Capacitor                     |
+| --------------------- | ------------------------- | ----------------------------- |
+| **Focus**             | PWA wrapping specifically | General hybrid app platform   |
+| **Platforms**         | iOS only (focused)        | iOS, Android, Web             |
+| **Native Code**       | Zero required             | Sometimes needed for plugins  |
+| **Configuration**     | JSON only                 | JSON + native project files   |
+| **Plugin System**     | 13 built-in modules       | Large community ecosystem     |
+| **Project Structure** | Xcode project             | Xcode project + CocoaPods/SPM |
+| **Swift Version**     | Swift 6 with actors       | Varies by plugin              |
 
 ### When to Choose PWAKit
 
@@ -81,15 +81,15 @@ React Native compiles your JavaScript/TypeScript into native UI components. When
 
 ### Key Differences
 
-| Aspect | PWAKit | React Native |
-|--------|--------|--------------|
-| **UI** | Web (HTML/CSS in WebView) | Native iOS components |
-| **Existing Code** | Use your PWA directly | Must rewrite UI in React Native |
-| **Styling** | CSS | StyleSheet (CSS-like but different) |
-| **DOM APIs** | Full browser APIs | None (no DOM) |
-| **Performance** | Web performance | Near-native performance |
-| **Bundle Size** | ~2-5 MB | ~20-50 MB |
-| **Hot Reload** | Browser dev tools | Metro bundler |
+| Aspect            | PWAKit                    | React Native                        |
+| ----------------- | ------------------------- | ----------------------------------- |
+| **UI**            | Web (HTML/CSS in WebView) | Native iOS components               |
+| **Existing Code** | Use your PWA directly     | Must rewrite UI in React Native     |
+| **Styling**       | CSS                       | StyleSheet (CSS-like but different) |
+| **DOM APIs**      | Full browser APIs         | None (no DOM)                       |
+| **Performance**   | Web performance           | Near-native performance             |
+| **Bundle Size**   | ~2-5 MB                   | ~20-50 MB                           |
+| **Hot Reload**    | Browser dev tools         | Metro bundler                       |
 
 ### When to Choose PWAKit
 
@@ -117,15 +117,15 @@ Flutter doesn't use native UI components OR web views. It paints every pixel usi
 
 ### Key Differences
 
-| Aspect | PWAKit | Flutter |
-|--------|--------|---------|
-| **Language** | JavaScript/TypeScript | Dart |
-| **Rendering** | WebView (browser engine) | Custom Skia engine |
+| Aspect             | PWAKit                         | Flutter                         |
+| ------------------ | ------------------------------ | ------------------------------- |
+| **Language**       | JavaScript/TypeScript          | Dart                            |
+| **Rendering**      | WebView (browser engine)       | Custom Skia engine              |
 | **Learning Curve** | None (use existing web skills) | High (new language + framework) |
-| **UI Paradigm** | HTML/CSS | Widget tree |
-| **Existing Code** | Use your PWA directly | Must rewrite everything |
-| **Bundle Size** | ~2-5 MB | ~15-25 MB |
-| **Web Support** | Native (it's a web app) | Flutter Web (different runtime) |
+| **UI Paradigm**    | HTML/CSS                       | Widget tree                     |
+| **Existing Code**  | Use your PWA directly          | Must rewrite everything         |
+| **Bundle Size**    | ~2-5 MB                        | ~15-25 MB                       |
+| **Web Support**    | Native (it's a web app)        | Flutter Web (different runtime) |
 
 ### When to Choose PWAKit
 
@@ -153,16 +153,16 @@ You write Swift code using Apple's frameworks (UIKit, SwiftUI). Your app compile
 
 ### Key Differences
 
-| Aspect | PWAKit | Native Swift |
-|--------|--------|--------------|
-| **Language** | JavaScript/TypeScript | Swift |
-| **UI Framework** | HTML/CSS | SwiftUI/UIKit |
-| **IDE** | Any web IDE | Xcode required |
-| **Learning Curve** | None (web skills) | High (new language + frameworks) |
-| **API Access** | Via bridge (async) | Direct (sync) |
-| **Performance** | Web performance | Maximum native performance |
-| **Code Sharing** | Web + iOS from same code | iOS only |
-| **Team Skills** | Web developers | iOS developers |
+| Aspect             | PWAKit                   | Native Swift                     |
+| ------------------ | ------------------------ | -------------------------------- |
+| **Language**       | JavaScript/TypeScript    | Swift                            |
+| **UI Framework**   | HTML/CSS                 | SwiftUI/UIKit                    |
+| **IDE**            | Any web IDE              | Xcode required                   |
+| **Learning Curve** | None (web skills)        | High (new language + frameworks) |
+| **API Access**     | Via bridge (async)       | Direct (sync)                    |
+| **Performance**    | Web performance          | Maximum native performance       |
+| **Code Sharing**   | Web + iOS from same code | iOS only                         |
+| **Team Skills**    | Web developers           | iOS developers                   |
 
 ### When to Choose PWAKit
 
@@ -203,14 +203,14 @@ PWABuilder generates an Xcode project that wraps your PWA in WKWebView - concept
 
 ### PWAKit vs PWABuilder iOS
 
-| Aspect | PWAKit | PWABuilder iOS |
-|--------|--------|----------------|
+| Aspect             | PWAKit                                  | PWABuilder iOS             |
+| ------------------ | --------------------------------------- | -------------------------- |
 | **Native Modules** | 13 built-in (haptics, biometrics, etc.) | Basic (fewer capabilities) |
-| **TypeScript SDK** | Yes, fully typed | Limited |
-| **Configuration** | JSON-based, flexible | Generated from manifest |
-| **Maintenance** | Actively developed | Generated output |
-| **Customization** | High (module system) | Limited |
-| **Architecture** | Swift 6, actor-based | Older Swift patterns |
+| **TypeScript SDK** | Yes, fully typed                        | Limited                    |
+| **Configuration**  | JSON-based, flexible                    | Generated from manifest    |
+| **Maintenance**    | Actively developed                      | Generated output           |
+| **Customization**  | High (module system)                    | Limited                    |
+| **Architecture**   | Swift 6, actor-based                    | Older Swift patterns       |
 
 ### When to Use PWABuilder
 
@@ -229,6 +229,7 @@ PWABuilder generates an Xcode project that wraps your PWA in WKWebView - concept
 ### Using Both
 
 A common workflow:
+
 1. Use PWABuilder to quickly validate your PWA works as an iOS app
 2. Migrate to PWAKit when you need more native features
 3. The same PWA works with both - no code changes needed
@@ -239,18 +240,18 @@ A common workflow:
 
 When wrapped with PWAKit, your PWA keeps all its advantages:
 
-| PWA Feature | Status | Notes |
-|-------------|--------|-------|
-| Service Workers | Supported | Offline caching works normally |
-| HTTPS | Required | Start URL must be HTTPS |
-| Responsive Design | Supported | Your CSS handles all screen sizes |
-| IndexedDB | Supported | Client-side database works |
-| LocalStorage | Supported | All web storage APIs work |
-| Cache API | Supported | Service worker caching works |
-| Background Sync | Supported | Where iOS allows |
-| Web Push | Enhanced | APNs provides better iOS integration |
-| Add to Home Screen | Native | App Store install replaces this |
-| Web App Manifest | N/A | Native app config replaces manifest |
+| PWA Feature        | Status    | Notes                                |
+| ------------------ | --------- | ------------------------------------ |
+| Service Workers    | Supported | Offline caching works normally       |
+| HTTPS              | Required  | Start URL must be HTTPS              |
+| Responsive Design  | Supported | Your CSS handles all screen sizes    |
+| IndexedDB          | Supported | Client-side database works           |
+| LocalStorage       | Supported | All web storage APIs work            |
+| Cache API          | Supported | Service worker caching works         |
+| Background Sync    | Supported | Where iOS allows                     |
+| Web Push           | Enhanced  | APNs provides better iOS integration |
+| Add to Home Screen | Native    | App Store install replaces this      |
+| Web App Manifest   | N/A       | Native app config replaces manifest  |
 
 ---
 
@@ -275,11 +276,11 @@ Do you have an existing PWA or web app?
 
 ## Summary
 
-| Tool | Best For |
-|------|----------|
-| **PWAKit** | Existing PWAs needing iOS App Store with native features, web-only teams |
-| **Capacitor** | Cross-platform hybrid apps, large plugin ecosystem needs |
-| **React Native** | Teams wanting native UI with JavaScript, React expertise |
-| **Flutter** | New projects wanting pixel-perfect cross-platform UI |
-| **Native Swift** | Maximum performance, iOS-only, experienced native teams |
-| **PWABuilder** | Quick PWA-to-App-Store with minimal native features |
+| Tool             | Best For                                                                 |
+| ---------------- | ------------------------------------------------------------------------ |
+| **PWAKit**       | Existing PWAs needing iOS App Store with native features, web-only teams |
+| **Capacitor**    | Cross-platform hybrid apps, large plugin ecosystem needs                 |
+| **React Native** | Teams wanting native UI with JavaScript, React expertise                 |
+| **Flutter**      | New projects wanting pixel-perfect cross-platform UI                     |
+| **Native Swift** | Maximum performance, iOS-only, experienced native teams                  |
+| **PWABuilder**   | Quick PWA-to-App-Store with minimal native features                      |

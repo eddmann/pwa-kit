@@ -31,8 +31,7 @@ jobs:
             --exclude='kit/src/PWAKit/Resources/pwa-config.json'
 
       - name: Build CLI
-        working-directory: cli
-        run: npm ci && npm run build
+        run: make cli/deps cli/build
 
       - name: Publish CLI
         working-directory: cli
@@ -41,8 +40,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build SDK
-        working-directory: sdk
-        run: npm ci && npm run build
+        run: make sdk/deps sdk/build
 
       - name: Publish SDK
         working-directory: sdk

@@ -89,21 +89,21 @@ npm install @eddmann/pwa-kit-sdk
 ### Basic Usage
 
 ```typescript
-import { push, badging, haptics, ios, isNative } from '@eddmann/pwa-kit-sdk';
+import { push, badging, haptics, ios, isNative } from "@eddmann/pwa-kit-sdk";
 
 if (isNative) {
   // Subscribe to push notifications
   const subscription = await push.subscribe();
-  console.log('Token:', subscription.token);
+  console.log("Token:", subscription.token);
 
   // Set app badge
   await badging.setAppBadge(5);
 
   // Haptic feedback
-  await haptics.impact('medium');
+  await haptics.impact("medium");
 
   // iOS-specific: Face ID / Touch ID
-  const result = await ios.biometrics.authenticate('Confirm purchase');
+  const result = await ios.biometrics.authenticate("Confirm purchase");
 }
 ```
 
@@ -113,22 +113,22 @@ See [sdk/README.md](sdk/README.md) for the complete SDK documentation and API re
 
 PWAKit includes 13 native modules:
 
-| Module              | Description              | SDK API                                        |
-| ------------------- | ------------------------ | ---------------------------------------------- |
-| Platform            | Device info              | `platform.getInfo()`                           |
-| App                 | Lifecycle, reviews       | `ios.app.requestReview()`                      |
-| Haptics             | Haptic feedback          | `haptics.impact('medium')`                     |
-| Push Notifications  | Remote push (APNs)       | `push.subscribe()`                             |
-| Local Notifications | Scheduled notifications  | `ios.notifications.schedule()`                 |
-| Biometrics          | Face ID / Touch ID       | `ios.biometrics.authenticate()`                |
-| Secure Storage      | Keychain                 | `ios.secureStorage.set()`                      |
-| Clipboard           | Copy/paste               | `clipboard.writeText()`                        |
-| Share               | Share sheet              | `share.share()`                                |
-| Print               | AirPrint                 | `print.print()`                                |
-| Camera Permission   | Camera access            | `permissions.request({ name: 'camera' })`      |
-| Location Permission | Location access          | `permissions.request({ name: 'geolocation' })` |
-| HealthKit           | Health data              | `ios.healthKit.querySteps()`                   |
-| StoreKit            | In-app purchases         | `ios.storeKit.purchase()`                      |
+| Module              | Description             | SDK API                                        |
+| ------------------- | ----------------------- | ---------------------------------------------- |
+| Platform            | Device info             | `platform.getInfo()`                           |
+| App                 | Lifecycle, reviews      | `ios.app.requestReview()`                      |
+| Haptics             | Haptic feedback         | `haptics.impact('medium')`                     |
+| Push Notifications  | Remote push (APNs)      | `push.subscribe()`                             |
+| Local Notifications | Scheduled notifications | `ios.notifications.schedule()`                 |
+| Biometrics          | Face ID / Touch ID      | `ios.biometrics.authenticate()`                |
+| Secure Storage      | Keychain                | `ios.secureStorage.set()`                      |
+| Clipboard           | Copy/paste              | `clipboard.writeText()`                        |
+| Share               | Share sheet             | `share.share()`                                |
+| Print               | AirPrint                | `print.print()`                                |
+| Camera Permission   | Camera access           | `permissions.request({ name: 'camera' })`      |
+| Location Permission | Location access         | `permissions.request({ name: 'geolocation' })` |
+| HealthKit           | Health data             | `ios.healthKit.querySteps()`                   |
+| StoreKit            | In-app purchases        | `ios.storeKit.purchase()`                      |
 
 For full API documentation, see [sdk/README.md](sdk/README.md). To create your own modules, see [docs/custom-modules.md](docs/custom-modules.md).
 

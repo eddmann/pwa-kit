@@ -26,21 +26,21 @@ For direct browser usage without a bundler:
 ## Quick Start
 
 ```typescript
-import { push, badging, haptics, ios, isNative } from '@eddmann/pwa-kit-sdk';
+import { push, badging, haptics, ios, isNative } from "@eddmann/pwa-kit-sdk";
 
 if (isNative) {
   // Subscribe to push notifications (PushManager API)
   const subscription = await push.subscribe();
-  console.log('Token:', subscription.token);
+  console.log("Token:", subscription.token);
 
   // Set app badge (Badging API)
   await badging.setAppBadge(5);
 
   // Haptic feedback
-  await haptics.impact('medium');
+  await haptics.impact("medium");
 
   // iOS-specific: Face ID / Touch ID
-  const result = await ios.biometrics.authenticate('Confirm purchase');
+  const result = await ios.biometrics.authenticate("Confirm purchase");
 }
 ```
 
@@ -52,50 +52,50 @@ The SDK organizes APIs into three categories:
 
 These modules follow Web Platform API conventions:
 
-| Module | Web Standard | Description |
-|--------|--------------|-------------|
-| `push` | [PushManager](https://developer.mozilla.org/en-US/docs/Web/API/PushManager) | Push notification registration |
-| `badging` | [Badging API](https://developer.mozilla.org/en-US/docs/Web/API/Badging_API) | App icon badges |
-| `vibration` | [Vibration API](https://developer.mozilla.org/en-US/docs/Web/API/Vibration_API) | Vibration (uses haptics on iOS) |
-| `clipboard` | [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API) | Read/write clipboard |
-| `share` | [Web Share API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API) | Native share sheet |
-| `permissions` | [Permissions API](https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API) | Permission management |
+| Module        | Web Standard                                                                        | Description                     |
+| ------------- | ----------------------------------------------------------------------------------- | ------------------------------- |
+| `push`        | [PushManager](https://developer.mozilla.org/en-US/docs/Web/API/PushManager)         | Push notification registration  |
+| `badging`     | [Badging API](https://developer.mozilla.org/en-US/docs/Web/API/Badging_API)         | App icon badges                 |
+| `vibration`   | [Vibration API](https://developer.mozilla.org/en-US/docs/Web/API/Vibration_API)     | Vibration (uses haptics on iOS) |
+| `clipboard`   | [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API)     | Read/write clipboard            |
+| `share`       | [Web Share API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API)     | Native share sheet              |
+| `permissions` | [Permissions API](https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API) | Permission management           |
 
 ### Enhanced APIs
 
 Extended functionality beyond web standards:
 
-| Module | Description |
-|--------|-------------|
-| `haptics` | iOS haptic feedback (impact, notification, selection) |
-| `print` | AirPrint functionality |
-| `platform` | Platform detection and device info |
+| Module     | Description                                           |
+| ---------- | ----------------------------------------------------- |
+| `haptics`  | iOS haptic feedback (impact, notification, selection) |
+| `print`    | AirPrint functionality                                |
+| `platform` | Platform detection and device info                    |
 
 ### iOS-Specific Modules (Namespaced)
 
 Native iOS features without web equivalents, namespaced under `ios.*`:
 
-| Module | Description |
-|--------|-------------|
-| `ios.biometrics` | Face ID / Touch ID authentication |
-| `ios.secureStorage` | Keychain storage |
-| `ios.healthKit` | HealthKit data access |
-| `ios.storeKit` | In-app purchases (StoreKit 2) |
-| `ios.app` | App lifecycle and reviews |
-| `ios.notifications` | Local notification scheduling |
+| Module              | Description                       |
+| ------------------- | --------------------------------- |
+| `ios.biometrics`    | Face ID / Touch ID authentication |
+| `ios.secureStorage` | Keychain storage                  |
+| `ios.healthKit`     | HealthKit data access             |
+| `ios.storeKit`      | In-app purchases (StoreKit 2)     |
+| `ios.app`           | App lifecycle and reviews         |
+| `ios.notifications` | Local notification scheduling     |
 
 ## Web API Alignment
 
 PWAKit SDK methods are designed to match Web Platform API signatures as closely as possible:
 
-| SDK Module | Web Standard | Alignment |
-|------------|--------------|-----------|
-| `push` | [PushManager](https://developer.mozilla.org/en-US/docs/Web/API/PushManager) | Exact match - `subscribe()`, `getSubscription()`, `permissionState()` |
-| `badging` | [Badging API](https://developer.mozilla.org/en-US/docs/Web/API/Badging_API) | Exact match - `setAppBadge()`, `clearAppBadge()` |
-| `vibration` | [Vibration API](https://developer.mozilla.org/en-US/docs/Web/API/Vibration_API) | Exact match - `vibrate(pattern)` (polyfills with haptics on iOS) |
-| `clipboard` | [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API) | Text methods - `writeText()`, `readText()` |
-| `share` | [Web Share API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API) | Match - `share()`, async `canShare()` |
-| `permissions` | [Permissions API](https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API) | Match with extension - `query()` + `request()` |
+| SDK Module    | Web Standard                                                                        | Alignment                                                             |
+| ------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `push`        | [PushManager](https://developer.mozilla.org/en-US/docs/Web/API/PushManager)         | Exact match - `subscribe()`, `getSubscription()`, `permissionState()` |
+| `badging`     | [Badging API](https://developer.mozilla.org/en-US/docs/Web/API/Badging_API)         | Exact match - `setAppBadge()`, `clearAppBadge()`                      |
+| `vibration`   | [Vibration API](https://developer.mozilla.org/en-US/docs/Web/API/Vibration_API)     | Exact match - `vibrate(pattern)` (polyfills with haptics on iOS)      |
+| `clipboard`   | [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API)     | Text methods - `writeText()`, `readText()`                            |
+| `share`       | [Web Share API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API)     | Match - `share()`, async `canShare()`                                 |
+| `permissions` | [Permissions API](https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API) | Match with extension - `query()` + `request()`                        |
 
 ### Intentional Deviations
 
@@ -111,17 +111,17 @@ These deviations improve the developer experience on mobile:
 ### Push (PushManager)
 
 ```typescript
-import { push } from '@eddmann/pwa-kit-sdk';
+import { push } from "@eddmann/pwa-kit-sdk";
 
 // Subscribe to push notifications
 const subscription = await push.subscribe();
-console.log('Token:', subscription.token);
-console.log('Endpoint:', subscription.endpoint); // apns://token
+console.log("Token:", subscription.token);
+console.log("Endpoint:", subscription.endpoint); // apns://token
 
 // Get existing subscription
 const existing = await push.getSubscription();
 if (existing) {
-  console.log('Already subscribed');
+  console.log("Already subscribed");
 }
 
 // Check permission state
@@ -132,7 +132,7 @@ const state = await push.permissionState();
 ### Badging (Badging API)
 
 ```typescript
-import { badging } from '@eddmann/pwa-kit-sdk';
+import { badging } from "@eddmann/pwa-kit-sdk";
 
 // Set badge count
 await badging.setAppBadge(5);
@@ -144,7 +144,7 @@ await badging.clearAppBadge();
 ### Vibration (Vibration API)
 
 ```typescript
-import { vibration } from '@eddmann/pwa-kit-sdk';
+import { vibration } from "@eddmann/pwa-kit-sdk";
 
 // Vibrate (triggers haptic on iOS)
 await vibration.vibrate(100);
@@ -154,10 +154,10 @@ await vibration.vibrate([100, 50, 100]); // Pattern
 ### Clipboard (Clipboard API)
 
 ```typescript
-import { clipboard } from '@eddmann/pwa-kit-sdk';
+import { clipboard } from "@eddmann/pwa-kit-sdk";
 
 // Write text
-await clipboard.writeText('Hello, World!');
+await clipboard.writeText("Hello, World!");
 
 // Read text
 const text = await clipboard.readText();
@@ -166,22 +166,24 @@ const text = await clipboard.readText();
 ### Share (Web Share API)
 
 ```typescript
-import { share } from '@eddmann/pwa-kit-sdk';
+import { share } from "@eddmann/pwa-kit-sdk";
 
 // Share URL
 await share.share({
-  title: 'Check this out',
-  url: 'https://example.com'
+  title: "Check this out",
+  url: "https://example.com",
 });
 
 // Share with files
 await share.share({
-  title: 'Document',
-  files: [{
-    name: 'report.pdf',
-    type: 'application/pdf',
-    data: 'base64encodeddata...'
-  }]
+  title: "Document",
+  files: [
+    {
+      name: "report.pdf",
+      type: "application/pdf",
+      data: "base64encodeddata...",
+    },
+  ],
 });
 
 // Check availability
@@ -191,14 +193,14 @@ const canShare = await share.canShare();
 ### Permissions (Permissions API)
 
 ```typescript
-import { permissions } from '@eddmann/pwa-kit-sdk';
+import { permissions } from "@eddmann/pwa-kit-sdk";
 
 // Query permission state
-const status = await permissions.query({ name: 'camera' });
-console.log('Camera:', status.state); // 'granted' | 'denied' | 'prompt'
+const status = await permissions.query({ name: "camera" });
+console.log("Camera:", status.state); // 'granted' | 'denied' | 'prompt'
 
 // Request permission
-const result = await permissions.request({ name: 'geolocation' });
+const result = await permissions.request({ name: "geolocation" });
 
 // Supported permissions: 'camera', 'geolocation', 'microphone'
 ```
@@ -210,16 +212,16 @@ const result = await permissions.request({ name: 'geolocation' });
 Native iOS haptic feedback with impact, notification, and selection patterns.
 
 ```typescript
-import { haptics } from '@eddmann/pwa-kit-sdk';
+import { haptics } from "@eddmann/pwa-kit-sdk";
 
 // Impact feedback
-await haptics.impact('light');   // light, medium, heavy, soft, rigid
-await haptics.impact('medium');
-await haptics.impact('heavy');
+await haptics.impact("light"); // light, medium, heavy, soft, rigid
+await haptics.impact("medium");
+await haptics.impact("heavy");
 
 // Notification feedback
-await haptics.notification('success');  // success, warning, error
-await haptics.notification('error');
+await haptics.notification("success"); // success, warning, error
+await haptics.notification("error");
 
 // Selection feedback
 await haptics.selection();
@@ -230,11 +232,11 @@ await haptics.selection();
 AirPrint support for the current page.
 
 ```typescript
-import { print } from '@eddmann/pwa-kit-sdk';
+import { print } from "@eddmann/pwa-kit-sdk";
 
 const result = await print.print();
 if (result.success) {
-  console.log('Print job submitted');
+  console.log("Print job submitted");
 }
 ```
 
@@ -243,7 +245,7 @@ if (result.success) {
 Platform detection and device information.
 
 ```typescript
-import { platform } from '@eddmann/pwa-kit-sdk';
+import { platform } from "@eddmann/pwa-kit-sdk";
 
 const info = await platform.getInfo();
 // {
@@ -265,14 +267,14 @@ These modules are namespaced under `ios.*` as they don't have web equivalents.
 Face ID and Touch ID authentication.
 
 ```typescript
-import { ios } from '@eddmann/pwa-kit-sdk';
+import { ios } from "@eddmann/pwa-kit-sdk";
 
 // Check availability
 const availability = await ios.biometrics.isAvailable();
 // { available: true, biometryType: 'faceId' }
 
 // Authenticate
-const result = await ios.biometrics.authenticate('Confirm your identity');
+const result = await ios.biometrics.authenticate("Confirm your identity");
 if (result.success) {
   // Authentication successful
 }
@@ -283,19 +285,19 @@ if (result.success) {
 Keychain-backed secure storage that persists across app reinstalls.
 
 ```typescript
-import { ios } from '@eddmann/pwa-kit-sdk';
+import { ios } from "@eddmann/pwa-kit-sdk";
 
 // Store value
-await ios.secureStorage.set('auth_token', 'secret123');
+await ios.secureStorage.set("auth_token", "secret123");
 
 // Retrieve value
-const token = await ios.secureStorage.get('auth_token');
+const token = await ios.secureStorage.get("auth_token");
 
 // Check if key exists
-const exists = await ios.secureStorage.has('auth_token');
+const exists = await ios.secureStorage.has("auth_token");
 
 // Delete value
-await ios.secureStorage.delete('auth_token');
+await ios.secureStorage.delete("auth_token");
 ```
 
 ### ios.healthKit
@@ -303,51 +305,51 @@ await ios.secureStorage.delete('auth_token');
 Access health and fitness data via Apple HealthKit.
 
 ```typescript
-import { ios } from '@eddmann/pwa-kit-sdk';
+import { ios } from "@eddmann/pwa-kit-sdk";
 
 // Check availability
 const { available } = await ios.healthKit.isAvailable();
 
 // Request authorization
 const auth = await ios.healthKit.requestAuthorization({
-  read: ['stepCount', 'heartRate'],
+  read: ["stepCount", "heartRate"],
   readWorkouts: true,
-  readSleep: true
+  readSleep: true,
 });
 
 // Query steps
 const steps = await ios.healthKit.querySteps({
-  startDate: '2024-01-01T00:00:00Z',
-  endDate: '2024-01-31T23:59:59Z'
+  startDate: "2024-01-01T00:00:00Z",
+  endDate: "2024-01-31T23:59:59Z",
 });
 
 // Query heart rate
 const heartRate = await ios.healthKit.queryHeartRate({
-  startDate: '2024-01-01T00:00:00Z',
-  endDate: '2024-01-31T23:59:59Z'
+  startDate: "2024-01-01T00:00:00Z",
+  endDate: "2024-01-31T23:59:59Z",
 });
 
 // Query workouts
 const workouts = await ios.healthKit.queryWorkouts({
-  startDate: '2024-01-01T00:00:00Z',
-  endDate: '2024-01-31T23:59:59Z',
-  limit: 10
+  startDate: "2024-01-01T00:00:00Z",
+  endDate: "2024-01-31T23:59:59Z",
+  limit: 10,
 });
 
 // Query sleep
 const sleep = await ios.healthKit.querySleep({
-  startDate: '2024-01-01T00:00:00Z',
-  endDate: '2024-01-31T23:59:59Z'
+  startDate: "2024-01-01T00:00:00Z",
+  endDate: "2024-01-31T23:59:59Z",
 });
 
 // Save workout
 await ios.healthKit.saveWorkout({
-  activityType: 'running',
-  startDate: '2024-01-15T08:00:00Z',
-  endDate: '2024-01-15T08:30:00Z',
+  activityType: "running",
+  startDate: "2024-01-15T08:00:00Z",
+  endDate: "2024-01-15T08:30:00Z",
   duration: 1800,
   totalEnergyBurned: 350,
-  totalDistance: 5000
+  totalDistance: 5000,
 });
 ```
 
@@ -356,18 +358,18 @@ await ios.healthKit.saveWorkout({
 In-app purchases via StoreKit 2.
 
 ```typescript
-import { ios } from '@eddmann/pwa-kit-sdk';
+import { ios } from "@eddmann/pwa-kit-sdk";
 
 // Get products
-const products = await ios.storeKit.getProducts(['premium', 'coins_100']);
+const products = await ios.storeKit.getProducts(["premium", "coins_100"]);
 for (const product of products) {
   console.log(`${product.displayName}: ${product.displayPrice}`);
 }
 
 // Purchase
-const result = await ios.storeKit.purchase('premium');
+const result = await ios.storeKit.purchase("premium");
 if (result.success) {
-  console.log('Transaction ID:', result.transactionId);
+  console.log("Transaction ID:", result.transactionId);
 }
 
 // Restore purchases
@@ -375,10 +377,10 @@ await ios.storeKit.restore();
 
 // Get entitlements
 const entitlements = await ios.storeKit.getEntitlements();
-console.log('Owned:', entitlements.ownedProductIds);
+console.log("Owned:", entitlements.ownedProductIds);
 
 // Check ownership
-const hasPremium = await ios.storeKit.isOwned('premium');
+const hasPremium = await ios.storeKit.isOwned("premium");
 ```
 
 ### ios.app
@@ -386,7 +388,7 @@ const hasPremium = await ios.storeKit.isOwned('premium');
 App lifecycle and utilities.
 
 ```typescript
-import { ios } from '@eddmann/pwa-kit-sdk';
+import { ios } from "@eddmann/pwa-kit-sdk";
 
 // Get app version
 const version = await ios.app.getVersion();
@@ -404,53 +406,53 @@ await ios.app.openSettings();
 Local notification scheduling. Schedule one-off or recurring notifications that fire even when the app is in the background.
 
 ```typescript
-import { ios } from '@eddmann/pwa-kit-sdk';
+import { ios } from "@eddmann/pwa-kit-sdk";
 
 // Schedule a notification in 60 seconds
 await ios.notifications.schedule({
-  id: 'reminder-123',
-  title: 'Time for a break',
-  body: 'You have been working for an hour',
-  trigger: { type: 'timeInterval', seconds: 60 }
+  id: "reminder-123",
+  title: "Time for a break",
+  body: "You have been working for an hour",
+  trigger: { type: "timeInterval", seconds: 60 },
 });
 
 // Schedule a repeating notification (minimum 60 seconds)
 await ios.notifications.schedule({
-  id: 'hourly',
-  title: 'Hourly check-in',
-  trigger: { type: 'timeInterval', seconds: 3600, repeats: true }
+  id: "hourly",
+  title: "Hourly check-in",
+  trigger: { type: "timeInterval", seconds: 3600, repeats: true },
 });
 
 // Schedule at a specific date
 await ios.notifications.schedule({
-  id: 'meeting',
-  title: 'Meeting starts',
-  body: 'Project sync in conference room A',
-  trigger: { type: 'date', date: new Date('2024-12-25T10:00:00') }
+  id: "meeting",
+  title: "Meeting starts",
+  body: "Project sync in conference room A",
+  trigger: { type: "date", date: new Date("2024-12-25T10:00:00") },
 });
 
 // Schedule a daily recurring notification (9 AM)
 await ios.notifications.schedule({
-  id: 'daily-reminder',
-  title: 'Good morning!',
-  body: 'Start your day with a review',
-  trigger: { type: 'calendar', hour: 9, minute: 0, repeats: true }
+  id: "daily-reminder",
+  title: "Good morning!",
+  body: "Start your day with a review",
+  trigger: { type: "calendar", hour: 9, minute: 0, repeats: true },
 });
 
 // Include badge, sound, and custom data
 await ios.notifications.schedule({
-  id: 'full-example',
-  title: 'New message',
-  body: 'You have a new message',
-  subtitle: 'From John',
+  id: "full-example",
+  title: "New message",
+  body: "You have a new message",
+  subtitle: "From John",
   badge: 1,
-  sound: 'default',
-  data: { messageId: '123', senderId: 'john' },
-  trigger: { type: 'timeInterval', seconds: 5 }
+  sound: "default",
+  data: { messageId: "123", senderId: "john" },
+  trigger: { type: "timeInterval", seconds: 5 },
 });
 
 // Cancel a specific notification
-await ios.notifications.cancel('reminder-123');
+await ios.notifications.cancel("reminder-123");
 
 // Cancel all scheduled notifications
 await ios.notifications.cancelAll();
@@ -467,13 +469,14 @@ for (const notification of pending) {
 
 **Trigger Types:**
 
-| Type | Description | Example |
-|------|-------------|---------|
-| `timeInterval` | Fire after N seconds | `{ type: 'timeInterval', seconds: 60, repeats: false }` |
-| `date` | Fire at specific date/time | `{ type: 'date', date: new Date('2024-12-25T10:00:00') }` |
-| `calendar` | Fire on calendar match | `{ type: 'calendar', hour: 9, minute: 0, repeats: true }` |
+| Type           | Description                | Example                                                   |
+| -------------- | -------------------------- | --------------------------------------------------------- |
+| `timeInterval` | Fire after N seconds       | `{ type: 'timeInterval', seconds: 60, repeats: false }`   |
+| `date`         | Fire at specific date/time | `{ type: 'date', date: new Date('2024-12-25T10:00:00') }` |
+| `calendar`     | Fire on calendar match     | `{ type: 'calendar', hour: 9, minute: 0, repeats: true }` |
 
 **Calendar Trigger Components:**
+
 - `hour` (0-23), `minute` (0-59), `second` (0-59)
 - `weekday` (1=Sunday, 7=Saturday)
 - `day` (1-31), `month` (1-12), `year`
@@ -483,7 +486,11 @@ for (const notification of pending) {
 ## Detection Utilities
 
 ```typescript
-import { isNative, getPlatformInfo, hasMessageHandlers } from '@eddmann/pwa-kit-sdk';
+import {
+  isNative,
+  getPlatformInfo,
+  hasMessageHandlers,
+} from "@eddmann/pwa-kit-sdk";
 
 // Quick check if running in native app
 if (isNative) {
@@ -511,18 +518,18 @@ if (hasMessageHandlers()) {
 For advanced usage, access the bridge directly.
 
 ```typescript
-import { bridge } from '@eddmann/pwa-kit-sdk';
+import { bridge } from "@eddmann/pwa-kit-sdk";
 
 // Call any native module
-const response = await bridge.call('myModule', 'myAction', { key: 'value' });
+const response = await bridge.call("myModule", "myAction", { key: "value" });
 
 // Listen to native events
-window.addEventListener('pwa:push', (event) => {
-  console.log('Push notification:', event.detail);
+window.addEventListener("pwa:push", (event) => {
+  console.log("Push notification:", event.detail);
 });
 
-window.addEventListener('pwa:lifecycle', (event) => {
-  console.log('Lifecycle event:', event.detail);
+window.addEventListener("pwa:lifecycle", (event) => {
+  console.log("Lifecycle event:", event.detail);
 });
 ```
 
@@ -564,13 +571,14 @@ public struct MyModule: PWAModule {
 **JavaScript Usage:**
 
 ```typescript
-import { bridge } from '@eddmann/pwa-kit-sdk';
+import { bridge } from "@eddmann/pwa-kit-sdk";
 
-const result = await bridge.call('myModule', 'doSomething', { value: 'test' });
+const result = await bridge.call("myModule", "doSomething", { value: "test" });
 console.log(result.result); // "Processed: test"
 ```
 
 See the [Custom Modules Guide](../docs/custom-modules.md) for complete documentation including:
+
 - The `PWAModule` protocol
 - Registration and feature flags
 - Working with UIKit and @MainActor
@@ -608,7 +616,7 @@ import type {
   // Platform types
   PlatformInfo,
   PlatformDetectionInfo,
-} from '@eddmann/pwa-kit-sdk';
+} from "@eddmann/pwa-kit-sdk";
 ```
 
 ## Browser Compatibility
@@ -616,15 +624,15 @@ import type {
 The SDK safely handles non-native environments:
 
 ```typescript
-import { isNative, push, haptics } from '@eddmann/pwa-kit-sdk';
+import { isNative, push, haptics } from "@eddmann/pwa-kit-sdk";
 
 if (isNative) {
   // Running in PWAKit native app
   await push.subscribe();
-  await haptics.impact('medium');
+  await haptics.impact("medium");
 } else {
   // Running in browser - provide fallbacks
-  console.log('Native features unavailable');
+  console.log("Native features unavailable");
   // Use web APIs or graceful degradation
 }
 ```

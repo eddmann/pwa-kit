@@ -18,11 +18,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Install SwiftLint
-        run: brew install swiftlint
-
-      - name: Install SwiftFormat
-        run: brew install swiftformat
+      - name: Install dependencies
+        run: make kit/deps
 
       - name: Show Xcode version
         run: xcodebuild -version
@@ -45,7 +42,7 @@ jobs:
           cache-dependency-path: sdk/package-lock.json
 
       - name: Install dependencies
-        run: cd sdk && npm ci
+        run: make sdk/deps
 
       - name: Can release
         run: make sdk/can-release
@@ -65,7 +62,7 @@ jobs:
           cache-dependency-path: cli/package-lock.json
 
       - name: Install dependencies
-        run: cd cli && npm ci
+        run: make cli/deps
 
       - name: Can release
         run: make cli/can-release

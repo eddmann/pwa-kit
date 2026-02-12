@@ -4,11 +4,11 @@ This document explains how to configure PWAKit for your Progressive Web App, inc
 
 ## Configuration Files Overview
 
-| File | Purpose | When Updated |
-|------|---------|--------------|
-| `pwa-config.json` | Source of truth for app configuration | Edit manually |
-| `Info.plist` | iOS app metadata and permissions | Sync via build script or manually |
-| `PWAKit.entitlements` | App capabilities (push, HealthKit, etc.) | Edit for capabilities |
+| File                  | Purpose                                  | When Updated                      |
+| --------------------- | ---------------------------------------- | --------------------------------- |
+| `pwa-config.json`     | Source of truth for app configuration    | Edit manually                     |
+| `Info.plist`          | iOS app metadata and permissions         | Sync via build script or manually |
+| `PWAKit.entitlements` | App capabilities (push, HealthKit, etc.) | Edit for capabilities             |
 
 ## pwa-config.json
 
@@ -56,11 +56,11 @@ The primary configuration file located at `kit/src/PWAKit/Resources/pwa-config.j
 
 ### Origins Configuration
 
-| Field | Description | Maps To |
-|-------|-------------|---------|
-| `origins.allowed` | Domains that can load in the WebView | `WKAppBoundDomains` in Info.plist |
-| `origins.auth` | OAuth/login domains (show toolbar with Done button) | `WKAppBoundDomains` in Info.plist |
-| `origins.external` | Domains that open in SFSafariViewController | N/A |
+| Field              | Description                                         | Maps To                           |
+| ------------------ | --------------------------------------------------- | --------------------------------- |
+| `origins.allowed`  | Domains that can load in the WebView                | `WKAppBoundDomains` in Info.plist |
+| `origins.auth`     | OAuth/login domains (show toolbar with Done button) | `WKAppBoundDomains` in Info.plist |
+| `origins.external` | Domains that open in SFSafariViewController         | N/A                               |
 
 **Important**: The `origins.allowed` and `origins.auth` arrays must be synced to `WKAppBoundDomains` in Info.plist. Run the sync script after changing these values:
 
@@ -88,13 +88,13 @@ These are always required:
 
 Add these based on which features your PWA uses:
 
-| Feature | Info.plist Key | Required When |
-|---------|----------------|---------------|
-| Camera | `NSCameraUsageDescription` | PWA uses camera/photo capture |
-| Microphone | `NSMicrophoneUsageDescription` | PWA records audio or video calls |
-| Location | `NSLocationWhenInUseUsageDescription` | PWA uses geolocation |
-| Face ID | `NSFaceIDUsageDescription` | `features.biometrics` is `true` |
-| HealthKit | `NSHealthShareUsageDescription`, `NSHealthUpdateUsageDescription` | `features.healthkit` is `true` |
+| Feature    | Info.plist Key                                                    | Required When                    |
+| ---------- | ----------------------------------------------------------------- | -------------------------------- |
+| Camera     | `NSCameraUsageDescription`                                        | PWA uses camera/photo capture    |
+| Microphone | `NSMicrophoneUsageDescription`                                    | PWA records audio or video calls |
+| Location   | `NSLocationWhenInUseUsageDescription`                             | PWA uses geolocation             |
+| Face ID    | `NSFaceIDUsageDescription`                                        | `features.biometrics` is `true`  |
+| HealthKit  | `NSHealthShareUsageDescription`, `NSHealthUpdateUsageDescription` | `features.healthkit` is `true`   |
 
 Example privacy descriptions:
 
@@ -207,19 +207,19 @@ For sharing data between app and extensions:
 
 ## Feature Flags Reference
 
-| Flag | Description | Requires |
-|------|-------------|----------|
-| `notifications` | Push notification support | `aps-environment` entitlement, `UIBackgroundModes` |
-| `haptics` | Haptic feedback | None |
-| `biometrics` | Face ID / Touch ID | `NSFaceIDUsageDescription` |
-| `secureStorage` | Keychain storage | None |
-| `healthkit` | HealthKit data access | HealthKit entitlement, usage descriptions |
-| `iap` | In-App Purchases | StoreKit capability |
-| `share` | Share sheet | None |
-| `print` | AirPrint | None |
-| `clipboard` | System clipboard | None |
-| `cameraPermission` | Camera permission requests | `NSCameraUsageDescription` |
-| `locationPermission` | Location permission requests | `NSLocationWhenInUseUsageDescription` |
+| Flag                 | Description                  | Requires                                           |
+| -------------------- | ---------------------------- | -------------------------------------------------- |
+| `notifications`      | Push notification support    | `aps-environment` entitlement, `UIBackgroundModes` |
+| `haptics`            | Haptic feedback              | None                                               |
+| `biometrics`         | Face ID / Touch ID           | `NSFaceIDUsageDescription`                         |
+| `secureStorage`      | Keychain storage             | None                                               |
+| `healthkit`          | HealthKit data access        | HealthKit entitlement, usage descriptions          |
+| `iap`                | In-App Purchases             | StoreKit capability                                |
+| `share`              | Share sheet                  | None                                               |
+| `print`              | AirPrint                     | None                                               |
+| `clipboard`          | System clipboard             | None                                               |
+| `cameraPermission`   | Camera permission requests   | `NSCameraUsageDescription`                         |
+| `locationPermission` | Location permission requests | `NSLocationWhenInUseUsageDescription`              |
 
 ## Syncing Configuration
 
@@ -230,6 +230,7 @@ After modifying `pwa-config.json`, run the sync script to update Info.plist:
 ```
 
 This script:
+
 1. Reads `origins.allowed` and `origins.auth` from pwa-config.json
 2. Updates `WKAppBoundDomains` in Info.plist
 3. Validates that required privacy descriptions exist for enabled features

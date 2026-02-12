@@ -1063,8 +1063,6 @@ function setupEventListeners() {
   window.addEventListener('pwa:push', (event) => {
     const { type, title, body } = event.detail;
     consoleLog.info(`Push event: ${type}`, { title, body });
-    // TODO: remove - temporary alert to verify cold-launch tap events arrive
-    alert(`Push event: ${type}\n${title || ''}${body ? '\n' + body : ''}`);
   });
 
   // App visibility
