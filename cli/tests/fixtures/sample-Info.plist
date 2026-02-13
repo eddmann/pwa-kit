@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDisplayName</key>
 	<string>My App</string>
+	<key>CFBundleName</key>
+	<string>My App</string>
 	<key>WKAppBoundDomains</key>
 	<array>
 		<string>old.example.com</string>

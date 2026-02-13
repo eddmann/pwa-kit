@@ -3,16 +3,14 @@ import { logger } from '../utils/logger.js';
 
 export interface PbxprojSyncResult {
   bundleIdUpdated: boolean;
-  displayNameUpdated: boolean;
 }
 
 export function syncPbxproj(
   pbxprojPath: string,
   targetBundleId: string,
-  targetAppName: string,
   mode: 'apply' | 'dry-run' | 'validate',
 ): PbxprojSyncResult {
-  const result: PbxprojSyncResult = { bundleIdUpdated: false, displayNameUpdated: false };
+  const result: PbxprojSyncResult = { bundleIdUpdated: false };
 
   if (!fs.existsSync(pbxprojPath)) {
     logger.warn('project.pbxproj not found, skipping');
@@ -48,37 +46,7 @@ export function syncPbxproj(
     }
   }
 
-  // Sync display name
-  if (targetAppName) {
-    const currentNames = content.match(/INFOPLIST_KEY_CFBundleDisplayName = "([^"]+)"/g) ?? [];
-    const uniqueNames = new Set(
-      currentNames.map((m) => m.replace(/INFOPLIST_KEY_CFBundleDisplayName = "|"/g, '')),
-    );
-
-    if (currentNames.length === 0) {
-      logger.warn('INFOPLIST_KEY_CFBundleDisplayName not found in pbxproj, skipping');
-    } else if (uniqueNames.size === 1 && uniqueNames.has(targetAppName)) {
-      logger.success(`CFBundleDisplayName is already in sync (${targetAppName})`);
-    } else if (mode === 'dry-run') {
-      logger.warn(
-        `Would update CFBundleDisplayName: ${[...uniqueNames].join(', ')} → ${targetAppName}`,
-      );
-    } else if (mode === 'validate') {
-      logger.error(`CFBundleDisplayName mismatch!`);
-      logger.detail(`Expected: ${targetAppName}`);
-      logger.detail(`Actual: ${[...uniqueNames].join(', ')}`);
-      throw new Error('CFBundleDisplayName not in sync with pwa-config.json');
-    } else {
-      content = content.replace(
-        /INFOPLIST_KEY_CFBundleDisplayName = "[^"]+"/g,
-        `INFOPLIST_KEY_CFBundleDisplayName = "${targetAppName}"`,
-      );
-      result.displayNameUpdated = true;
-      logger.success(`Updated CFBundleDisplayName: ${targetAppName}`);
-    }
-  }
-
-  if (result.bundleIdUpdated || result.displayNameUpdated) {
+  if (result.bundleIdUpdated) {
     fs.writeFileSync(pbxprojPath, content);
     logger.success('project.pbxproj written');
   }

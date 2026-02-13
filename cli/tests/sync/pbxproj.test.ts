@@ -21,7 +21,7 @@ describe('syncPbxproj', () => {
   });
 
   it('updates bundle ID in all occurrences', () => {
-    const result = syncPbxproj(tmpFile, 'com.new.bundle', '', 'apply');
+    const result = syncPbxproj(tmpFile, 'com.new.bundle', 'apply');
     expect(result.bundleIdUpdated).toBe(true);
 
     const content = fs.readFileSync(tmpFile, 'utf-8');
@@ -30,29 +30,19 @@ describe('syncPbxproj', () => {
     expect(content).not.toContain('com.example.myapp');
   });
 
-  it('updates display name', () => {
-    const result = syncPbxproj(tmpFile, '', 'New Name', 'apply');
-    expect(result.displayNameUpdated).toBe(true);
-
-    const content = fs.readFileSync(tmpFile, 'utf-8');
-    expect(content).toContain('INFOPLIST_KEY_CFBundleDisplayName = "New Name"');
-    expect(content).not.toContain('"My App"');
-  });
-
   it('reports already in sync', () => {
-    const result = syncPbxproj(tmpFile, 'com.example.myapp', 'My App', 'apply');
+    const result = syncPbxproj(tmpFile, 'com.example.myapp', 'apply');
     expect(result.bundleIdUpdated).toBe(false);
-    expect(result.displayNameUpdated).toBe(false);
   });
 
   it('dry-run does not modify file', () => {
     const before = fs.readFileSync(tmpFile, 'utf-8');
-    syncPbxproj(tmpFile, 'com.new.bundle', 'New Name', 'dry-run');
+    syncPbxproj(tmpFile, 'com.new.bundle', 'dry-run');
     const after = fs.readFileSync(tmpFile, 'utf-8');
     expect(after).toBe(before);
   });
 
   it('validate throws on mismatch', () => {
-    expect(() => syncPbxproj(tmpFile, 'com.new.bundle', '', 'validate')).toThrow();
+    expect(() => syncPbxproj(tmpFile, 'com.new.bundle', 'validate')).toThrow();
   });
 });

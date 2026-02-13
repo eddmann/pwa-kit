@@ -8,7 +8,6 @@
 		13B07FB71A68108700A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				INFOPLIST_KEY_CFBundleDisplayName = "My App";
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.myapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -17,7 +16,6 @@
 		13B07FB81A68108700A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				INFOPLIST_KEY_CFBundleDisplayName = "My App";
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.myapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

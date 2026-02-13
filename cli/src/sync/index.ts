@@ -15,14 +15,14 @@ export async function runSync(paths: ProjectPaths, mode: SyncMode): Promise<void
 
   // pbxproj sync
   logger.step('Syncing project.pbxproj...');
-  syncPbxproj(paths.pbxproj, config.app.bundleId, config.app.name, mode);
+  syncPbxproj(paths.pbxproj, config.app.bundleId, mode);
 
   // Plist sync (domains + orientation)
   const allDomains = [...new Set([...config.origins.allowed, ...config.origins.auth])];
   logger.detail(`Allowed origins: [${config.origins.allowed.join(', ')}]`);
   logger.detail(`Auth origins: [${config.origins.auth.join(', ')}]`);
   logger.detail(`Combined: [${allDomains.join(', ')}]`);
-  syncPlist(paths.infoPlist, allDomains, config.appearance.orientationLock, mode);
+  syncPlist(paths.infoPlist, allDomains, config.appearance.orientationLock, config.app.name, mode);
 
   // Privacy validation (read-only, always runs)
   const privacyErrors = validatePrivacy(paths.infoPlist, config.features);

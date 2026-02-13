@@ -22,7 +22,7 @@ describe('syncPlist', () => {
   });
 
   it('updates WKAppBoundDomains', () => {
-    const modified = syncPlist(tmpFile, ['new.example.com', 'api.example.com'], 'any', 'apply');
+    const modified = syncPlist(tmpFile, ['new.example.com', 'api.example.com'], 'any', 'My App', 'apply');
     expect(modified).toBe(true);
 
     const data = plist.parse(fs.readFileSync(tmpFile, 'utf-8')) as Record<string, unknown>;
@@ -33,7 +33,7 @@ describe('syncPlist', () => {
   });
 
   it('updates orientation to portrait', () => {
-    syncPlist(tmpFile, ['old.example.com'], 'portrait', 'apply');
+    syncPlist(tmpFile, ['old.example.com'], 'portrait', 'My App', 'apply');
 
     const data = plist.parse(fs.readFileSync(tmpFile, 'utf-8')) as Record<string, unknown>;
     const orientations = data['UISupportedInterfaceOrientations'] as string[];
@@ -44,7 +44,7 @@ describe('syncPlist', () => {
 
   it('dry-run does not modify file', () => {
     const before = fs.readFileSync(tmpFile, 'utf-8');
-    syncPlist(tmpFile, ['new.example.com'], 'portrait', 'dry-run');
+    syncPlist(tmpFile, ['new.example.com'], 'portrait', 'New Name', 'dry-run');
     const after = fs.readFileSync(tmpFile, 'utf-8');
     expect(after).toBe(before);
   });
@@ -54,8 +54,27 @@ describe('syncPlist', () => {
       tmpFile,
       ['old.example.com'],
       'any',
+      'My App',
       'apply',
     );
     expect(modified).toBe(false);
+  });
+
+  it('updates CFBundleDisplayName and CFBundleName', () => {
+    const modified = syncPlist(tmpFile, ['old.example.com'], 'any', 'New Name', 'apply');
+    expect(modified).toBe(true);
+
+    const data = plist.parse(fs.readFileSync(tmpFile, 'utf-8')) as Record<string, unknown>;
+    expect(data['CFBundleDisplayName']).toBe('New Name');
+    expect(data['CFBundleName']).toBe('New Name');
+  });
+
+  it('reports no change when names already in sync', () => {
+    const modified = syncPlist(tmpFile, ['old.example.com'], 'any', 'My App', 'apply');
+    expect(modified).toBe(false);
+
+    const data = plist.parse(fs.readFileSync(tmpFile, 'utf-8')) as Record<string, unknown>;
+    expect(data['CFBundleDisplayName']).toBe('My App');
+    expect(data['CFBundleName']).toBe('My App');
   });
 });

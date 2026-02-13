@@ -23,6 +23,7 @@ export function syncPlist(
   plistPath: string,
   domains: string[],
   orientationLock: Orientation,
+  appName: string,
   mode: 'apply' | 'dry-run' | 'validate',
 ): boolean {
   if (!fs.existsSync(plistPath)) {
@@ -83,6 +84,32 @@ export function syncPlist(
     data['UISupportedInterfaceOrientations~ipad'] = targetOrientations;
     modified = true;
     logger.success(`Updated UISupportedInterfaceOrientations: [${targetOrientations.join(', ')}] (${orientationLock})`);
+  }
+
+  // Sync bundle names
+  if (appName) {
+    logger.step('Syncing bundle names...');
+    const currentDisplayName = (data['CFBundleDisplayName'] as string) ?? '';
+    const currentBundleName = (data['CFBundleName'] as string) ?? '';
+    const namesMatch = currentDisplayName === appName && currentBundleName === appName;
+
+    if (namesMatch) {
+      logger.success(`CFBundleDisplayName and CFBundleName are already in sync (${appName})`);
+    } else if (mode === 'dry-run') {
+      logger.warn(`Would update CFBundleDisplayName: ${currentDisplayName} → ${appName}`);
+      logger.warn(`Would update CFBundleName: ${currentBundleName} → ${appName}`);
+    } else if (mode === 'validate') {
+      logger.error('Bundle name mismatch!');
+      logger.detail(`Expected: ${appName}`);
+      logger.detail(`CFBundleDisplayName: ${currentDisplayName}`);
+      logger.detail(`CFBundleName: ${currentBundleName}`);
+      throw new Error('Bundle names not in sync with pwa-config.json');
+    } else {
+      data['CFBundleDisplayName'] = appName;
+      data['CFBundleName'] = appName;
+      modified = true;
+      logger.success(`Updated CFBundleDisplayName and CFBundleName: ${appName}`);
+    }
   }
 
   if (modified) {
