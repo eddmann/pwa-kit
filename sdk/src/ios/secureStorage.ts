@@ -24,7 +24,7 @@ export interface GetResult {
  *
  * @example
  * ```typescript
- * import { ios } from '@eddmann/pwa-kit-sdk';
+ * import { ios } from '@pwa-kit/sdk';
  *
  * // Store a value
  * await ios.secureStorage.set('auth_token', 'secret123');

@@ -31,7 +31,7 @@ export interface PlatformInfo {
  *
  * @example
  * ```typescript
- * import { platform } from '@eddmann/pwa-kit-sdk';
+ * import { platform } from '@pwa-kit/sdk';
  *
  * const info = await platform.getInfo();
  * console.log(`Running on ${info.platform} ${info.version}`);

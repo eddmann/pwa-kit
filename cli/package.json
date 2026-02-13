@@ -1,5 +1,5 @@
 {
-  "name": "@eddmann/pwa-kit",
+  "name": "@pwa-kit/cli",
   "version": "0.1.0",
   "description": "CLI for creating and configuring PWAKit iOS apps",
   "bin": {
@@ -48,7 +48,6 @@
     "directory": "cli"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
     "access": "public"
   }
 }

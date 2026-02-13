@@ -17,7 +17,7 @@ import { bridge } from '../bridge';
  *
  * @example
  * ```typescript
- * import { badging } from '@eddmann/pwa-kit-sdk';
+ * import { badging } from '@pwa-kit/sdk';
  *
  * // Set badge count
  * await badging.setAppBadge(5);

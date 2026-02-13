@@ -1,11 +1,11 @@
-# @eddmann/pwa-kit CLI
+# @pwa-kit/cli
 
 CLI for creating and configuring PWAKit iOS apps. Generates `pwa-config.json` from a PWA's web manifest and syncs it to the Xcode project (bundle ID, icons, colors, orientations, entitlements).
 
 ## Install
 
 ```bash
-npm install @eddmann/pwa-kit
+npm install @pwa-kit/cli
 ```
 
 Or run directly from the monorepo:

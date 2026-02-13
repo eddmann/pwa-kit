@@ -21,7 +21,7 @@ export interface PrintResult {
  *
  * @example
  * ```typescript
- * import { print } from '@eddmann/pwa-kit-sdk';
+ * import { print } from '@pwa-kit/sdk';
  *
  * // Print the current page
  * const result = await print.print();

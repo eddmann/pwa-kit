@@ -23,7 +23,7 @@ import { bridge } from '../bridge';
  *
  * @example
  * ```typescript
- * import { vibration } from '@eddmann/pwa-kit-sdk';
+ * import { vibration } from '@pwa-kit/sdk';
  *
  * // Simple vibration
  * vibration.vibrate(200);

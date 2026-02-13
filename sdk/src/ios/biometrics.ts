@@ -40,7 +40,7 @@ export interface AuthenticationResult {
  *
  * @example
  * ```typescript
- * import { ios } from '@eddmann/pwa-kit-sdk';
+ * import { ios } from '@pwa-kit/sdk';
  *
  * // Check availability
  * const availability = await ios.biometrics.isAvailable();

@@ -52,7 +52,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: '20'
-          registry-url: 'https://npm.pkg.github.com'
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Package template
         run: |
@@ -70,7 +70,7 @@ jobs:
         working-directory: cli
         run: npm publish --ignore-scripts
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Build SDK
         run: make sdk/deps sdk/build
@@ -79,7 +79,7 @@ jobs:
         working-directory: sdk
         run: npm publish --ignore-scripts
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

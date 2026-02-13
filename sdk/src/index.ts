@@ -43,7 +43,7 @@
  *   permissions,
  *   ios,
  *   isNative
- * } from '@eddmann/pwa-kit-sdk';
+ * } from '@pwa-kit/sdk';
  *
  * if (isNative) {
  *   // Push notifications

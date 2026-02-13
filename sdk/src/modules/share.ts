@@ -47,7 +47,7 @@ export interface ShareResult {
  *
  * @example
  * ```typescript
- * import { share } from '@eddmann/pwa-kit-sdk';
+ * import { share } from '@pwa-kit/sdk';
  *
  * // Share a URL
  * const result = await share.share({

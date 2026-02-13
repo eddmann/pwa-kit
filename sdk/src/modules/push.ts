@@ -87,7 +87,7 @@ function mapPermissionState(state: string): PushPermissionState {
  *
  * @example
  * ```typescript
- * import { push } from '@eddmann/pwa-kit-sdk';
+ * import { push } from '@pwa-kit/sdk';
  *
  * // Subscribe to push notifications
  * const subscription = await push.subscribe();

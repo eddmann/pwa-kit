@@ -46,7 +46,7 @@ function generateUUID(): string {
  *
  * @example
  * ```typescript
- * import { PWABridge } from '@eddmann/pwa-kit-sdk';
+ * import { PWABridge } from '@pwa-kit/sdk';
  *
  * const bridge = new PWABridge();
  *

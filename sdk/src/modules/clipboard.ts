@@ -27,7 +27,7 @@ export interface ClipboardReadResult {
  *
  * @example
  * ```typescript
- * import { clipboard } from '@eddmann/pwa-kit-sdk';
+ * import { clipboard } from '@pwa-kit/sdk';
  *
  * // Copy text
  * await clipboard.writeText('Hello, World!');

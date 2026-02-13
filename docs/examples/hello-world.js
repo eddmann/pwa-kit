@@ -5,7 +5,7 @@
  * from JavaScript using the PWAKit SDK bridge.
  */
 
-import { bridge, isNative } from '@eddmann/pwa-kit-sdk';
+import { bridge, isNative } from '@pwa-kit/sdk';
 
 // ============================================================================
 // Basic Usage

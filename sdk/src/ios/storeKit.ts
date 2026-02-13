@@ -66,7 +66,7 @@ export interface EntitlementInfo {
  *
  * @example
  * ```typescript
- * import { ios } from '@eddmann/pwa-kit-sdk';
+ * import { ios } from '@pwa-kit/sdk';
  *
  * // Get available products
  * const products = await ios.storeKit.getProducts(['premium', 'coins_100']);

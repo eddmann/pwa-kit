@@ -156,7 +156,7 @@ function serializeTrigger(trigger: NotificationTrigger): Record<string, unknown>
  *
  * @example
  * ```typescript
- * import { notifications } from '@eddmann/pwa-kit-sdk';
+ * import { notifications } from '@pwa-kit/sdk';
  *
  * // Schedule a one-off notification in 60 seconds
  * await notifications.schedule({

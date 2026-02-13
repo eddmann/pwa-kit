@@ -1,5 +1,5 @@
 {
-  "name": "@eddmann/pwa-kit-sdk",
+  "name": "@pwa-kit/sdk",
   "version": "0.1.0",
   "description": "JavaScript SDK for PWAKit native bridge",
   "main": "dist/index.js",
@@ -59,7 +59,6 @@
     "directory": "sdk"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
     "access": "public"
   }
 }

@@ -115,7 +115,7 @@ export function getUserAgent(): string | null {
  *
  * @example
  * ```typescript
- * import { getPlatformInfo } from '@eddmann/pwa-kit-sdk';
+ * import { getPlatformInfo } from '@pwa-kit/sdk';
  *
  * const info = getPlatformInfo();
  * if (info.isNative) {
@@ -151,7 +151,7 @@ export function getPlatformInfo(): PlatformDetectionInfo {
  *
  * @example
  * ```typescript
- * import { isNative } from '@eddmann/pwa-kit-sdk';
+ * import { isNative } from '@pwa-kit/sdk';
  *
  * if (isNative) {
  *   // Use native features via the bridge
@@ -176,7 +176,7 @@ export const isNative: boolean = hasMessageHandlers() || hasPWAKitInUserAgent();
  *
  * @example
  * ```typescript
- * import { platformInfo } from '@eddmann/pwa-kit-sdk';
+ * import { platformInfo } from '@pwa-kit/sdk';
  *
  * console.log('Running on:', platformInfo.platform);
  * console.log('Is native:', platformInfo.isNative);

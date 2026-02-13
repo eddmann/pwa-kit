@@ -9,7 +9,7 @@
  *
  * @example
  * ```typescript
- * import { ios } from '@eddmann/pwa-kit-sdk';
+ * import { ios } from '@pwa-kit/sdk';
  *
  * // Biometric authentication
  * await ios.biometrics.authenticate('Confirm payment');

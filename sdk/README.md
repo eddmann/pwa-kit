@@ -1,11 +1,11 @@
-# @eddmann/pwa-kit-sdk
+# @pwa-kit/sdk
 
 TypeScript SDK for communicating with the PWAKit native iOS bridge. Provides Web API-aligned interfaces for native capabilities like push notifications, badges, haptics, biometrics, HealthKit, StoreKit, and more.
 
 ## Installation
 
 ```bash
-npm install @eddmann/pwa-kit-sdk
+npm install @pwa-kit/sdk
 ```
 
 ## Browser Bundle
@@ -26,7 +26,7 @@ For direct browser usage without a bundler:
 ## Quick Start
 
 ```typescript
-import { push, badging, haptics, ios, isNative } from "@eddmann/pwa-kit-sdk";
+import { push, badging, haptics, ios, isNative } from "@pwa-kit/sdk";
 
 if (isNative) {
   // Subscribe to push notifications (PushManager API)
@@ -111,7 +111,7 @@ These deviations improve the developer experience on mobile:
 ### Push (PushManager)
 
 ```typescript
-import { push } from "@eddmann/pwa-kit-sdk";
+import { push } from "@pwa-kit/sdk";
 
 // Subscribe to push notifications
 const subscription = await push.subscribe();
@@ -132,7 +132,7 @@ const state = await push.permissionState();
 ### Badging (Badging API)
 
 ```typescript
-import { badging } from "@eddmann/pwa-kit-sdk";
+import { badging } from "@pwa-kit/sdk";
 
 // Set badge count
 await badging.setAppBadge(5);
@@ -144,7 +144,7 @@ await badging.clearAppBadge();
 ### Vibration (Vibration API)
 
 ```typescript
-import { vibration } from "@eddmann/pwa-kit-sdk";
+import { vibration } from "@pwa-kit/sdk";
 
 // Vibrate (triggers haptic on iOS)
 await vibration.vibrate(100);
@@ -154,7 +154,7 @@ await vibration.vibrate([100, 50, 100]); // Pattern
 ### Clipboard (Clipboard API)
 
 ```typescript
-import { clipboard } from "@eddmann/pwa-kit-sdk";
+import { clipboard } from "@pwa-kit/sdk";
 
 // Write text
 await clipboard.writeText("Hello, World!");
@@ -166,7 +166,7 @@ const text = await clipboard.readText();
 ### Share (Web Share API)
 
 ```typescript
-import { share } from "@eddmann/pwa-kit-sdk";
+import { share } from "@pwa-kit/sdk";
 
 // Share URL
 await share.share({
@@ -193,7 +193,7 @@ const canShare = await share.canShare();
 ### Permissions (Permissions API)
 
 ```typescript
-import { permissions } from "@eddmann/pwa-kit-sdk";
+import { permissions } from "@pwa-kit/sdk";
 
 // Query permission state
 const status = await permissions.query({ name: "camera" });
@@ -212,7 +212,7 @@ const result = await permissions.request({ name: "geolocation" });
 Native iOS haptic feedback with impact, notification, and selection patterns.
 
 ```typescript
-import { haptics } from "@eddmann/pwa-kit-sdk";
+import { haptics } from "@pwa-kit/sdk";
 
 // Impact feedback
 await haptics.impact("light"); // light, medium, heavy, soft, rigid
@@ -232,7 +232,7 @@ await haptics.selection();
 AirPrint support for the current page.
 
 ```typescript
-import { print } from "@eddmann/pwa-kit-sdk";
+import { print } from "@pwa-kit/sdk";
 
 const result = await print.print();
 if (result.success) {
@@ -245,7 +245,7 @@ if (result.success) {
 Platform detection and device information.
 
 ```typescript
-import { platform } from "@eddmann/pwa-kit-sdk";
+import { platform } from "@pwa-kit/sdk";
 
 const info = await platform.getInfo();
 // {
@@ -267,7 +267,7 @@ These modules are namespaced under `ios.*` as they don't have web equivalents.
 Face ID and Touch ID authentication.
 
 ```typescript
-import { ios } from "@eddmann/pwa-kit-sdk";
+import { ios } from "@pwa-kit/sdk";
 
 // Check availability
 const availability = await ios.biometrics.isAvailable();
@@ -285,7 +285,7 @@ if (result.success) {
 Keychain-backed secure storage that persists across app reinstalls.
 
 ```typescript
-import { ios } from "@eddmann/pwa-kit-sdk";
+import { ios } from "@pwa-kit/sdk";
 
 // Store value
 await ios.secureStorage.set("auth_token", "secret123");
@@ -305,7 +305,7 @@ await ios.secureStorage.delete("auth_token");
 Access health and fitness data via Apple HealthKit.
 
 ```typescript
-import { ios } from "@eddmann/pwa-kit-sdk";
+import { ios } from "@pwa-kit/sdk";
 
 // Check availability
 const { available } = await ios.healthKit.isAvailable();
@@ -358,7 +358,7 @@ await ios.healthKit.saveWorkout({
 In-app purchases via StoreKit 2.
 
 ```typescript
-import { ios } from "@eddmann/pwa-kit-sdk";
+import { ios } from "@pwa-kit/sdk";
 
 // Get products
 const products = await ios.storeKit.getProducts(["premium", "coins_100"]);
@@ -388,7 +388,7 @@ const hasPremium = await ios.storeKit.isOwned("premium");
 App lifecycle and utilities.
 
 ```typescript
-import { ios } from "@eddmann/pwa-kit-sdk";
+import { ios } from "@pwa-kit/sdk";
 
 // Get app version
 const version = await ios.app.getVersion();
@@ -406,7 +406,7 @@ await ios.app.openSettings();
 Local notification scheduling. Schedule one-off or recurring notifications that fire even when the app is in the background.
 
 ```typescript
-import { ios } from "@eddmann/pwa-kit-sdk";
+import { ios } from "@pwa-kit/sdk";
 
 // Schedule a notification in 60 seconds
 await ios.notifications.schedule({
@@ -490,7 +490,7 @@ import {
   isNative,
   getPlatformInfo,
   hasMessageHandlers,
-} from "@eddmann/pwa-kit-sdk";
+} from "@pwa-kit/sdk";
 
 // Quick check if running in native app
 if (isNative) {
@@ -518,7 +518,7 @@ if (hasMessageHandlers()) {
 For advanced usage, access the bridge directly.
 
 ```typescript
-import { bridge } from "@eddmann/pwa-kit-sdk";
+import { bridge } from "@pwa-kit/sdk";
 
 // Call any native module
 const response = await bridge.call("myModule", "myAction", { key: "value" });
@@ -571,7 +571,7 @@ public struct MyModule: PWAModule {
 **JavaScript Usage:**
 
 ```typescript
-import { bridge } from "@eddmann/pwa-kit-sdk";
+import { bridge } from "@pwa-kit/sdk";
 
 const result = await bridge.call("myModule", "doSomething", { value: "test" });
 console.log(result.result); // "Processed: test"
@@ -616,7 +616,7 @@ import type {
   // Platform types
   PlatformInfo,
   PlatformDetectionInfo,
-} from "@eddmann/pwa-kit-sdk";
+} from "@pwa-kit/sdk";
 ```
 
 ## Browser Compatibility
@@ -624,7 +624,7 @@ import type {
 The SDK safely handles non-native environments:
 
 ```typescript
-import { isNative, push, haptics } from "@eddmann/pwa-kit-sdk";
+import { isNative, push, haptics } from "@pwa-kit/sdk";
 
 if (isNative) {
   // Running in PWAKit native app

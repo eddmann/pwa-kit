@@ -115,7 +115,7 @@ public struct HelloWorldModule: PWAModule {
 ### JavaScript Usage
 
 ```javascript
-import { bridge } from "@eddmann/pwa-kit-sdk";
+import { bridge } from "@pwa-kit/sdk";
 
 // Simple greeting
 const greeting = await bridge.call("helloWorld", "greet", {

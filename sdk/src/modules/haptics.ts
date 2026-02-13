@@ -21,7 +21,7 @@ export type NotificationType = 'success' | 'warning' | 'error';
  *
  * @example
  * ```typescript
- * import { haptics } from '@eddmann/pwa-kit-sdk';
+ * import { haptics } from '@pwa-kit/sdk';
  *
  * // Trigger impact feedback
  * await haptics.impact('medium');

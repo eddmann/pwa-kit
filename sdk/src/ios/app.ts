@@ -33,7 +33,7 @@ export interface ReviewResult {
  *
  * @example
  * ```typescript
- * import { ios } from '@eddmann/pwa-kit-sdk';
+ * import { ios } from '@pwa-kit/sdk';
  *
  * // Get app version
  * const version = await ios.app.getVersion();

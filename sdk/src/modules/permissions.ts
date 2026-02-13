@@ -115,7 +115,7 @@ function getModuleName(name: PermissionName): string {
  *
  * @example
  * ```typescript
- * import { permissions } from '@eddmann/pwa-kit-sdk';
+ * import { permissions } from '@pwa-kit/sdk';
  *
  * // Query permission state
  * const status = await permissions.query({ name: 'camera' });

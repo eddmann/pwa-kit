@@ -89,19 +89,19 @@ echo "@eddmann:registry=https://npm.pkg.github.com" >> .npmrc
 ### CLI
 
 ```bash
-npx @eddmann/pwa-kit init
+npx @pwa-kit/cli init
 ```
 
 ### JavaScript SDK
 
 ```bash
-npm install @eddmann/pwa-kit-sdk
+npm install @pwa-kit/sdk
 ```
 
 ### Basic Usage
 
 ```typescript
-import { push, badging, haptics, ios, isNative } from "@eddmann/pwa-kit-sdk";
+import { push, badging, haptics, ios, isNative } from "@pwa-kit/sdk";
 
 if (isNative) {
   // Subscribe to push notifications
