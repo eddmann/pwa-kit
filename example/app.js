@@ -447,6 +447,29 @@ async function testPrint() {
   }
 }
 
+// JavaScript Dialogs (handled by native UIAlertController)
+function testAlert() {
+  alert('This is a native alert dialog from JavaScript!');
+  consoleLog.success('Alert dismissed');
+}
+
+function testConfirm() {
+  const result = confirm('Do you like PWAKit?');
+  consoleLog.success('Confirm result:', result);
+  showResult('dialog-result', { confirmed: result }, true);
+}
+
+function testPrompt() {
+  const result = prompt('What is your name?', 'PWAKit User');
+  if (result !== null) {
+    consoleLog.success('Prompt result:', result);
+    showResult('dialog-result', { input: result }, true);
+  } else {
+    consoleLog.info('Prompt cancelled');
+    showResult('dialog-result', { cancelled: true }, false);
+  }
+}
+
 // App Module (iOS-specific)
 async function testAppReview() {
   try {

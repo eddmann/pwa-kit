@@ -8,6 +8,7 @@ A comprehensive demonstration app showcasing **every PWAKit capability**. This "
 | ------------------- | ------------------------------------------------------------------------------- |
 | Platform Detection  | Native bridge detection, device info, user agent parsing                        |
 | Haptics             | Impact feedback (5 styles), notification feedback (3 types), selection feedback |
+| Vibration           | Web Vibration API: simple duration and patterns (double, triple, SOS)           |
 | Push Notifications  | Subscribe, get token, check permission, set/clear badge                         |
 | Local Notifications | Schedule, cancel, list pending; time interval, date, and calendar triggers      |
 | Share Sheet         | Share text/URLs, share files (images, documents)                                |
@@ -16,16 +17,17 @@ A comprehensive demonstration app showcasing **every PWAKit capability**. This "
 | App Lifecycle       | Version info, open settings, request App Store review                           |
 | Clipboard           | Copy and paste text                                                             |
 | Print               | AirPrint dialog for current page                                                |
+| JavaScript Dialogs  | Native alert, confirm, and prompt dialogs                                       |
 | In-App Purchases    | StoreKit 2: fetch products, purchase, restore, entitlements                     |
 | HealthKit           | Query steps, heart rate, workouts, sleep; save workouts                         |
-| Permissions         | Camera and location permission management                                       |
+| Permissions         | Camera, microphone, and location permission management                          |
 
 ## Running the Example
 
 1. Start the local HTTPS server:
 
    ```bash
-   make example
+   make example/serve
    # Or directly: node example/server.js
    ```
 
@@ -35,12 +37,12 @@ A comprehensive demonstration app showcasing **every PWAKit capability**. This "
    # Local development (against localhost server)
    node cli/dist/index.js init --force \
      --url "https://localhost:8443" \
-     --features "notifications,haptics,biometrics,secureStorage,healthkit,iap,share,print,clipboard"
+     --features "notifications,haptics,biometrics,secureStorage,healthkit,iap,share,print,clipboard,cameraPermission,microphonePermission,locationPermission"
 
    # Or against the deployed Cloudflare Workers version
    node cli/dist/index.js init --force \
      --url "https://pwakit-example.eddmann.workers.dev" \
-     --features "notifications,haptics,biometrics,secureStorage,healthkit,iap,share,print,clipboard"
+     --features "notifications,haptics,biometrics,secureStorage,healthkit,iap,share,print,clipboard,cameraPermission,microphonePermission,locationPermission"
    ```
 
 3. Build and run in Xcode (`Cmd+R`)
@@ -58,6 +60,11 @@ A comprehensive demonstration app showcasing **every PWAKit capability**. This "
 - **Impact haptics**: Light, Medium, Heavy, Soft, Rigid
 - **Notification haptics**: Success, Warning, Error
 - **Selection haptics**: For picker/slider interactions
+
+### Vibration (Web API)
+
+- Simple vibration with configurable duration (short, medium, long)
+- Pattern vibration (double, triple, SOS)
 
 ### Push Notifications
 
@@ -111,6 +118,12 @@ A comprehensive demonstration app showcasing **every PWAKit capability**. This "
 
 - Open AirPrint dialog for current page
 
+**JavaScript Dialogs**
+
+- `alert()` — native UIAlertController with OK button
+- `confirm()` — native dialog with Cancel/OK, returns boolean
+- `prompt()` — native dialog with text input, returns string or null
+
 ### Purchases (StoreKit 2)
 
 - Fetch product information by ID
@@ -129,6 +142,7 @@ A comprehensive demonstration app showcasing **every PWAKit capability**. This "
 ### Permissions
 
 - Check and request camera permission
+- Check and request microphone permission
 - Check and request location permission
 
 ## Development Certificates
@@ -168,6 +182,7 @@ The development certificates allow testing these features locally without deploy
 | File                  | Description                                                                    |
 | --------------------- | ------------------------------------------------------------------------------ |
 | `index.html`          | Main app structure with organized sections for each feature category           |
+| `pwakit.js`           | PWAKit SDK browser bundle (built from `sdk/`)                                  |
 | `app.js`              | 40+ test functions demonstrating all SDK modules with error handling           |
 | `styles.css`          | Full iOS design system (light/dark mode, SF Pro typography, native components) |
 | `manifest.json`       | PWA manifest configuration                                                     |

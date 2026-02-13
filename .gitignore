@@ -110,3 +110,9 @@ sdk/package-lock.json
 cli/node_modules/
 cli/dist/
 cli/package-lock.json
+
+# MARK: - Example
+
+example/node_modules/
+example/dist/
+example/pwakit.js

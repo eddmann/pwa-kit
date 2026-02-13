@@ -109,6 +109,10 @@ example/deps: ## Install example dependencies
 example/serve: ## Run kitchen sink demo server
 	@./example/run-example.sh --server-only
 
-example/deploy: ## Deploy to Cloudflare Workers
-	@cp example/manifest.json example/icon-1024.png example/dist/
+example/build: sdk/build ## Build example for deployment
+	@cd example && rm -rf dist && mkdir -p dist
+	@cp example/index.html example/app.js example/styles.css example/manifest.json example/icon-1024.png example/dist/
+	@cp sdk/dist/index.global.js example/dist/pwakit.js
+
+example/deploy: example/build ## Deploy to Cloudflare Workers
 	@cd example && npx wrangler deploy

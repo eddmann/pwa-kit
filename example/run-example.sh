@@ -110,6 +110,34 @@ check_prerequisites() {
     fi
 }
 
+build_sdk() {
+    local sdk_dir="$PROJECT_ROOT/sdk"
+    local sdk_bundle="$sdk_dir/dist/index.global.js"
+    local target="$EXAMPLE_DIR/pwakit.js"
+
+    # Skip if pwakit.js already exists and is newer than SDK source
+    if [[ -f "$target" && -f "$sdk_bundle" && "$target" -nt "$sdk_bundle" ]]; then
+        print_info "pwakit.js is up to date"
+        return 0
+    fi
+
+    print_step "Building SDK..."
+
+    if [[ ! -d "$sdk_dir/node_modules" ]]; then
+        (cd "$sdk_dir" && npm ci --silent)
+    fi
+
+    (cd "$sdk_dir" && npm run build --silent)
+
+    if [[ ! -f "$sdk_bundle" ]]; then
+        print_error "SDK build failed — $sdk_bundle not found"
+        exit 1
+    fi
+
+    cp "$sdk_bundle" "$target"
+    print_success "pwakit.js built from SDK"
+}
+
 wait_for_server() {
     local max_attempts=30
     local attempt=1
@@ -209,6 +237,7 @@ echo "==================="
 echo ""
 
 check_prerequisites
+build_sdk
 start_server
 
 if [[ "$SERVER_ONLY" == true ]]; then
