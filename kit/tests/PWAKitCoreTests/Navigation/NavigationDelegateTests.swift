@@ -1,9 +1,8 @@
 import Foundation
+@testable import PWAKitApp
 import Testing
 import UIKit
 import WebKit
-
-@testable import PWAKitApp
 
 // MARK: - NavigationDelegateTests
 
@@ -15,12 +14,12 @@ struct NavigationDelegateTests {
     struct InitializationTests {
         @Test("Creates delegate from policy resolver and start URL")
         @MainActor
-        func createsFromPolicyResolver() {
+        func createsFromPolicyResolver() throws {
             let resolver = NavigationPolicyResolver(
                 allowedOrigins: ["example.com"],
                 authOrigins: ["auth.example.com"]
             )
-            let startURL = URL(string: "https://example.com/")!
+            let startURL = try #require(URL(string: "https://example.com/"))
 
             let delegate = NavigationDelegate(
                 policyResolver: resolver,
@@ -33,9 +32,9 @@ struct NavigationDelegateTests {
 
         @Test("Creates delegate from WebViewConfiguration")
         @MainActor
-        func createsFromWebViewConfiguration() {
-            let config = WebViewConfiguration(
-                startURL: URL(string: "https://app.example.com/")!,
+        func createsFromWebViewConfiguration() throws {
+            let config = try WebViewConfiguration(
+                startURL: #require(URL(string: "https://app.example.com/")),
                 allowedOrigins: ["app.example.com", "*.example.com"],
                 authOrigins: ["accounts.google.com"]
             )
@@ -47,13 +46,13 @@ struct NavigationDelegateTests {
 
         @Test("Creates delegate from OriginsConfiguration")
         @MainActor
-        func createsFromOriginsConfiguration() {
+        func createsFromOriginsConfiguration() throws {
             let origins = OriginsConfiguration(
                 allowed: ["example.com"],
                 auth: ["auth0.com"],
                 external: ["external.com"]
             )
-            let startURL = URL(string: "https://example.com/")!
+            let startURL = try #require(URL(string: "https://example.com/"))
 
             let delegate = NavigationDelegate(
                 origins: origins,
@@ -65,11 +64,11 @@ struct NavigationDelegateTests {
 
         @Test("Sets view controller when provided")
         @MainActor
-        func setsViewControllerWhenProvided() {
+        func setsViewControllerWhenProvided() throws {
             let resolver = NavigationPolicyResolver(
                 allowedOrigins: ["example.com"]
             )
-            let startURL = URL(string: "https://example.com/")!
+            let startURL = try #require(URL(string: "https://example.com/"))
             let viewController = UIViewController()
 
             let delegate = NavigationDelegate(
@@ -237,14 +236,14 @@ struct NavigationDelegateTests {
 struct NavigationDelegatePolicyIntegrationTests {
     @Test("Delegate uses provided policy resolver")
     @MainActor
-    func delegateUsesProvidedPolicyResolver() {
+    func delegateUsesProvidedPolicyResolver() throws {
         // Create a resolver with specific configuration
         let resolver = NavigationPolicyResolver(
             allowedOrigins: ["myapp.com"],
             authOrigins: ["oauth.provider.com"],
             externalOrigins: ["blocked.com"]
         )
-        let startURL = URL(string: "https://myapp.com/")!
+        let startURL = try #require(URL(string: "https://myapp.com/"))
 
         let delegate = NavigationDelegate(
             policyResolver: resolver,
@@ -258,9 +257,9 @@ struct NavigationDelegatePolicyIntegrationTests {
 
     @Test("Delegate created from WebViewConfiguration inherits origins")
     @MainActor
-    func delegateFromWebViewConfigurationInheritsOrigins() {
-        let config = WebViewConfiguration(
-            startURL: URL(string: "https://myapp.example.com/")!,
+    func delegateFromWebViewConfigurationInheritsOrigins() throws {
+        let config = try WebViewConfiguration(
+            startURL: #require(URL(string: "https://myapp.example.com/")),
             allowedOrigins: ["myapp.example.com"],
             authOrigins: ["auth.example.com"]
         )
@@ -273,13 +272,13 @@ struct NavigationDelegatePolicyIntegrationTests {
 
     @Test("Delegate created from OriginsConfiguration uses external origins")
     @MainActor
-    func delegateFromOriginsConfigurationUsesExternalOrigins() {
+    func delegateFromOriginsConfigurationUsesExternalOrigins() throws {
         let origins = OriginsConfiguration(
             allowed: ["app.example.com"],
             auth: ["login.example.com"],
             external: ["docs.example.com", "blog.example.com"]
         )
-        let startURL = URL(string: "https://app.example.com/")!
+        let startURL = try #require(URL(string: "https://app.example.com/"))
 
         let delegate = NavigationDelegate(
             origins: origins,
@@ -292,15 +291,15 @@ struct NavigationDelegatePolicyIntegrationTests {
 
     @Test("Multiple delegates can be created with different configurations")
     @MainActor
-    func multipleDelegatesWithDifferentConfigurations() {
-        let delegate1 = NavigationDelegate(
+    func multipleDelegatesWithDifferentConfigurations() throws {
+        let delegate1 = try NavigationDelegate(
             policyResolver: NavigationPolicyResolver(allowedOrigins: ["app1.com"]),
-            startURL: URL(string: "https://app1.com/")!
+            startURL: #require(URL(string: "https://app1.com/"))
         )
 
-        let delegate2 = NavigationDelegate(
+        let delegate2 = try NavigationDelegate(
             policyResolver: NavigationPolicyResolver(allowedOrigins: ["app2.com"]),
-            startURL: URL(string: "https://app2.com/")!
+            startURL: #require(URL(string: "https://app2.com/"))
         )
 
         // Both delegates should be independent
@@ -315,10 +314,10 @@ struct NavigationDelegatePolicyIntegrationTests {
 struct NavigationDelegateViewControllerTests {
     @Test("View controller can be set after initialization")
     @MainActor
-    func viewControllerCanBeSetAfterInit() {
-        let delegate = NavigationDelegate(
+    func viewControllerCanBeSetAfterInit() throws {
+        let delegate = try NavigationDelegate(
             policyResolver: NavigationPolicyResolver(allowedOrigins: ["example.com"]),
-            startURL: URL(string: "https://example.com/")!
+            startURL: #require(URL(string: "https://example.com/"))
         )
 
         #expect(delegate.viewController == nil)
@@ -331,10 +330,10 @@ struct NavigationDelegateViewControllerTests {
 
     @Test("View controller is weakly held")
     @MainActor
-    func viewControllerIsWeaklyHeld() {
-        let delegate = NavigationDelegate(
+    func viewControllerIsWeaklyHeld() throws {
+        let delegate = try NavigationDelegate(
             policyResolver: NavigationPolicyResolver(allowedOrigins: ["example.com"]),
-            startURL: URL(string: "https://example.com/")!
+            startURL: #require(URL(string: "https://example.com/"))
         )
 
         autoreleasepool {
@@ -355,10 +354,10 @@ struct NavigationDelegateViewControllerTests {
 struct NavigationDelegateWebViewReferenceTests {
     @Test("WebView is weakly held")
     @MainActor
-    func webViewIsWeaklyHeld() {
-        let delegate = NavigationDelegate(
+    func webViewIsWeaklyHeld() throws {
+        let delegate = try NavigationDelegate(
             policyResolver: NavigationPolicyResolver(allowedOrigins: ["example.com"]),
-            startURL: URL(string: "https://example.com/")!
+            startURL: #require(URL(string: "https://example.com/"))
         )
 
         autoreleasepool {
@@ -372,10 +371,10 @@ struct NavigationDelegateWebViewReferenceTests {
 
     @Test("WebView reference is updated on each navigation")
     @MainActor
-    func webViewReferenceUpdatedOnNavigation() {
-        let delegate = NavigationDelegate(
+    func webViewReferenceUpdatedOnNavigation() throws {
+        let delegate = try NavigationDelegate(
             policyResolver: NavigationPolicyResolver(allowedOrigins: ["example.com"]),
-            startURL: URL(string: "https://example.com/")!
+            startURL: #require(URL(string: "https://example.com/"))
         )
 
         let webView1 = WKWebView()

@@ -1,7 +1,6 @@
 import Foundation
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 @Suite("HealthKitTypes Tests")
 struct HealthKitTypesTests {
@@ -32,31 +31,31 @@ struct HealthKitTypesTests {
 
             let stepCount = try decoder.decode(
                 HealthQuantityType.self,
-                from: "\"stepCount\"".data(using: .utf8)!
+                from: #require("\"stepCount\"".data(using: .utf8))
             )
             #expect(stepCount == .stepCount)
 
             let heartRate = try decoder.decode(
                 HealthQuantityType.self,
-                from: "\"heartRate\"".data(using: .utf8)!
+                from: #require("\"heartRate\"".data(using: .utf8))
             )
             #expect(heartRate == .heartRate)
 
             let distanceWalkingRunning = try decoder.decode(
                 HealthQuantityType.self,
-                from: "\"distanceWalkingRunning\"".data(using: .utf8)!
+                from: #require("\"distanceWalkingRunning\"".data(using: .utf8))
             )
             #expect(distanceWalkingRunning == .distanceWalkingRunning)
         }
 
         @Test("Throws error for invalid value")
-        func throwsForInvalidValue() {
+        func throwsForInvalidValue() throws {
             let decoder = JSONDecoder()
 
             #expect(throws: DecodingError.self) {
                 _ = try decoder.decode(
                     HealthQuantityType.self,
-                    from: "\"invalid_type\"".data(using: .utf8)!
+                    from: #require("\"invalid_type\"".data(using: .utf8))
                 )
             }
         }
@@ -109,31 +108,31 @@ struct HealthKitTypesTests {
 
             let running = try decoder.decode(
                 WorkoutActivityType.self,
-                from: "\"running\"".data(using: .utf8)!
+                from: #require("\"running\"".data(using: .utf8))
             )
             #expect(running == .running)
 
             let yoga = try decoder.decode(
                 WorkoutActivityType.self,
-                from: "\"yoga\"".data(using: .utf8)!
+                from: #require("\"yoga\"".data(using: .utf8))
             )
             #expect(yoga == .yoga)
 
             let mixedCardio = try decoder.decode(
                 WorkoutActivityType.self,
-                from: "\"mixedCardio\"".data(using: .utf8)!
+                from: #require("\"mixedCardio\"".data(using: .utf8))
             )
             #expect(mixedCardio == .mixedCardio)
         }
 
         @Test("Throws error for invalid value")
-        func throwsForInvalidValue() {
+        func throwsForInvalidValue() throws {
             let decoder = JSONDecoder()
 
             #expect(throws: DecodingError.self) {
                 _ = try decoder.decode(
                     WorkoutActivityType.self,
-                    from: "\"invalid_workout\"".data(using: .utf8)!
+                    from: #require("\"invalid_workout\"".data(using: .utf8))
                 )
             }
         }
@@ -182,31 +181,31 @@ struct HealthKitTypesTests {
 
             let inBed = try decoder.decode(
                 SleepStage.self,
-                from: "\"inBed\"".data(using: .utf8)!
+                from: #require("\"inBed\"".data(using: .utf8))
             )
             #expect(inBed == .inBed)
 
             let core = try decoder.decode(
                 SleepStage.self,
-                from: "\"asleepCore\"".data(using: .utf8)!
+                from: #require("\"asleepCore\"".data(using: .utf8))
             )
             #expect(core == .asleepCore)
 
             let awake = try decoder.decode(
                 SleepStage.self,
-                from: "\"awake\"".data(using: .utf8)!
+                from: #require("\"awake\"".data(using: .utf8))
             )
             #expect(awake == .awake)
         }
 
         @Test("Throws error for invalid value")
-        func throwsForInvalidValue() {
+        func throwsForInvalidValue() throws {
             let decoder = JSONDecoder()
 
             #expect(throws: DecodingError.self) {
                 _ = try decoder.decode(
                     SleepStage.self,
-                    from: "\"invalid_stage\"".data(using: .utf8)!
+                    from: #require("\"invalid_stage\"".data(using: .utf8))
                 )
             }
         }
@@ -254,7 +253,7 @@ struct HealthKitTypesTests {
             encoder.dateEncodingStrategy = .iso8601
             encoder.outputFormatting = .sortedKeys
             let data = try encoder.encode(sample)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             // Note: JSON may encode 72.0 as "72" or "72.0" depending on platform
             // Note: JSON escapes forward slash as \/ so "count/min" becomes "count\/min"
@@ -275,7 +274,7 @@ struct HealthKitTypesTests {
             let encoder = JSONEncoder()
             encoder.dateEncodingStrategy = .iso8601
             let data = try encoder.encode(sample)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"value\":10000"))
             #expect(json.contains("\"unit\":\"count\""))
@@ -297,7 +296,7 @@ struct HealthKitTypesTests {
             decoder.dateDecodingStrategy = .iso8601
             let sample = try decoder.decode(
                 HealthSample.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(sample.value == 85.5)
@@ -364,7 +363,7 @@ struct HealthKitTypesTests {
             encoder.dateEncodingStrategy = .iso8601
             encoder.outputFormatting = .sortedKeys
             let data = try encoder.encode(workout)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"type\":\"running\""))
             #expect(json.contains("\"duration\":1800"))
@@ -384,7 +383,7 @@ struct HealthKitTypesTests {
             let encoder = JSONEncoder()
             encoder.dateEncodingStrategy = .iso8601
             let data = try encoder.encode(workout)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"type\":\"yoga\""))
             #expect(json.contains("\"duration\":3600"))
@@ -407,7 +406,7 @@ struct HealthKitTypesTests {
             decoder.dateDecodingStrategy = .iso8601
             let workout = try decoder.decode(
                 WorkoutData.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(workout.type == .cycling)
@@ -473,7 +472,7 @@ struct HealthKitTypesTests {
             encoder.dateEncodingStrategy = .iso8601
             encoder.outputFormatting = .sortedKeys
             let data = try encoder.encode(sample)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"stage\":\"asleepDeep\""))
         }
@@ -492,7 +491,7 @@ struct HealthKitTypesTests {
             decoder.dateDecodingStrategy = .iso8601
             let sample = try decoder.decode(
                 SleepSample.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(sample.stage == .asleepREM)
@@ -549,7 +548,7 @@ struct HealthKitTypesTests {
             let encoder = JSONEncoder()
             encoder.dateEncodingStrategy = .iso8601
             let data = try encoder.encode(request)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"quantityType\":\"stepCount\""))
         }
@@ -568,7 +567,7 @@ struct HealthKitTypesTests {
             decoder.dateDecodingStrategy = .iso8601
             let request = try decoder.decode(
                 HealthQueryRequest.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(request.quantityType == .heartRate)
@@ -625,7 +624,7 @@ struct HealthKitTypesTests {
             let encoder = JSONEncoder()
             encoder.dateEncodingStrategy = .iso8601
             let data = try encoder.encode(request)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"workoutType\":\"running\""))
         }
@@ -640,7 +639,7 @@ struct HealthKitTypesTests {
             let encoder = JSONEncoder()
             encoder.dateEncodingStrategy = .iso8601
             let data = try encoder.encode(request)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"workoutType\":null") || !json.contains("\"workoutType\""))
         }
@@ -659,7 +658,7 @@ struct HealthKitTypesTests {
             decoder.dateDecodingStrategy = .iso8601
             let request = try decoder.decode(
                 WorkoutQueryRequest.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(request.workoutType == .swimming)
@@ -714,7 +713,7 @@ struct HealthKitTypesTests {
             let encoder = JSONEncoder()
             encoder.dateEncodingStrategy = .iso8601
             let data = try encoder.encode(request)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"startDate\""))
             #expect(json.contains("\"endDate\""))
@@ -733,7 +732,7 @@ struct HealthKitTypesTests {
             decoder.dateDecodingStrategy = .iso8601
             let request = try decoder.decode(
                 SleepQueryRequest.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(request.startDate == startDate)
@@ -791,7 +790,7 @@ struct HealthKitTypesTests {
             let encoder = JSONEncoder()
             encoder.dateEncodingStrategy = .iso8601
             let data = try encoder.encode(request)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"workoutType\":\"running\""))
             #expect(json.contains("\"calories\":350.5"))
@@ -809,7 +808,7 @@ struct HealthKitTypesTests {
             let encoder = JSONEncoder()
             encoder.dateEncodingStrategy = .iso8601
             let data = try encoder.encode(request)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"workoutType\":\"yoga\""))
         }
@@ -830,7 +829,7 @@ struct HealthKitTypesTests {
             decoder.dateDecodingStrategy = .iso8601
             let request = try decoder.decode(
                 SaveWorkoutRequest.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(request.workoutType == .cycling)
@@ -886,7 +885,7 @@ struct HealthKitTypesTests {
 
             let encoder = JSONEncoder()
             let data = try encoder.encode(request)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"read\""))
             #expect(json.contains("\"stepCount\""))
@@ -902,7 +901,7 @@ struct HealthKitTypesTests {
 
             let encoder = JSONEncoder()
             let data = try encoder.encode(request)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"write\":[]"))
         }
@@ -919,7 +918,7 @@ struct HealthKitTypesTests {
             let decoder = JSONDecoder()
             let request = try decoder.decode(
                 AuthorizationRequest.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(request.read.count == 2)
@@ -979,7 +978,7 @@ struct HealthKitTypesTests {
             let encoder = JSONEncoder()
             encoder.dateEncodingStrategy = .iso8601
             let data = try encoder.encode(response)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"samples\""))
             #expect(json.contains("\"value\":72"))
@@ -1047,7 +1046,7 @@ struct HealthKitTypesTests {
             let encoder = JSONEncoder()
             encoder.dateEncodingStrategy = .iso8601
             let data = try encoder.encode(response)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"workouts\""))
             #expect(json.contains("\"type\":\"running\""))
@@ -1112,7 +1111,7 @@ struct HealthKitTypesTests {
             let encoder = JSONEncoder()
             encoder.dateEncodingStrategy = .iso8601
             let data = try encoder.encode(response)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"samples\""))
             #expect(json.contains("\"stage\":\"asleepDeep\""))
@@ -1166,7 +1165,7 @@ struct HealthKitTypesTests {
 
             let encoder = JSONEncoder()
             let data = try encoder.encode(response)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json == "{\"available\":true}")
         }
@@ -1178,7 +1177,7 @@ struct HealthKitTypesTests {
             let decoder = JSONDecoder()
             let response = try decoder.decode(
                 HealthKitAvailabilityResponse.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(response.available == false)
@@ -1218,7 +1217,7 @@ struct HealthKitTypesTests {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .sortedKeys
             let data = try encoder.encode(response)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"success\":true"))
             #expect(!json.contains("\"error\"") || json.contains("\"error\":null"))
@@ -1231,7 +1230,7 @@ struct HealthKitTypesTests {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .sortedKeys
             let data = try encoder.encode(response)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"success\":false"))
             #expect(json.contains("\"error\":\"Authorization denied\""))
@@ -1249,7 +1248,7 @@ struct HealthKitTypesTests {
             let decoder = JSONDecoder()
             let response = try decoder.decode(
                 SaveWorkoutResponse.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(response.success == true)
@@ -1268,7 +1267,7 @@ struct HealthKitTypesTests {
             let decoder = JSONDecoder()
             let response = try decoder.decode(
                 SaveWorkoutResponse.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(response.success == false)

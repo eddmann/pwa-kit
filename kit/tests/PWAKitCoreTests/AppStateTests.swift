@@ -1,8 +1,7 @@
 import Combine
+@testable import PWAKitApp
 import WebKit
 import XCTest
-
-@testable import PWAKitApp
 
 /// Tests for the AppState observable pattern with configuration integration.
 /// Note: The actual AppState is in the PWAKit app target.

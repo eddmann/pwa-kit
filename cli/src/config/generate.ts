@@ -27,6 +27,9 @@ export function generateConfig(opts: GenerateConfigOptions): PWAConfig {
     share: false,
     print: false,
     clipboard: false,
+    cameraPermission: false,
+    microphonePermission: false,
+    locationPermission: false,
   } as Record<Feature, boolean>;
 
   for (const f of opts.features) {

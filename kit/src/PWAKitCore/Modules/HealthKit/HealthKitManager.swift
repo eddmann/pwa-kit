@@ -173,6 +173,11 @@ public actor HealthKitManager {
             writeSet.insert(HKObjectType.workoutType())
         }
 
+        // HealthKit requires at least one data type, return early if none requested
+        guard !readSet.isEmpty || !writeSet.isEmpty else {
+            return
+        }
+
         do {
             try await healthStore.requestAuthorization(toShare: writeSet, read: readSet)
         } catch {

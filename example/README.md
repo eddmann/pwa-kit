@@ -33,13 +33,12 @@ A comprehensive demonstration app showcasing **every PWAKit capability**. This "
 
    ```bash
    # Local development (against localhost server)
-   ./scripts/configure.sh --force \
+   node cli/dist/index.js init --force \
      --url "https://localhost:8443" \
-     --name "PWAKit" \
      --features "notifications,haptics,biometrics,secureStorage,healthkit,iap,share,print,clipboard"
 
    # Or against the deployed Cloudflare Workers version
-   ./scripts/configure.sh --force \
+   node cli/dist/index.js init --force \
      --url "https://pwakit-example.eddmann.workers.dev" \
      --features "notifications,haptics,biometrics,secureStorage,healthkit,iap,share,print,clipboard"
    ```

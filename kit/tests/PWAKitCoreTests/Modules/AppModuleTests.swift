@@ -1,8 +1,7 @@
 import Foundation
+@testable import PWAKitApp
 import Testing
 import UIKit
-
-@testable import PWAKitApp
 
 // MARK: - AppModuleTests
 
@@ -50,12 +49,12 @@ struct AppModuleTests {
         // Verify version field exists and is a string
         let version = dict?["version"]?.stringValue
         #expect(version != nil)
-        #expect(!version!.isEmpty)
+        #expect(try !(#require(version?.isEmpty)))
 
         // Verify build field exists and is a string
         let build = dict?["build"]?.stringValue
         #expect(build != nil)
-        #expect(!build!.isEmpty)
+        #expect(try !(#require(build?.isEmpty)))
     }
 
     @Test("getVersion returns consistent values on multiple calls")

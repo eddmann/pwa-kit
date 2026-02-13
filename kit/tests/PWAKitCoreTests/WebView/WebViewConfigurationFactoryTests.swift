@@ -1,8 +1,7 @@
 import Foundation
+@testable import PWAKitApp
 import Testing
 import WebKit
-
-@testable import PWAKitApp
 
 // MARK: - MockScriptMessageHandler
 
@@ -149,9 +148,9 @@ struct WebViewConfigurationFactoryTests {
     }
 
     @Test("Standalone mode uses mobile content mode")
-    func standaloneModeUsesMobileContentMode() {
-        let standaloneConfig = WebViewConfiguration(
-            startURL: URL(string: "https://app.example.com/")!,
+    func standaloneModeUsesMobileContentMode() throws {
+        let standaloneConfig = try WebViewConfiguration(
+            startURL: #require(URL(string: "https://app.example.com/")),
             allowedOrigins: ["app.example.com"],
             displayMode: .standalone
         )
@@ -164,9 +163,9 @@ struct WebViewConfigurationFactoryTests {
     }
 
     @Test("Fullscreen mode uses mobile content mode")
-    func fullscreenModeUsesMobileContentMode() {
-        let fullscreenConfig = WebViewConfiguration(
-            startURL: URL(string: "https://app.example.com/")!,
+    func fullscreenModeUsesMobileContentMode() throws {
+        let fullscreenConfig = try WebViewConfiguration(
+            startURL: #require(URL(string: "https://app.example.com/")),
             allowedOrigins: ["app.example.com"],
             displayMode: .fullscreen
         )

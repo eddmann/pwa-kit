@@ -1,8 +1,7 @@
 import Foundation
+@testable import PWAKitApp
 import StoreKit
 import Testing
-
-@testable import PWAKitApp
 
 // MARK: - StoreKitManagerTests
 
@@ -11,7 +10,7 @@ struct StoreKitManagerTests {
     // MARK: - Initialization
 
     @Test("Can be initialized")
-    func canBeInitialized() async {
+    func canBeInitialized() {
         let manager = StoreKitManager()
         _ = manager // Suppress unused warning
         // Successfully created
@@ -85,7 +84,7 @@ struct StoreKitManagerTests {
 
     @Test("Can check if purchases are allowed")
     @MainActor
-    func canCheckIfPurchasesAreAllowed() async {
+    func canCheckIfPurchasesAreAllowed() {
         let manager = StoreKitManager()
 
         let canMake = manager.canMakePurchases()

@@ -1,7 +1,6 @@
 import Foundation
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 @Suite("SecureStorageModule Tests")
 struct SecureStorageModuleTests {

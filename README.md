@@ -18,7 +18,7 @@ PWAKit wraps your existing Progressive Web App in a thin native iOS shell. Unlik
 
 - **Native iOS App**: Full App Store distribution with native performance
 - **JavaScript Bridge**: Access iOS capabilities from your web code
-- **14 Native Modules**: Haptics, notifications, biometrics, secure storage, and more
+- **15 Native Modules**: Haptics, notifications, biometrics, secure storage, and more
 - **TypeScript SDK**: Fully typed APIs for all native features
 - **JSON Configuration**: Easy setup without Swift knowledge
 - **iOS 15+ Support**: Broad device compatibility
@@ -43,10 +43,10 @@ git clone https://github.com/eddmann/pwa-kit.git
 cd pwa-kit
 
 # 2. Configure your PWA
-make setup
+make kit/setup
 
 # 3. Open in Xcode and run
-make open
+make kit/open
 # Then press Cmd+R in Xcode to build and run
 ```
 
@@ -58,7 +58,7 @@ The setup wizard will prompt for:
 
 ## Configuration
 
-PWAKit uses a JSON configuration file at `src/PWAKit/Resources/pwa-config.json`.
+PWAKit uses a JSON configuration file at `kit/src/PWAKit/Resources/pwa-config.json`.
 
 ### Minimal Configuration
 
@@ -111,24 +111,25 @@ See [sdk/README.md](sdk/README.md) for the complete SDK documentation and API re
 
 ## Native Modules
 
-PWAKit includes 13 native modules:
+PWAKit includes 15 native modules:
 
-| Module              | Description             | SDK API                                        |
-| ------------------- | ----------------------- | ---------------------------------------------- |
-| Platform            | Device info             | `platform.getInfo()`                           |
-| App                 | Lifecycle, reviews      | `ios.app.requestReview()`                      |
-| Haptics             | Haptic feedback         | `haptics.impact('medium')`                     |
-| Push Notifications  | Remote push (APNs)      | `push.subscribe()`                             |
-| Local Notifications | Scheduled notifications | `ios.notifications.schedule()`                 |
-| Biometrics          | Face ID / Touch ID      | `ios.biometrics.authenticate()`                |
-| Secure Storage      | Keychain                | `ios.secureStorage.set()`                      |
-| Clipboard           | Copy/paste              | `clipboard.writeText()`                        |
-| Share               | Share sheet             | `share.share()`                                |
-| Print               | AirPrint                | `print.print()`                                |
-| Camera Permission   | Camera access           | `permissions.request({ name: 'camera' })`      |
-| Location Permission | Location access         | `permissions.request({ name: 'geolocation' })` |
-| HealthKit           | Health data             | `ios.healthKit.querySteps()`                   |
-| StoreKit            | In-app purchases        | `ios.storeKit.purchase()`                      |
+| Module                | Description             | SDK API                                        |
+| --------------------- | ----------------------- | ---------------------------------------------- |
+| Platform              | Device info             | `platform.getInfo()`                           |
+| App                   | Lifecycle, reviews      | `ios.app.requestReview()`                      |
+| Haptics               | Haptic feedback         | `haptics.impact('medium')`                     |
+| Push Notifications    | Remote push (APNs)      | `push.subscribe()`                             |
+| Local Notifications   | Scheduled notifications | `ios.notifications.schedule()`                 |
+| Biometrics            | Face ID / Touch ID      | `ios.biometrics.authenticate()`                |
+| Secure Storage        | Keychain                | `ios.secureStorage.set()`                      |
+| Clipboard             | Copy/paste              | `clipboard.writeText()`                        |
+| Share                 | Share sheet             | `share.share()`                                |
+| Print                 | AirPrint                | `print.print()`                                |
+| Camera Permission     | Camera access           | `permissions.request({ name: 'camera' })`      |
+| Microphone Permission | Microphone access       | `permissions.request({ name: 'microphone' })`  |
+| Location Permission   | Location access         | `permissions.request({ name: 'geolocation' })` |
+| HealthKit             | Health data             | `ios.healthKit.querySteps()`                   |
+| StoreKit              | In-app purchases        | `ios.storeKit.purchase()`                      |
 
 For full API documentation, see [sdk/README.md](sdk/README.md). To create your own modules, see [docs/custom-modules.md](docs/custom-modules.md).
 
@@ -137,11 +138,11 @@ For full API documentation, see [sdk/README.md](sdk/README.md). To create your o
 Run `make help` to see all available commands. Key commands:
 
 ```bash
-make setup          # Run interactive setup wizard
-make open           # Open Xcode project (Cmd+R to run, Cmd+U to test)
-make example        # Run kitchen sink demo server
-make lint           # Run SwiftLint
-make format         # Format code with SwiftFormat
+make kit/setup      # Run interactive setup wizard
+make kit/open       # Open Xcode project (Cmd+R to run, Cmd+U to test)
+make example/serve  # Run kitchen sink demo server
+make kit/lint       # Run SwiftLint
+make kit/fmt        # Format code with SwiftFormat
 ```
 
 For device testing, debugging, and deployment, see [docs/development.md](docs/development.md).

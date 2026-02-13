@@ -1,8 +1,7 @@
 import Foundation
+@testable import PWAKitApp
 import Testing
 import WebKit
-
-@testable import PWAKitApp
 
 // MARK: - BridgeMessageFlowTests
 
@@ -15,7 +14,7 @@ struct BridgeMessageFlowTests {
     // MARK: - Message Parsing Tests
 
     @Test("Parses JSON string message body")
-    func parsesJSONStringMessageBody() async throws {
+    func parsesJSONStringMessageBody() async {
         let dispatcher = BridgeDispatcher()
         await dispatcher.register(TestModule())
 
@@ -33,7 +32,7 @@ struct BridgeMessageFlowTests {
     }
 
     @Test("Parses dictionary message body")
-    func parsesDictionaryMessageBody() async throws {
+    func parsesDictionaryMessageBody() async {
         let dispatcher = BridgeDispatcher()
         await dispatcher.register(TestModule())
 
@@ -54,7 +53,7 @@ struct BridgeMessageFlowTests {
     }
 
     @Test("Handles invalid JSON gracefully")
-    func handlesInvalidJSONGracefully() async throws {
+    func handlesInvalidJSONGracefully() async {
         let dispatcher = BridgeDispatcher()
         await dispatcher.register(TestModule())
 
@@ -69,7 +68,7 @@ struct BridgeMessageFlowTests {
     }
 
     @Test("Handles empty message gracefully")
-    func handlesEmptyMessageGracefully() async throws {
+    func handlesEmptyMessageGracefully() async {
         let dispatcher = BridgeDispatcher()
         await dispatcher.register(TestModule())
 
@@ -83,7 +82,7 @@ struct BridgeMessageFlowTests {
     // MARK: - Response Sending Tests
 
     @Test("Formats response as JavaScript callback")
-    func formatsResponseAsJavaScriptCallback() async throws {
+    func formatsResponseAsJavaScriptCallback() {
         let response = BridgeResponse.success(id: "test-id", data: AnyCodable(["result": AnyCodable(true)]))
         let javascript = JavaScriptBridge.formatCallback(response)
 
@@ -93,7 +92,7 @@ struct BridgeMessageFlowTests {
     }
 
     @Test("Formats error response as JavaScript callback")
-    func formatsErrorResponseAsJavaScriptCallback() async throws {
+    func formatsErrorResponseAsJavaScriptCallback() {
         let response = BridgeResponse.failure(id: "error-id", error: "Something went wrong")
         let javascript = JavaScriptBridge.formatCallback(response)
 
@@ -104,7 +103,7 @@ struct BridgeMessageFlowTests {
     }
 
     @Test("Formats response from JSON string")
-    func formatsResponseFromJSONString() async throws {
+    func formatsResponseFromJSONString() {
         let jsonString = """
         {"id":"json-test","success":true,"data":{"key":"value"}}
         """
@@ -117,7 +116,7 @@ struct BridgeMessageFlowTests {
     // MARK: - Event Sending Tests
 
     @Test("Formats bridge event as JavaScript")
-    func formatsBridgeEventAsJavaScript() async throws {
+    func formatsBridgeEventAsJavaScript() {
         let event = BridgeEvent(type: "push", data: AnyCodable(["title": AnyCodable("New Message")]))
         let javascript = JavaScriptBridge.formatEvent(event)
 
@@ -127,7 +126,7 @@ struct BridgeMessageFlowTests {
     }
 
     @Test("Formats event with type and data")
-    func formatsEventWithTypeAndData() async throws {
+    func formatsEventWithTypeAndData() {
         let javascript = JavaScriptBridge.formatEvent(
             type: "lifecycle",
             data: AnyCodable(["state": AnyCodable("foreground")])
@@ -167,7 +166,7 @@ struct BridgeMessageFlowTests {
     }
 
     @Test("Handler routes to correct module action")
-    func handlerRoutesToCorrectModuleAction() async throws {
+    func handlerRoutesToCorrectModuleAction() async {
         let dispatcher = BridgeDispatcher()
         await dispatcher.register(TestModule())
 
@@ -186,7 +185,7 @@ struct BridgeMessageFlowTests {
     }
 
     @Test("Handler returns error for unknown module")
-    func handlerReturnsErrorForUnknownModule() async throws {
+    func handlerReturnsErrorForUnknownModule() async {
         let dispatcher = BridgeDispatcher()
         await dispatcher.register(TestModule())
 
@@ -204,7 +203,7 @@ struct BridgeMessageFlowTests {
     }
 
     @Test("Handler returns error for unknown action")
-    func handlerReturnsErrorForUnknownAction() async throws {
+    func handlerReturnsErrorForUnknownAction() async {
         let dispatcher = BridgeDispatcher()
         await dispatcher.register(TestModule())
 
@@ -273,12 +272,12 @@ struct JSONExtractionTests {
     }
 }
 
+@testable import PWAKitApp
+
 // MARK: - iOS-Specific Handler Tests
 import Testing
 import UIKit
 import WebKit
-
-@testable import PWAKitApp
 
 // MARK: - MockWebView
 
@@ -319,7 +318,7 @@ struct BridgeScriptMessageHandlerIOSTests {
     // MARK: - ModuleContextFactory Tests
 
     @Test("ModuleContextFactory creates context")
-    func moduleContextFactoryCreatesContext() async throws {
+    func moduleContextFactoryCreatesContext() {
         let factory = ModuleContextFactory()
         let context = factory.makeContext(
             webView: nil,
@@ -331,7 +330,7 @@ struct BridgeScriptMessageHandlerIOSTests {
     }
 
     @Test("ModuleContextFactory preserves configuration")
-    func moduleContextFactoryPreservesConfiguration() async throws {
+    func moduleContextFactoryPreservesConfiguration() {
         let customConfig = PWAConfiguration(
             version: 2,
             app: AppConfiguration(
@@ -363,7 +362,7 @@ struct BridgeScriptMessageHandlerIOSTests {
     // MARK: - Handler Initialization Tests
 
     @Test("Handler initializes with dispatcher")
-    func handlerInitializesWithDispatcher() async throws {
+    func handlerInitializesWithDispatcher() {
         let dispatcher = BridgeDispatcher()
         let handler = BridgeScriptMessageHandler(dispatcher: dispatcher)
 
@@ -372,7 +371,7 @@ struct BridgeScriptMessageHandlerIOSTests {
     }
 
     @Test("Handler initializes with custom configuration")
-    func handlerInitializesWithCustomConfiguration() async throws {
+    func handlerInitializesWithCustomConfiguration() {
         let customConfig = PWAConfiguration(
             version: 1,
             app: AppConfiguration(
@@ -400,7 +399,7 @@ struct BridgeScriptMessageHandlerIOSTests {
     }
 
     @Test("Handler configuration can be updated")
-    func handlerConfigurationCanBeUpdated() async throws {
+    func handlerConfigurationCanBeUpdated() {
         let dispatcher = BridgeDispatcher()
         let handler = BridgeScriptMessageHandler(dispatcher: dispatcher)
 

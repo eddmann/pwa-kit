@@ -184,13 +184,12 @@ public struct ShareModule: PWAModule {
         }
 
         // Present share sheet on main actor
-        let result = try await presentShareSheet(
+        return try await presentShareSheet(
             items: items,
             title: title,
             temporaryFileURLs: temporaryFileURLs,
             context: context
         )
-        return result
     }
 
     /// Presents the UIActivityViewController and returns the result.

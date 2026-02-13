@@ -3,52 +3,27 @@ import Foundation
 @testable import PWAKitApp
 import Testing
 
-@Suite("CameraPermissionModule Tests")
-struct CameraPermissionModuleTests {
+@Suite("MicrophonePermissionModule Tests")
+struct MicrophonePermissionModuleTests {
     // MARK: - Module Properties
 
     @Test("Has correct module name")
     func hasCorrectModuleName() {
-        #expect(CameraPermissionModule.moduleName == "cameraPermission")
+        #expect(MicrophonePermissionModule.moduleName == "microphonePermission")
     }
 
     @Test("Supports checkPermission and requestPermission actions")
     func supportsExpectedActions() {
-        #expect(CameraPermissionModule.supportedActions == ["checkPermission", "requestPermission"])
-        #expect(CameraPermissionModule.supports(action: "checkPermission"))
-        #expect(CameraPermissionModule.supports(action: "requestPermission"))
+        #expect(MicrophonePermissionModule.supportedActions == ["checkPermission", "requestPermission"])
+        #expect(MicrophonePermissionModule.supports(action: "checkPermission"))
+        #expect(MicrophonePermissionModule.supports(action: "requestPermission"))
     }
 
     @Test("Does not support unknown actions")
     func doesNotSupportUnknownActions() {
-        #expect(!CameraPermissionModule.supports(action: "unknown"))
-        #expect(!CameraPermissionModule.supports(action: "getStatus"))
-        #expect(!CameraPermissionModule.supports(action: ""))
-    }
-
-    // MARK: - PermissionStatus Enum
-
-    @Test("PermissionStatus has all expected cases")
-    func permissionStatusHasAllCases() {
-        let allCases = CameraPermissionModule.PermissionStatus.allCases
-        #expect(allCases.count == 4)
-        #expect(allCases.map(\.rawValue).sorted() == ["denied", "granted", "notDetermined", "restricted"])
-    }
-
-    @Test("PermissionStatus raw values are correct")
-    func permissionStatusRawValues() {
-        #expect(CameraPermissionModule.PermissionStatus.granted.rawValue == "granted")
-        #expect(CameraPermissionModule.PermissionStatus.denied.rawValue == "denied")
-        #expect(CameraPermissionModule.PermissionStatus.notDetermined.rawValue == "notDetermined")
-        #expect(CameraPermissionModule.PermissionStatus.restricted.rawValue == "restricted")
-    }
-
-    @Test("PermissionStatus converts from AVAuthorizationStatus correctly")
-    func permissionStatusConvertsFromAVAuthorizationStatus() {
-        #expect(CameraPermissionModule.PermissionStatus.from(.authorized) == .granted)
-        #expect(CameraPermissionModule.PermissionStatus.from(.denied) == .denied)
-        #expect(CameraPermissionModule.PermissionStatus.from(.notDetermined) == .notDetermined)
-        #expect(CameraPermissionModule.PermissionStatus.from(.restricted) == .restricted)
+        #expect(!MicrophonePermissionModule.supports(action: "unknown"))
+        #expect(!MicrophonePermissionModule.supports(action: "getStatus"))
+        #expect(!MicrophonePermissionModule.supports(action: ""))
     }
 
     // MARK: - checkPermission Action
@@ -56,7 +31,7 @@ struct CameraPermissionModuleTests {
     @Test("checkPermission returns expected structure")
     @MainActor
     func checkPermissionReturnsExpectedStructure() async throws {
-        let module = CameraPermissionModule()
+        let module = MicrophonePermissionModule()
         let context = ModuleContext()
 
         let result = try await module.handle(
@@ -70,10 +45,10 @@ struct CameraPermissionModuleTests {
         #expect(dict?["state"]?.stringValue != nil)
     }
 
-    @Test("checkPermission returns valid status")
+    @Test("checkPermission returns valid state")
     @MainActor
-    func checkPermissionReturnsValidStatus() async throws {
-        let module = CameraPermissionModule()
+    func checkPermissionReturnsValidState() async throws {
+        let module = MicrophonePermissionModule()
         let context = ModuleContext()
 
         let result = try await module.handle(
@@ -82,18 +57,17 @@ struct CameraPermissionModuleTests {
             context: context
         )
 
-        let status = result?.dictionaryValue?["state"]?.stringValue
-        #expect(status != nil)
+        let state = result?.dictionaryValue?["state"]?.stringValue
+        #expect(state != nil)
 
-        // Status should be one of the valid values
-        let validStatuses = ["granted", "denied", "notDetermined", "restricted"]
-        #expect(validStatuses.contains(status ?? ""))
+        let validStates = ["granted", "denied", "notDetermined", "restricted"]
+        #expect(validStates.contains(state ?? ""))
     }
 
     @Test("checkPermission ignores payload")
     @MainActor
     func checkPermissionIgnoresPayload() async throws {
-        let module = CameraPermissionModule()
+        let module = MicrophonePermissionModule()
         let context = ModuleContext()
 
         let resultWithPayload = try await module.handle(
@@ -114,7 +88,7 @@ struct CameraPermissionModuleTests {
     @Test("checkPermission is consistent with AVCaptureDevice status")
     @MainActor
     func checkPermissionIsConsistent() async throws {
-        let module = CameraPermissionModule()
+        let module = MicrophonePermissionModule()
         let context = ModuleContext()
 
         let result = try await module.handle(
@@ -123,13 +97,13 @@ struct CameraPermissionModuleTests {
             context: context
         )
 
-        let status = result?.dictionaryValue?["state"]?.stringValue
+        let state = result?.dictionaryValue?["state"]?.stringValue
 
-        // Get actual AVFoundation status
-        let avStatus = AVCaptureDevice.authorizationStatus(for: .video)
-        let expectedStatus = CameraPermissionModule.PermissionStatus.from(avStatus)
+        // Get actual AVFoundation status for audio
+        let avStatus = AVCaptureDevice.authorizationStatus(for: .audio)
+        let expectedState = CameraPermissionModule.PermissionStatus.from(avStatus)
 
-        #expect(status == expectedStatus.rawValue)
+        #expect(state == expectedState.rawValue)
     }
 
     // MARK: - requestPermission Action
@@ -137,7 +111,7 @@ struct CameraPermissionModuleTests {
     @Test("requestPermission returns expected structure")
     @MainActor
     func requestPermissionReturnsExpectedStructure() async throws {
-        let module = CameraPermissionModule()
+        let module = MicrophonePermissionModule()
         let context = ModuleContext()
 
         let result = try await module.handle(
@@ -151,10 +125,10 @@ struct CameraPermissionModuleTests {
         #expect(dict?["state"]?.stringValue != nil)
     }
 
-    @Test("requestPermission returns valid status")
+    @Test("requestPermission returns valid state")
     @MainActor
-    func requestPermissionReturnsValidStatus() async throws {
-        let module = CameraPermissionModule()
+    func requestPermissionReturnsValidState() async throws {
+        let module = MicrophonePermissionModule()
         let context = ModuleContext()
 
         let result = try await module.handle(
@@ -163,22 +137,19 @@ struct CameraPermissionModuleTests {
             context: context
         )
 
-        let status = result?.dictionaryValue?["state"]?.stringValue
-        #expect(status != nil)
+        let state = result?.dictionaryValue?["state"]?.stringValue
+        #expect(state != nil)
 
-        // Status should be one of the valid values
-        // (notDetermined is not expected here since requestPermission resolves it)
-        let validStatuses = ["granted", "denied", "notDetermined", "restricted"]
-        #expect(validStatuses.contains(status ?? ""))
+        let validStates = ["granted", "denied", "notDetermined", "restricted"]
+        #expect(validStates.contains(state ?? ""))
     }
 
     @Test("requestPermission ignores payload")
     @MainActor
     func requestPermissionIgnoresPayload() async throws {
-        let module = CameraPermissionModule()
+        let module = MicrophonePermissionModule()
         let context = ModuleContext()
 
-        // Both calls should handle payload the same way
         let resultWithPayload = try await module.handle(
             action: "requestPermission",
             payload: AnyCodable(["ignored": AnyCodable("value")]),
@@ -193,7 +164,7 @@ struct CameraPermissionModuleTests {
     @Test("Throws error for unknown action")
     @MainActor
     func throwsForUnknownAction() async throws {
-        let module = CameraPermissionModule()
+        let module = MicrophonePermissionModule()
         let context = ModuleContext()
 
         await #expect(throws: BridgeError.self) {
@@ -208,7 +179,7 @@ struct CameraPermissionModuleTests {
     @Test("Throws specific error for unknown action")
     @MainActor
     func throwsSpecificErrorForUnknownAction() async {
-        let module = CameraPermissionModule()
+        let module = MicrophonePermissionModule()
         let context = ModuleContext()
 
         do {
@@ -229,11 +200,10 @@ struct CameraPermissionModuleTests {
 
     @Test("Module is Sendable")
     func moduleIsSendable() async {
-        let module = CameraPermissionModule()
+        let module = MicrophonePermissionModule()
 
-        // Verify module can be safely used across concurrency boundaries
         await Task.detached {
-            #expect(CameraPermissionModule.moduleName == "cameraPermission")
+            #expect(MicrophonePermissionModule.moduleName == "microphonePermission")
             _ = module
         }.value
     }
@@ -242,19 +212,17 @@ struct CameraPermissionModuleTests {
 
     @Test("Conforms to PWAModule protocol")
     func conformsToPWAModule() {
-        let module = CameraPermissionModule()
+        let module = MicrophonePermissionModule()
 
-        // Verify protocol conformance by using as PWAModule
         let _: any PWAModule = module
 
-        // Verify static properties
-        #expect(CameraPermissionModule.moduleName == "cameraPermission")
-        #expect(!CameraPermissionModule.supportedActions.isEmpty)
+        #expect(MicrophonePermissionModule.moduleName == "microphonePermission")
+        #expect(!MicrophonePermissionModule.supportedActions.isEmpty)
     }
 
     @Test("validateAction throws for unsupported action")
     func validateActionThrows() throws {
-        let module = CameraPermissionModule()
+        let module = MicrophonePermissionModule()
 
         #expect(throws: BridgeError.self) {
             try module.validateAction("unsupported")
@@ -263,39 +231,36 @@ struct CameraPermissionModuleTests {
 
     @Test("validateAction succeeds for supported actions")
     func validateActionSucceeds() throws {
-        let module = CameraPermissionModule()
+        let module = MicrophonePermissionModule()
 
         try module.validateAction("checkPermission")
         try module.validateAction("requestPermission")
-        // Should not throw
     }
 
     // MARK: - Permission State Consistency
 
-    @Test("checkPermission and requestPermission return same status when already determined")
+    @Test("checkPermission and requestPermission return same state when already determined")
     @MainActor
-    func bothActionsReturnSameStatusWhenDetermined() async throws {
-        let module = CameraPermissionModule()
+    func bothActionsReturnSameStateWhenDetermined() async throws {
+        let module = MicrophonePermissionModule()
         let context = ModuleContext()
 
-        // Get current status via check
         let checkResult = try await module.handle(
             action: "checkPermission",
             payload: nil,
             context: context
         )
-        let checkStatus = checkResult?.dictionaryValue?["state"]?.stringValue
+        let checkState = checkResult?.dictionaryValue?["state"]?.stringValue
 
-        // If already determined, request should return same status
-        if checkStatus != "notDetermined" {
+        if checkState != "notDetermined" {
             let requestResult = try await module.handle(
                 action: "requestPermission",
                 payload: nil,
                 context: context
             )
-            let requestStatus = requestResult?.dictionaryValue?["state"]?.stringValue
+            let requestState = requestResult?.dictionaryValue?["state"]?.stringValue
 
-            #expect(checkStatus == requestStatus)
+            #expect(checkState == requestState)
         }
     }
 }

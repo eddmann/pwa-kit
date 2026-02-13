@@ -40,6 +40,9 @@ public struct FeaturesConfiguration: Codable, Sendable, Equatable {
     /// Enable camera permission management.
     public let cameraPermission: Bool
 
+    /// Enable microphone permission management.
+    public let microphonePermission: Bool
+
     /// Enable location permission management.
     public let locationPermission: Bool
 
@@ -56,6 +59,7 @@ public struct FeaturesConfiguration: Codable, Sendable, Equatable {
     ///   - print: Enable printing. Defaults to `true`.
     ///   - clipboard: Enable clipboard access. Defaults to `true`.
     ///   - cameraPermission: Enable camera permission. Defaults to `true`.
+    ///   - microphonePermission: Enable microphone permission. Defaults to `true`.
     ///   - locationPermission: Enable location permission. Defaults to `true`.
     public init(
         notifications: Bool = true,
@@ -68,6 +72,7 @@ public struct FeaturesConfiguration: Codable, Sendable, Equatable {
         print: Bool = true,
         clipboard: Bool = true,
         cameraPermission: Bool = true,
+        microphonePermission: Bool = true,
         locationPermission: Bool = true
     ) {
         self.notifications = notifications
@@ -80,6 +85,7 @@ public struct FeaturesConfiguration: Codable, Sendable, Equatable {
         self.print = print
         self.clipboard = clipboard
         self.cameraPermission = cameraPermission
+        self.microphonePermission = microphonePermission
         self.locationPermission = locationPermission
     }
 
@@ -99,6 +105,7 @@ public struct FeaturesConfiguration: Codable, Sendable, Equatable {
         case print
         case clipboard
         case cameraPermission
+        case microphonePermission
         case locationPermission
     }
 
@@ -114,6 +121,7 @@ public struct FeaturesConfiguration: Codable, Sendable, Equatable {
         self.print = try container.decodeIfPresent(Bool.self, forKey: .print) ?? true
         self.clipboard = try container.decodeIfPresent(Bool.self, forKey: .clipboard) ?? true
         self.cameraPermission = try container.decodeIfPresent(Bool.self, forKey: .cameraPermission) ?? true
+        self.microphonePermission = try container.decodeIfPresent(Bool.self, forKey: .microphonePermission) ?? true
         self.locationPermission = try container.decodeIfPresent(Bool.self, forKey: .locationPermission) ?? true
     }
 }

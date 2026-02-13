@@ -1,7 +1,6 @@
 import Foundation
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 @Suite("UniversalLinkHandler Tests")
 struct UniversalLinkHandlerTests {
@@ -11,15 +10,15 @@ struct UniversalLinkHandlerTests {
     struct URLHandlingTests {
         @Test("Can handle HTTPS URLs matching allowed origins")
         @MainActor
-        func canHandleAllowedOrigins() {
+        func canHandleAllowedOrigins() throws {
             let handler = UniversalLinkHandler(
                 allowedOrigins: ["example.com", "app.example.org"]
             )
 
-            let urls = [
-                URL(string: "https://example.com/page")!,
-                URL(string: "https://example.com/path/to/resource")!,
-                URL(string: "https://app.example.org/dashboard")!,
+            let urls = try [
+                #require(URL(string: "https://example.com/page")),
+                #require(URL(string: "https://example.com/path/to/resource")),
+                #require(URL(string: "https://app.example.org/dashboard")),
             ]
 
             for url in urls {
@@ -29,15 +28,15 @@ struct UniversalLinkHandlerTests {
 
         @Test("Cannot handle non-HTTPS URLs")
         @MainActor
-        func cannotHandleNonHttpsUrls() {
+        func cannotHandleNonHttpsUrls() throws {
             let handler = UniversalLinkHandler(
                 allowedOrigins: ["example.com"]
             )
 
-            let urls = [
-                URL(string: "http://example.com/page")!,
-                URL(string: "ftp://example.com/file")!,
-                URL(string: "file:///Users/test/file.txt")!,
+            let urls = try [
+                #require(URL(string: "http://example.com/page")),
+                #require(URL(string: "ftp://example.com/file")),
+                #require(URL(string: "file:///Users/test/file.txt")),
             ]
 
             for url in urls {
@@ -47,15 +46,15 @@ struct UniversalLinkHandlerTests {
 
         @Test("Cannot handle URLs not matching allowed origins")
         @MainActor
-        func cannotHandleNonMatchingUrls() {
+        func cannotHandleNonMatchingUrls() throws {
             let handler = UniversalLinkHandler(
                 allowedOrigins: ["example.com"]
             )
 
-            let urls = [
-                URL(string: "https://other.com/page")!,
-                URL(string: "https://notexample.com/")!,
-                URL(string: "https://example.org/")!,
+            let urls = try [
+                #require(URL(string: "https://other.com/page")),
+                #require(URL(string: "https://notexample.com/")),
+                #require(URL(string: "https://example.org/")),
             ]
 
             for url in urls {
@@ -65,26 +64,26 @@ struct UniversalLinkHandlerTests {
 
         @Test("Wildcard subdomain matching works")
         @MainActor
-        func wildcardSubdomainMatching() {
+        func wildcardSubdomainMatching() throws {
             let handler = UniversalLinkHandler(
                 allowedOrigins: ["*.example.com"]
             )
 
-            let matchingURLs = [
-                URL(string: "https://example.com/page")!,
-                URL(string: "https://app.example.com/dashboard")!,
-                URL(string: "https://api.v2.example.com/data")!,
-                URL(string: "https://www.example.com/")!,
+            let matchingURLs = try [
+                #require(URL(string: "https://example.com/page")),
+                #require(URL(string: "https://app.example.com/dashboard")),
+                #require(URL(string: "https://api.v2.example.com/data")),
+                #require(URL(string: "https://www.example.com/")),
             ]
 
             for url in matchingURLs {
                 #expect(handler.canHandle(url: url), "Expected \(url) to be handleable")
             }
 
-            let nonMatchingURLs = [
-                URL(string: "https://notexample.com/")!,
-                URL(string: "https://example.org/")!,
-                URL(string: "https://fakeexample.com/")!,
+            let nonMatchingURLs = try [
+                #require(URL(string: "https://notexample.com/")),
+                #require(URL(string: "https://example.org/")),
+                #require(URL(string: "https://fakeexample.com/")),
             ]
 
             for url in nonMatchingURLs {
@@ -94,12 +93,12 @@ struct UniversalLinkHandlerTests {
 
         @Test("Case insensitive matching")
         @MainActor
-        func caseInsensitiveMatching() {
+        func caseInsensitiveMatching() throws {
             let handler = UniversalLinkHandler(
                 allowedOrigins: ["Example.COM"]
             )
 
-            let url = URL(string: "https://EXAMPLE.com/page")!
+            let url = try #require(URL(string: "https://EXAMPLE.com/page"))
             #expect(handler.canHandle(url: url))
         }
     }
@@ -110,12 +109,12 @@ struct UniversalLinkHandlerTests {
     struct PendingLinkTests {
         @Test("Setting and consuming pending link")
         @MainActor
-        func setAndConsumePendingLink() {
+        func setAndConsumePendingLink() throws {
             let handler = UniversalLinkHandler(
                 allowedOrigins: ["example.com"]
             )
 
-            let url = URL(string: "https://example.com/page")!
+            let url = try #require(URL(string: "https://example.com/page"))
             handler.setPendingLink(url)
 
             #expect(handler.hasPendingLink)
@@ -141,13 +140,13 @@ struct UniversalLinkHandlerTests {
 
         @Test("Setting new link replaces existing")
         @MainActor
-        func settingNewLinkReplaces() {
+        func settingNewLinkReplaces() throws {
             let handler = UniversalLinkHandler(
                 allowedOrigins: ["example.com"]
             )
 
-            let firstURL = URL(string: "https://example.com/first")!
-            let secondURL = URL(string: "https://example.com/second")!
+            let firstURL = try #require(URL(string: "https://example.com/first"))
+            let secondURL = try #require(URL(string: "https://example.com/second"))
 
             handler.setPendingLink(firstURL)
             handler.setPendingLink(secondURL)
@@ -158,12 +157,12 @@ struct UniversalLinkHandlerTests {
 
         @Test("Clearing pending link")
         @MainActor
-        func clearPendingLink() {
+        func clearPendingLink() throws {
             let handler = UniversalLinkHandler(
                 allowedOrigins: ["example.com"]
             )
 
-            let url = URL(string: "https://example.com/page")!
+            let url = try #require(URL(string: "https://example.com/page"))
             handler.setPendingLink(url)
 
             #expect(handler.hasPendingLink)
@@ -174,7 +173,7 @@ struct UniversalLinkHandlerTests {
 
         @Test("Callback invoked when pending link is set")
         @MainActor
-        func callbackInvokedOnSet() {
+        func callbackInvokedOnSet() throws {
             let handler = UniversalLinkHandler(
                 allowedOrigins: ["example.com"]
             )
@@ -184,7 +183,7 @@ struct UniversalLinkHandlerTests {
                 callbackURL = url
             }
 
-            let url = URL(string: "https://example.com/page")!
+            let url = try #require(URL(string: "https://example.com/page"))
             handler.setPendingLink(url)
 
             #expect(callbackURL == url)
@@ -197,13 +196,13 @@ struct UniversalLinkHandlerTests {
     struct UserActivityTests {
         @Test("Handles browsing web activity with valid URL")
         @MainActor
-        func handlesBrowsingWebActivity() {
+        func handlesBrowsingWebActivity() throws {
             let handler = UniversalLinkHandler(
                 allowedOrigins: ["example.com"]
             )
 
             let activity = NSUserActivity(activityType: NSUserActivityTypeBrowsingWeb)
-            activity.webpageURL = URL(string: "https://example.com/page")!
+            activity.webpageURL = try #require(URL(string: "https://example.com/page"))
 
             let handled = handler.handleUserActivity(activity)
             #expect(handled)
@@ -213,13 +212,13 @@ struct UniversalLinkHandlerTests {
 
         @Test("Does not handle non-browsing activities")
         @MainActor
-        func doesNotHandleNonBrowsingActivities() {
+        func doesNotHandleNonBrowsingActivities() throws {
             let handler = UniversalLinkHandler(
                 allowedOrigins: ["example.com"]
             )
 
             let activity = NSUserActivity(activityType: "com.example.custom")
-            activity.webpageURL = URL(string: "https://example.com/page")!
+            activity.webpageURL = try #require(URL(string: "https://example.com/page"))
 
             let handled = handler.handleUserActivity(activity)
             #expect(!handled)
@@ -243,13 +242,13 @@ struct UniversalLinkHandlerTests {
 
         @Test("Does not handle activity with non-matching URL")
         @MainActor
-        func doesNotHandleNonMatchingURL() {
+        func doesNotHandleNonMatchingURL() throws {
             let handler = UniversalLinkHandler(
                 allowedOrigins: ["example.com"]
             )
 
             let activity = NSUserActivity(activityType: NSUserActivityTypeBrowsingWeb)
-            activity.webpageURL = URL(string: "https://other.com/page")!
+            activity.webpageURL = try #require(URL(string: "https://other.com/page"))
 
             let handled = handler.handleUserActivity(activity)
             #expect(!handled)
@@ -263,7 +262,7 @@ struct UniversalLinkHandlerTests {
     struct OriginsConfigurationTests {
         @Test("Handler can be created from OriginsConfiguration")
         @MainActor
-        func handlerFromOriginsConfiguration() {
+        func handlerFromOriginsConfiguration() throws {
             let origins = OriginsConfiguration(
                 allowed: ["example.com", "*.app.io"],
                 auth: ["accounts.google.com"],
@@ -273,12 +272,12 @@ struct UniversalLinkHandlerTests {
             let handler = UniversalLinkHandler(origins: origins)
 
             // Should handle allowed origins
-            #expect(handler.canHandle(url: URL(string: "https://example.com/")!))
-            #expect(handler.canHandle(url: URL(string: "https://api.app.io/")!))
+            #expect(try handler.canHandle(url: #require(URL(string: "https://example.com/"))))
+            #expect(try handler.canHandle(url: #require(URL(string: "https://api.app.io/"))))
 
             // Should not handle auth/external origins (they use allowed origins only)
-            #expect(!handler.canHandle(url: URL(string: "https://accounts.google.com/")!))
-            #expect(!handler.canHandle(url: URL(string: "https://external.com/")!))
+            #expect(try !handler.canHandle(url: #require(URL(string: "https://accounts.google.com/"))))
+            #expect(try !handler.canHandle(url: #require(URL(string: "https://external.com/"))))
         }
     }
 
@@ -288,36 +287,36 @@ struct UniversalLinkHandlerTests {
     struct EdgeCaseTests {
         @Test("Handles URL with path pattern in allowed origins")
         @MainActor
-        func handlesPathPatternInAllowedOrigins() {
+        func handlesPathPatternInAllowedOrigins() throws {
             // Path patterns in allowed origins should still match the domain
             let handler = UniversalLinkHandler(
                 allowedOrigins: ["example.com/app/*"]
             )
 
             // Domain matching should still work
-            let url = URL(string: "https://example.com/other/page")!
+            let url = try #require(URL(string: "https://example.com/other/page"))
             #expect(handler.canHandle(url: url))
         }
 
         @Test("Handles URL without path")
         @MainActor
-        func handlesURLWithoutPath() {
+        func handlesURLWithoutPath() throws {
             let handler = UniversalLinkHandler(
                 allowedOrigins: ["example.com"]
             )
 
-            let url = URL(string: "https://example.com")!
+            let url = try #require(URL(string: "https://example.com"))
             #expect(handler.canHandle(url: url))
         }
 
         @Test("Multiple consume calls return nil after first")
         @MainActor
-        func multipleConsumeCallsReturnNil() {
+        func multipleConsumeCallsReturnNil() throws {
             let handler = UniversalLinkHandler(
                 allowedOrigins: ["example.com"]
             )
 
-            let url = URL(string: "https://example.com/page")!
+            let url = try #require(URL(string: "https://example.com/page"))
             handler.setPendingLink(url)
 
             _ = handler.consumePendingLink()

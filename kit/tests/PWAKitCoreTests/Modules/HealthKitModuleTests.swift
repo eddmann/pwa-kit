@@ -1,7 +1,6 @@
 import Foundation
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 // MARK: - HealthKitModuleTests
 
@@ -20,6 +19,7 @@ struct HealthKitModuleTests {
             "isAvailable",
             "requestAuthorization",
             "querySteps",
+            "queryStepCount",
             "queryHeartRate",
             "queryWorkouts",
             "querySleep",
@@ -28,6 +28,7 @@ struct HealthKitModuleTests {
         #expect(HealthKitModule.supports(action: "isAvailable"))
         #expect(HealthKitModule.supports(action: "requestAuthorization"))
         #expect(HealthKitModule.supports(action: "querySteps"))
+        #expect(HealthKitModule.supports(action: "queryStepCount"))
         #expect(HealthKitModule.supports(action: "queryHeartRate"))
         #expect(HealthKitModule.supports(action: "queryWorkouts"))
         #expect(HealthKitModule.supports(action: "querySleep"))
@@ -71,22 +72,13 @@ struct HealthKitModuleTests {
         let module = HealthKitModule()
         let context = ModuleContext()
 
-        // Test with empty read and write arrays - should not throw
-        // Note: On devices without HealthKit, this may throw, so we catch the error
-        do {
-            let result = try await module.handle(
-                action: "requestAuthorization",
-                payload: AnyCodable(["read": AnyCodable([AnyCodable]()), "write": AnyCodable([AnyCodable]())]),
-                context: context
-            )
-            // If it succeeds, verify the response format
-            let dict = result?.dictionaryValue
-            #expect(dict?["success"]?.boolValue == true)
-        } catch {
-            // HealthKit may not be available on this device, which is expected
-            // The error should be a moduleError wrapping a HealthKitError
-            #expect(error is BridgeError)
-        }
+        let result = try await module.handle(
+            action: "requestAuthorization",
+            payload: AnyCodable(["read": AnyCodable([AnyCodable]()), "write": AnyCodable([AnyCodable]())]),
+            context: context
+        )
+        let dict = result?.dictionaryValue
+        #expect(dict?["success"]?.boolValue == true)
     }
 
     @Test("requestAuthorization accepts nil payload")
@@ -95,19 +87,13 @@ struct HealthKitModuleTests {
         let module = HealthKitModule()
         let context = ModuleContext()
 
-        // Should not throw for nil payload (empty read/write arrays)
-        do {
-            let result = try await module.handle(
-                action: "requestAuthorization",
-                payload: nil,
-                context: context
-            )
-            let dict = result?.dictionaryValue
-            #expect(dict?["success"]?.boolValue == true)
-        } catch {
-            // HealthKit may not be available
-            #expect(error is BridgeError)
-        }
+        let result = try await module.handle(
+            action: "requestAuthorization",
+            payload: nil,
+            context: context
+        )
+        let dict = result?.dictionaryValue
+        #expect(dict?["success"]?.boolValue == true)
     }
 
     // MARK: - Query Steps Action

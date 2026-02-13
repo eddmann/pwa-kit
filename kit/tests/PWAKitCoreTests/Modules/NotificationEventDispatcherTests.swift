@@ -1,8 +1,7 @@
 import Foundation
+@testable import PWAKitApp
 import Testing
 import WebKit
-
-@testable import PWAKitApp
 
 // MARK: - NotificationEventDispatcherTests
 
@@ -255,7 +254,7 @@ struct NotificationEventDispatcherTests {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .sortedKeys
             let data = try encoder.encode(payload)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"type\":\"received\""))
             #expect(json.contains("\"title\":\"Test Title\""))
@@ -279,7 +278,7 @@ struct NotificationEventDispatcherTests {
 
             let encoder = JSONEncoder()
             let data = try encoder.encode(payload)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("userInfo"))
             #expect(json.contains("messageId"))
@@ -298,7 +297,7 @@ struct NotificationEventDispatcherTests {
             """
 
             let decoder = JSONDecoder()
-            let payload = try decoder.decode(NotificationPayload.self, from: json.data(using: .utf8)!)
+            let payload = try decoder.decode(NotificationPayload.self, from: #require(json.data(using: .utf8)))
 
             #expect(payload.type == .tapped)
             #expect(payload.title == "Decoded Title")

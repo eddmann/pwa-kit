@@ -1,9 +1,8 @@
 import Combine
 import Foundation
+@testable import PWAKitApp
 import Testing
 import WebKit
-
-@testable import PWAKitApp
 
 // MARK: - DownloadHandlerTests
 
@@ -228,7 +227,7 @@ struct DownloadHandlerTests {
     // MARK: - URL Generation
 
     @Test("Creates destination in Documents directory")
-    func createsDestinationInDocumentsDirectory() async throws {
+    func createsDestinationInDocumentsDirectory() {
         let handler = DownloadHandler()
 
         // Verify documents directory is accessible
@@ -399,19 +398,19 @@ struct DownloadInfoTests {
 @MainActor
 struct BlobURLTests {
     @Test("Detects blob URLs correctly")
-    func detectsBlobURLsCorrectly() {
+    func detectsBlobURLsCorrectly() throws {
         // Valid blob URLs
-        let blobURL1 = URL(string: "blob:https://example.com/12345-67890")!
-        let blobURL2 = URL(string: "blob:http://localhost:3000/abcdef")!
+        let blobURL1 = try #require(URL(string: "blob:https://example.com/12345-67890"))
+        let blobURL2 = try #require(URL(string: "blob:http://localhost:3000/abcdef"))
 
         #expect(DownloadHandler.isBlobURL(blobURL1) == true)
         #expect(DownloadHandler.isBlobURL(blobURL2) == true)
 
         // Non-blob URLs
-        let httpsURL = URL(string: "https://example.com/file.pdf")!
-        let httpURL = URL(string: "http://example.com/file.pdf")!
+        let httpsURL = try #require(URL(string: "https://example.com/file.pdf"))
+        let httpURL = try #require(URL(string: "http://example.com/file.pdf"))
         let fileURL = URL(fileURLWithPath: "/tmp/file.pdf")
-        let dataURL = URL(string: "data:text/plain;base64,SGVsbG8=")!
+        let dataURL = try #require(URL(string: "data:text/plain;base64,SGVsbG8="))
 
         #expect(DownloadHandler.isBlobURL(httpsURL) == false)
         #expect(DownloadHandler.isBlobURL(httpURL) == false)
@@ -420,9 +419,9 @@ struct BlobURLTests {
     }
 
     @Test("Blob URL detection is case insensitive")
-    func blobURLDetectionIsCaseInsensitive() {
-        let uppercaseBlob = URL(string: "BLOB:https://example.com/12345")!
-        let mixedCaseBlob = URL(string: "Blob:https://example.com/12345")!
+    func blobURLDetectionIsCaseInsensitive() throws {
+        let uppercaseBlob = try #require(URL(string: "BLOB:https://example.com/12345"))
+        let mixedCaseBlob = try #require(URL(string: "Blob:https://example.com/12345"))
 
         #expect(DownloadHandler.isBlobURL(uppercaseBlob) == true)
         #expect(DownloadHandler.isBlobURL(mixedCaseBlob) == true)

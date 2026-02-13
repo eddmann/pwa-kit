@@ -1,7 +1,6 @@
 import Foundation
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 @Suite("IAPTypes Tests")
 struct IAPTypesTests {
@@ -32,37 +31,37 @@ struct IAPTypesTests {
 
             let consumable = try decoder.decode(
                 ProductType.self,
-                from: "\"consumable\"".data(using: .utf8)!
+                from: #require("\"consumable\"".data(using: .utf8))
             )
             #expect(consumable == .consumable)
 
             let nonConsumable = try decoder.decode(
                 ProductType.self,
-                from: "\"non_consumable\"".data(using: .utf8)!
+                from: #require("\"non_consumable\"".data(using: .utf8))
             )
             #expect(nonConsumable == .nonConsumable)
 
             let autoRenewable = try decoder.decode(
                 ProductType.self,
-                from: "\"auto_renewable\"".data(using: .utf8)!
+                from: #require("\"auto_renewable\"".data(using: .utf8))
             )
             #expect(autoRenewable == .autoRenewable)
 
             let nonRenewing = try decoder.decode(
                 ProductType.self,
-                from: "\"non_renewing\"".data(using: .utf8)!
+                from: #require("\"non_renewing\"".data(using: .utf8))
             )
             #expect(nonRenewing == .nonRenewing)
         }
 
         @Test("Throws error for invalid value")
-        func throwsForInvalidValue() {
+        func throwsForInvalidValue() throws {
             let decoder = JSONDecoder()
 
             #expect(throws: DecodingError.self) {
                 _ = try decoder.decode(
                     ProductType.self,
-                    from: "\"invalid\"".data(using: .utf8)!
+                    from: #require("\"invalid\"".data(using: .utf8))
                 )
             }
         }
@@ -104,7 +103,7 @@ struct IAPTypesTests {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .sortedKeys
             let data = try encoder.encode(product)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"id\":\"com.example.premium\""))
             #expect(json.contains("\"displayName\":\"Premium Upgrade\""))
@@ -124,7 +123,7 @@ struct IAPTypesTests {
 
             let encoder = JSONEncoder()
             let data = try encoder.encode(product)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"id\":\"com.example.coins\""))
             #expect(json.contains("\"displayName\":\"100 Coins\""))
@@ -147,7 +146,7 @@ struct IAPTypesTests {
             let decoder = JSONDecoder()
             let product = try decoder.decode(
                 ProductInfo.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(product.id == "com.example.subscription")
@@ -205,7 +204,7 @@ struct IAPTypesTests {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .sortedKeys
             let data = try encoder.encode(result)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"success\":true"))
             #expect(json.contains("\"transactionId\":\"1000000123456789\""))
@@ -223,7 +222,7 @@ struct IAPTypesTests {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .sortedKeys
             let data = try encoder.encode(result)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"success\":false"))
             #expect(!json.contains("\"transactionId\"") || json.contains("\"transactionId\":null"))
@@ -245,7 +244,7 @@ struct IAPTypesTests {
             let decoder = JSONDecoder()
             let result = try decoder.decode(
                 PurchaseResult.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(result.success == true)
@@ -268,7 +267,7 @@ struct IAPTypesTests {
             let decoder = JSONDecoder()
             let result = try decoder.decode(
                 PurchaseResult.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(result.success == false)
@@ -346,7 +345,7 @@ struct IAPTypesTests {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .sortedKeys
             let data = try encoder.encode(entitlements)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"productIds\":[\"com.example.premium\",\"com.example.feature\"]"))
             #expect(json.contains("\"activeSubscriptions\":[\"com.example.subscription\"]"))
@@ -358,7 +357,7 @@ struct IAPTypesTests {
 
             let encoder = JSONEncoder()
             let data = try encoder.encode(entitlements)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"productIds\":[]"))
             #expect(json.contains("\"activeSubscriptions\":[]"))
@@ -376,7 +375,7 @@ struct IAPTypesTests {
             let decoder = JSONDecoder()
             let entitlements = try decoder.decode(
                 EntitlementInfo.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(entitlements.productIds == ["com.example.a", "com.example.b"])
@@ -438,7 +437,7 @@ struct IAPTypesTests {
 
             let encoder = JSONEncoder()
             let data = try encoder.encode(request)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"productIds\":[\"id1\",\"id2\"]"))
         }
@@ -450,7 +449,7 @@ struct IAPTypesTests {
             let decoder = JSONDecoder()
             let request = try decoder.decode(
                 GetProductsRequest.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(request.productIds == ["com.example.a", "com.example.b"])
@@ -489,7 +488,7 @@ struct IAPTypesTests {
 
             let encoder = JSONEncoder()
             let data = try encoder.encode(request)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json == "{\"productId\":\"com.example.premium\"}")
         }
@@ -501,7 +500,7 @@ struct IAPTypesTests {
             let decoder = JSONDecoder()
             let request = try decoder.decode(
                 PurchaseRequest.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(request.productId == "com.example.coins")
@@ -547,7 +546,7 @@ struct IAPTypesTests {
 
             let encoder = JSONEncoder()
             let data = try encoder.encode(response)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"products\""))
             #expect(json.contains("\"id\":\"com.example.a\""))
@@ -559,7 +558,7 @@ struct IAPTypesTests {
 
             let encoder = JSONEncoder()
             let data = try encoder.encode(response)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json == "{\"products\":[]}")
         }
@@ -583,7 +582,7 @@ struct IAPTypesTests {
             let decoder = JSONDecoder()
             let response = try decoder.decode(
                 GetProductsResponse.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(response.products.count == 1)
@@ -637,7 +636,7 @@ struct IAPTypesTests {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .sortedKeys
             let data = try encoder.encode(result)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"success\":true"))
             #expect(json.contains("\"restoredProductIds\":[\"com.example.a\",\"com.example.b\"]"))
@@ -651,7 +650,7 @@ struct IAPTypesTests {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .sortedKeys
             let data = try encoder.encode(result)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"success\":false"))
             #expect(json.contains("\"error\":\"Unable to restore\""))
@@ -670,7 +669,7 @@ struct IAPTypesTests {
             let decoder = JSONDecoder()
             let result = try decoder.decode(
                 RestoreResult.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(result.success == true)
@@ -691,7 +690,7 @@ struct IAPTypesTests {
             let decoder = JSONDecoder()
             let result = try decoder.decode(
                 RestoreResult.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(result.success == false)
@@ -740,7 +739,7 @@ struct IAPTypesTests {
         }
 
         @Test("Empty restore is successful")
-        func emptyRestoreIsSuccessful() throws {
+        func emptyRestoreIsSuccessful() {
             let result = RestoreResult(restoredProductIds: [])
 
             #expect(result.success == true)

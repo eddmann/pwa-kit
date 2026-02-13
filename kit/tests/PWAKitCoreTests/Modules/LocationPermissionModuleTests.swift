@@ -1,8 +1,7 @@
 import CoreLocation
 import Foundation
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 @Suite("LocationPermissionModule Tests")
 struct LocationPermissionModuleTests {
@@ -70,7 +69,7 @@ struct LocationPermissionModuleTests {
 
         let dict = result?.dictionaryValue
         #expect(dict != nil)
-        #expect(dict?["status"]?.stringValue != nil)
+        #expect(dict?["state"]?.stringValue != nil)
     }
 
     @Test("checkPermission returns valid status")
@@ -85,7 +84,7 @@ struct LocationPermissionModuleTests {
             context: context
         )
 
-        let status = result?.dictionaryValue?["status"]?.stringValue
+        let status = result?.dictionaryValue?["state"]?.stringValue
         #expect(status != nil)
 
         // Status should be one of the valid values
@@ -132,7 +131,7 @@ struct LocationPermissionModuleTests {
             payload: nil,
             context: context
         )
-        let currentStatus = checkResult?.dictionaryValue?["status"]?.stringValue
+        let currentStatus = checkResult?.dictionaryValue?["state"]?.stringValue
 
         // Only test requestPermission if status is already determined
         // Otherwise it would block waiting for user interaction
@@ -149,7 +148,7 @@ struct LocationPermissionModuleTests {
 
         let dict = result?.dictionaryValue
         #expect(dict != nil)
-        #expect(dict?["status"]?.stringValue != nil)
+        #expect(dict?["state"]?.stringValue != nil)
     }
 
     @Test("requestPermission returns same status as checkPermission when already determined")
@@ -164,7 +163,7 @@ struct LocationPermissionModuleTests {
             payload: nil,
             context: context
         )
-        let currentStatus = checkResult?.dictionaryValue?["status"]?.stringValue
+        let currentStatus = checkResult?.dictionaryValue?["state"]?.stringValue
 
         // Only test requestPermission if status is already determined
         guard currentStatus != "notDetermined" else {
@@ -178,7 +177,7 @@ struct LocationPermissionModuleTests {
             context: context
         )
 
-        let status = result?.dictionaryValue?["status"]?.stringValue
+        let status = result?.dictionaryValue?["state"]?.stringValue
         #expect(status == currentStatus)
     }
 

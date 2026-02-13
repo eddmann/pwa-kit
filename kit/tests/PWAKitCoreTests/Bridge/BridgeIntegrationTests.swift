@@ -1,7 +1,6 @@
 import Foundation
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 /// Integration tests that verify the complete message flow through the bridge system.
 ///

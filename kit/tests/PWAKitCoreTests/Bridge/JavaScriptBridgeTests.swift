@@ -1,7 +1,6 @@
 import Foundation
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 @Suite("JavaScriptBridge Tests")
 struct JavaScriptBridgeTests {
@@ -250,7 +249,7 @@ struct JavaScriptBridgeTests {
         )
 
         let data = try JSONEncoder().encode(event)
-        let json = String(data: data, encoding: .utf8)!
+        let json = try #require(String(data: data, encoding: .utf8))
 
         #expect(json.contains("\"type\":\"lifecycle\""))
         #expect(json.contains("\"state\":\"background\""))
@@ -320,7 +319,7 @@ struct JavaScriptBridgeTests {
     // MARK: - Generated JavaScript Validity
 
     @Test("Generated callback is valid JavaScript function call")
-    func callbackIsValidJavaScript() {
+    func callbackIsValidJavaScript() throws {
         let response = BridgeResponse.success(id: "valid-test", data: ["key": "value"])
         let js = JavaScriptBridge.formatCallback(response)
 
@@ -334,14 +333,14 @@ struct JavaScriptBridgeTests {
         let jsonString = String(js[jsonStart ..< jsonEnd])
 
         // Verify it's valid JSON
-        let jsonData = jsonString.data(using: .utf8)!
+        let jsonData = try #require(jsonString.data(using: .utf8))
         #expect(throws: Never.self) {
             _ = try JSONSerialization.jsonObject(with: jsonData)
         }
     }
 
     @Test("Generated event dispatch is valid JavaScript function call")
-    func eventDispatchIsValidJavaScript() {
+    func eventDispatchIsValidJavaScript() throws {
         let event = BridgeEvent(type: "test", data: ["value": 123])
         let js = JavaScriptBridge.formatEvent(event)
 
@@ -355,7 +354,7 @@ struct JavaScriptBridgeTests {
         let jsonString = String(js[jsonStart ..< jsonEnd])
 
         // Verify it's valid JSON
-        let jsonData = jsonString.data(using: .utf8)!
+        let jsonData = try #require(jsonString.data(using: .utf8))
         #expect(throws: Never.self) {
             _ = try JSONSerialization.jsonObject(with: jsonData)
         }
@@ -379,8 +378,8 @@ struct JavaScriptBridgeTests {
         let jsonEnd = js.index(js.endIndex, offsetBy: -2)
         let jsonString = String(js[jsonStart ..< jsonEnd])
 
-        let jsonData = jsonString.data(using: .utf8)!
-        let parsed = try JSONSerialization.jsonObject(with: jsonData) as! [String: Any]
+        let jsonData = try #require(jsonString.data(using: .utf8))
+        let parsed = try #require(JSONSerialization.jsonObject(with: jsonData) as? [String: Any])
 
         #expect(parsed["id"] as? String == "special-test")
         #expect(parsed["success"] as? Bool == false)
@@ -413,8 +412,8 @@ struct JavaScriptBridgeTests {
         let jsonEnd = js.index(js.endIndex, offsetBy: -2)
         let jsonString = String(js[jsonStart ..< jsonEnd])
 
-        let jsonData = jsonString.data(using: .utf8)!
-        let parsed = try JSONSerialization.jsonObject(with: jsonData) as! [String: Any]
+        let jsonData = try #require(jsonString.data(using: .utf8))
+        let parsed = try #require(JSONSerialization.jsonObject(with: jsonData) as? [String: Any])
 
         #expect(parsed["type"] as? String == "notification")
         let data = parsed["data"] as? [String: Any]

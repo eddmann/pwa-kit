@@ -1,7 +1,6 @@
 import Foundation
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 // MARK: - Counter
 
@@ -181,7 +180,7 @@ struct ConfigurationStoreTests {
     @Test("Feature enum contains all expected cases")
     func featureEnumCoverage() {
         let allFeatures = ConfigurationStore.Feature.allCases
-        #expect(allFeatures.count == 9)
+        #expect(allFeatures.count == 12)
 
         let featureNames = Set(allFeatures.map(\.rawValue))
         #expect(featureNames.contains("notifications"))
@@ -193,6 +192,9 @@ struct ConfigurationStoreTests {
         #expect(featureNames.contains("share"))
         #expect(featureNames.contains("print"))
         #expect(featureNames.contains("clipboard"))
+        #expect(featureNames.contains("cameraPermission"))
+        #expect(featureNames.contains("microphonePermission"))
+        #expect(featureNames.contains("locationPermission"))
     }
 
     // MARK: - Observer Tests
@@ -326,7 +328,7 @@ struct ConfigurationStoreTests {
     }
 
     @Test("Concurrent load and read is safe")
-    func concurrentLoadAndReadIsSafe() async throws {
+    func concurrentLoadAndReadIsSafe() async {
         let store = ConfigurationStore()
 
         await withTaskGroup(of: Void.self) { group in

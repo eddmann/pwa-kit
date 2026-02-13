@@ -1,7 +1,6 @@
 import Foundation
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 @Suite("CustomSchemeHandler Tests")
 struct CustomSchemeHandlerTests {
@@ -11,17 +10,17 @@ struct CustomSchemeHandlerTests {
     struct SchemeDetectionTests {
         @Test("Detects custom scheme URLs")
         @MainActor
-        func detectsCustomScheme() {
+        func detectsCustomScheme() throws {
             let handler = CustomSchemeHandler(
                 customScheme: "mypwa",
                 targetHost: "app.example.com"
             )
 
-            let urls = [
-                URL(string: "mypwa://")!,
-                URL(string: "mypwa://dashboard")!,
-                URL(string: "mypwa://path/to/page")!,
-                URL(string: "mypwa://page?query=value")!,
+            let urls = try [
+                #require(URL(string: "mypwa://")),
+                #require(URL(string: "mypwa://dashboard")),
+                #require(URL(string: "mypwa://path/to/page")),
+                #require(URL(string: "mypwa://page?query=value")),
             ]
 
             for url in urls {
@@ -31,17 +30,17 @@ struct CustomSchemeHandlerTests {
 
         @Test("Does not detect non-custom scheme URLs")
         @MainActor
-        func doesNotDetectOtherSchemes() {
+        func doesNotDetectOtherSchemes() throws {
             let handler = CustomSchemeHandler(
                 customScheme: "mypwa",
                 targetHost: "app.example.com"
             )
 
-            let urls = [
-                URL(string: "https://app.example.com/")!,
-                URL(string: "http://example.com/page")!,
-                URL(string: "otherscheme://path")!,
-                URL(string: "file:///local/file.txt")!,
+            let urls = try [
+                #require(URL(string: "https://app.example.com/")),
+                #require(URL(string: "http://example.com/page")),
+                #require(URL(string: "otherscheme://path")),
+                #require(URL(string: "file:///local/file.txt")),
             ]
 
             for url in urls {
@@ -51,16 +50,16 @@ struct CustomSchemeHandlerTests {
 
         @Test("Case insensitive scheme matching")
         @MainActor
-        func caseInsensitiveScheme() {
+        func caseInsensitiveScheme() throws {
             let handler = CustomSchemeHandler(
                 customScheme: "MyPWA",
                 targetHost: "app.example.com"
             )
 
-            let urls = [
-                URL(string: "mypwa://path")!,
-                URL(string: "MYPWA://path")!,
-                URL(string: "MyPwa://path")!,
+            let urls = try [
+                #require(URL(string: "mypwa://path")),
+                #require(URL(string: "MYPWA://path")),
+                #require(URL(string: "MyPwa://path")),
             ]
 
             for url in urls {
@@ -70,13 +69,13 @@ struct CustomSchemeHandlerTests {
 
         @Test("Scheme with :// suffix is normalized")
         @MainActor
-        func schemeNormalization() {
+        func schemeNormalization() throws {
             let handler = CustomSchemeHandler(
                 customScheme: "mypwa://",
                 targetHost: "app.example.com"
             )
 
-            let url = URL(string: "mypwa://path")!
+            let url = try #require(URL(string: "mypwa://path"))
             #expect(handler.isCustomScheme(url))
             #expect(handler.scheme == "mypwa")
         }
@@ -88,13 +87,13 @@ struct CustomSchemeHandlerTests {
     struct URLConversionTests {
         @Test("Converts custom scheme to HTTPS")
         @MainActor
-        func convertsToHTTPS() {
+        func convertsToHTTPS() throws {
             let handler = CustomSchemeHandler(
                 customScheme: "mypwa",
                 targetHost: "app.example.com"
             )
 
-            let customURL = URL(string: "mypwa://dashboard")!
+            let customURL = try #require(URL(string: "mypwa://dashboard"))
             let httpsURL = handler.convertToHTTPS(customURL)
 
             #expect(httpsURL?.scheme == "https")
@@ -104,13 +103,13 @@ struct CustomSchemeHandlerTests {
 
         @Test("Preserves path components")
         @MainActor
-        func preservesPath() {
+        func preservesPath() throws {
             let handler = CustomSchemeHandler(
                 customScheme: "mypwa",
                 targetHost: "app.example.com"
             )
 
-            let customURL = URL(string: "mypwa://path/to/deep/page")!
+            let customURL = try #require(URL(string: "mypwa://path/to/deep/page"))
             let httpsURL = handler.convertToHTTPS(customURL)
 
             #expect(httpsURL?.absoluteString == "https://app.example.com/path/to/deep/page")
@@ -118,13 +117,13 @@ struct CustomSchemeHandlerTests {
 
         @Test("Preserves query parameters")
         @MainActor
-        func preservesQuery() {
+        func preservesQuery() throws {
             let handler = CustomSchemeHandler(
                 customScheme: "mypwa",
                 targetHost: "app.example.com"
             )
 
-            let customURL = URL(string: "mypwa://search?q=hello&page=1")!
+            let customURL = try #require(URL(string: "mypwa://search?q=hello&page=1"))
             let httpsURL = handler.convertToHTTPS(customURL)
 
             #expect(httpsURL?.scheme == "https")
@@ -135,13 +134,13 @@ struct CustomSchemeHandlerTests {
 
         @Test("Preserves fragment")
         @MainActor
-        func preservesFragment() {
+        func preservesFragment() throws {
             let handler = CustomSchemeHandler(
                 customScheme: "mypwa",
                 targetHost: "app.example.com"
             )
 
-            let customURL = URL(string: "mypwa://page#section")!
+            let customURL = try #require(URL(string: "mypwa://page#section"))
             let httpsURL = handler.convertToHTTPS(customURL)
 
             #expect(httpsURL?.fragment == "section")
@@ -149,25 +148,25 @@ struct CustomSchemeHandlerTests {
 
         @Test("Returns nil for non-custom scheme URLs")
         @MainActor
-        func returnsNilForOtherSchemes() {
+        func returnsNilForOtherSchemes() throws {
             let handler = CustomSchemeHandler(
                 customScheme: "mypwa",
                 targetHost: "app.example.com"
             )
 
-            let httpsURL = URL(string: "https://example.com/page")!
+            let httpsURL = try #require(URL(string: "https://example.com/page"))
             #expect(handler.convertToHTTPS(httpsURL) == nil)
         }
 
         @Test("Handles root URL")
         @MainActor
-        func handlesRootURL() {
+        func handlesRootURL() throws {
             let handler = CustomSchemeHandler(
                 customScheme: "mypwa",
                 targetHost: "app.example.com"
             )
 
-            let customURL = URL(string: "mypwa://")!
+            let customURL = try #require(URL(string: "mypwa://"))
             let httpsURL = handler.convertToHTTPS(customURL)
 
             #expect(httpsURL?.absoluteString == "https://app.example.com")
@@ -180,13 +179,13 @@ struct CustomSchemeHandlerTests {
     struct PendingURLTests {
         @Test("Setting and consuming pending URL")
         @MainActor
-        func setAndConsumePendingURL() {
+        func setAndConsumePendingURL() throws {
             let handler = CustomSchemeHandler(
                 customScheme: "mypwa",
                 targetHost: "app.example.com"
             )
 
-            let url = URL(string: "https://app.example.com/page")!
+            let url = try #require(URL(string: "https://app.example.com/page"))
             handler.setPendingURL(url)
 
             #expect(handler.hasPendingURL)
@@ -213,14 +212,14 @@ struct CustomSchemeHandlerTests {
 
         @Test("Setting new URL replaces existing")
         @MainActor
-        func settingNewURLReplaces() {
+        func settingNewURLReplaces() throws {
             let handler = CustomSchemeHandler(
                 customScheme: "mypwa",
                 targetHost: "app.example.com"
             )
 
-            let firstURL = URL(string: "https://app.example.com/first")!
-            let secondURL = URL(string: "https://app.example.com/second")!
+            let firstURL = try #require(URL(string: "https://app.example.com/first"))
+            let secondURL = try #require(URL(string: "https://app.example.com/second"))
 
             handler.setPendingURL(firstURL)
             handler.setPendingURL(secondURL)
@@ -231,13 +230,13 @@ struct CustomSchemeHandlerTests {
 
         @Test("Clearing pending URL")
         @MainActor
-        func clearPendingURL() {
+        func clearPendingURL() throws {
             let handler = CustomSchemeHandler(
                 customScheme: "mypwa",
                 targetHost: "app.example.com"
             )
 
-            let url = URL(string: "https://app.example.com/page")!
+            let url = try #require(URL(string: "https://app.example.com/page"))
             handler.setPendingURL(url)
 
             #expect(handler.hasPendingURL)
@@ -248,7 +247,7 @@ struct CustomSchemeHandlerTests {
 
         @Test("Callback invoked when pending URL is set")
         @MainActor
-        func callbackInvokedOnSet() {
+        func callbackInvokedOnSet() throws {
             let handler = CustomSchemeHandler(
                 customScheme: "mypwa",
                 targetHost: "app.example.com"
@@ -259,7 +258,7 @@ struct CustomSchemeHandlerTests {
                 callbackURL = url
             }
 
-            let url = URL(string: "https://app.example.com/page")!
+            let url = try #require(URL(string: "https://app.example.com/page"))
             handler.setPendingURL(url)
 
             #expect(callbackURL == url)
@@ -272,13 +271,13 @@ struct CustomSchemeHandlerTests {
     struct URLHandlingTests {
         @Test("Handles custom scheme URL and sets pending")
         @MainActor
-        func handlesAndSetsPending() {
+        func handlesAndSetsPending() throws {
             let handler = CustomSchemeHandler(
                 customScheme: "mypwa",
                 targetHost: "app.example.com"
             )
 
-            let customURL = URL(string: "mypwa://dashboard")!
+            let customURL = try #require(URL(string: "mypwa://dashboard"))
             let handled = handler.handleURL(customURL)
 
             #expect(handled)
@@ -288,13 +287,13 @@ struct CustomSchemeHandlerTests {
 
         @Test("Does not handle non-custom scheme URLs")
         @MainActor
-        func doesNotHandleOtherSchemes() {
+        func doesNotHandleOtherSchemes() throws {
             let handler = CustomSchemeHandler(
                 customScheme: "mypwa",
                 targetHost: "app.example.com"
             )
 
-            let httpsURL = URL(string: "https://example.com/page")!
+            let httpsURL = try #require(URL(string: "https://example.com/page"))
             let handled = handler.handleURL(httpsURL)
 
             #expect(!handled)
@@ -357,13 +356,13 @@ struct CustomSchemeHandlerTests {
     struct EdgeCaseTests {
         @Test("Multiple consume calls return nil after first")
         @MainActor
-        func multipleConsumeCallsReturnNil() {
+        func multipleConsumeCallsReturnNil() throws {
             let handler = CustomSchemeHandler(
                 customScheme: "mypwa",
                 targetHost: "app.example.com"
             )
 
-            let url = URL(string: "https://app.example.com/page")!
+            let url = try #require(URL(string: "https://app.example.com/page"))
             handler.setPendingURL(url)
 
             _ = handler.consumePendingURL()
@@ -373,13 +372,13 @@ struct CustomSchemeHandlerTests {
 
         @Test("Handles URL with complex query and fragment")
         @MainActor
-        func handlesComplexURL() {
+        func handlesComplexURL() throws {
             let handler = CustomSchemeHandler(
                 customScheme: "mypwa",
                 targetHost: "app.example.com"
             )
 
-            let customURL = URL(string: "mypwa://search?q=hello%20world&filter=active&sort=date#results")!
+            let customURL = try #require(URL(string: "mypwa://search?q=hello%20world&filter=active&sort=date#results"))
             let httpsURL = handler.convertToHTTPS(customURL)
 
             #expect(httpsURL?.scheme == "https")

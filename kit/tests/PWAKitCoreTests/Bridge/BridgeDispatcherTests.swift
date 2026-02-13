@@ -1,7 +1,6 @@
 import Foundation
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 // MARK: - EchoModule
 
@@ -38,7 +37,9 @@ struct ErrorModule: PWAModule {
 
     struct CustomError: Error, LocalizedError {
         let message: String
-        var errorDescription: String? { message }
+        var errorDescription: String? {
+            message
+        }
     }
 
     func handle(
@@ -86,7 +87,7 @@ struct BridgeDispatcherTests {
     // MARK: - Message Routing Tests
 
     @Test("Routes message to correct module")
-    func routesToCorrectModule() async throws {
+    func routesToCorrectModule() async {
         let dispatcher = BridgeDispatcher()
         await dispatcher.register(EchoModule())
         let context = await ModuleContext()
@@ -105,7 +106,7 @@ struct BridgeDispatcherTests {
     }
 
     @Test("Routes message with payload to module")
-    func routesMessageWithPayload() async throws {
+    func routesMessageWithPayload() async {
         let dispatcher = BridgeDispatcher()
         await dispatcher.register(EchoModule())
         let context = await ModuleContext()
@@ -125,7 +126,7 @@ struct BridgeDispatcherTests {
     }
 
     @Test("Routes to multiple registered modules")
-    func routesToMultipleModules() async throws {
+    func routesToMultipleModules() async {
         let dispatcher = BridgeDispatcher()
         await dispatcher.register(EchoModule())
         await dispatcher.register(AsyncModule())

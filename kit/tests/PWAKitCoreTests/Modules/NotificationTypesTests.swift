@@ -1,7 +1,6 @@
 import Foundation
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 @Suite("NotificationTypes Tests")
 struct NotificationTypesTests {
@@ -35,43 +34,43 @@ struct NotificationTypesTests {
 
             let notDetermined = try decoder.decode(
                 NotificationPermissionState.self,
-                from: "\"not_determined\"".data(using: .utf8)!
+                from: #require("\"not_determined\"".data(using: .utf8))
             )
             #expect(notDetermined == .notDetermined)
 
             let denied = try decoder.decode(
                 NotificationPermissionState.self,
-                from: "\"denied\"".data(using: .utf8)!
+                from: #require("\"denied\"".data(using: .utf8))
             )
             #expect(denied == .denied)
 
             let granted = try decoder.decode(
                 NotificationPermissionState.self,
-                from: "\"granted\"".data(using: .utf8)!
+                from: #require("\"granted\"".data(using: .utf8))
             )
             #expect(granted == .granted)
 
             let unavailable = try decoder.decode(
                 NotificationPermissionState.self,
-                from: "\"unavailable\"".data(using: .utf8)!
+                from: #require("\"unavailable\"".data(using: .utf8))
             )
             #expect(unavailable == .unavailable)
 
             let unknown = try decoder.decode(
                 NotificationPermissionState.self,
-                from: "\"unknown\"".data(using: .utf8)!
+                from: #require("\"unknown\"".data(using: .utf8))
             )
             #expect(unknown == .unknown)
         }
 
         @Test("Throws error for invalid value")
-        func throwsForInvalidValue() {
+        func throwsForInvalidValue() throws {
             let decoder = JSONDecoder()
 
             #expect(throws: DecodingError.self) {
                 _ = try decoder.decode(
                     NotificationPermissionState.self,
-                    from: "\"invalid\"".data(using: .utf8)!
+                    from: #require("\"invalid\"".data(using: .utf8))
                 )
             }
         }
@@ -111,7 +110,7 @@ struct NotificationTypesTests {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .sortedKeys
             let data = try encoder.encode(subscription)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"success\":true"))
             #expect(json.contains("\"token\":\"abc123def456\""))
@@ -130,7 +129,7 @@ struct NotificationTypesTests {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .sortedKeys
             let data = try encoder.encode(subscription)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"success\":false"))
             // Note: nil values are omitted by default JSONEncoder
@@ -153,7 +152,7 @@ struct NotificationTypesTests {
             let decoder = JSONDecoder()
             let subscription = try decoder.decode(
                 NotificationSubscription.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(subscription.success == true)
@@ -176,7 +175,7 @@ struct NotificationTypesTests {
             let decoder = JSONDecoder()
             let subscription = try decoder.decode(
                 NotificationSubscription.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(subscription.success == false)
@@ -263,7 +262,7 @@ struct NotificationTypesTests {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .sortedKeys
             let data = try encoder.encode(payload)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"type\":\"tapped\""))
             #expect(json.contains("\"title\":\"Test Title\""))
@@ -285,7 +284,7 @@ struct NotificationTypesTests {
 
             let encoder = JSONEncoder()
             let data = try encoder.encode(payload)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json.contains("\"type\":\"received\""))
             #expect(json.contains("\"timestamp\":1704067200"))
@@ -309,7 +308,7 @@ struct NotificationTypesTests {
             let decoder = JSONDecoder()
             let payload = try decoder.decode(
                 NotificationPayload.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(payload.type == .tapped)
@@ -340,7 +339,7 @@ struct NotificationTypesTests {
             let decoder = JSONDecoder()
             let payload = try decoder.decode(
                 NotificationPayload.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(payload.type == .received)
@@ -398,13 +397,13 @@ struct NotificationTypesTests {
 
             let received = try decoder.decode(
                 NotificationPayload.EventType.self,
-                from: "\"received\"".data(using: .utf8)!
+                from: #require("\"received\"".data(using: .utf8))
             )
             #expect(received == .received)
 
             let tapped = try decoder.decode(
                 NotificationPayload.EventType.self,
-                from: "\"tapped\"".data(using: .utf8)!
+                from: #require("\"tapped\"".data(using: .utf8))
             )
             #expect(tapped == .tapped)
         }
@@ -430,7 +429,7 @@ struct NotificationTypesTests {
 
             let encoder = JSONEncoder()
             let data = try encoder.encode(request)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json == "{\"count\":42}")
         }
@@ -441,7 +440,7 @@ struct NotificationTypesTests {
 
             let encoder = JSONEncoder()
             let data = try encoder.encode(request)
-            let json = String(data: data, encoding: .utf8)!
+            let json = try #require(String(data: data, encoding: .utf8))
 
             #expect(json == "{\"count\":0}")
         }
@@ -453,7 +452,7 @@ struct NotificationTypesTests {
             let decoder = JSONDecoder()
             let request = try decoder.decode(
                 SetBadgeRequest.self,
-                from: json.data(using: .utf8)!
+                from: #require(json.data(using: .utf8))
             )
 
             #expect(request.count == 10)

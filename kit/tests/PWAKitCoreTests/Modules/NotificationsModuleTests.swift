@@ -1,8 +1,7 @@
 import Foundation
+@testable import PWAKitApp
 import Testing
 import UserNotifications
-
-@testable import PWAKitApp
 
 // MARK: - NotificationsModuleTests
 
@@ -53,8 +52,8 @@ struct NotificationsModuleTests {
     @Suite("Token Storage")
     struct TokenStorageTests {
         @Test("UserDefaultsTokenStorage stores and retrieves token")
-        func storesAndRetrievesToken() {
-            let userDefaults = UserDefaults(suiteName: "test-token-storage")!
+        func storesAndRetrievesToken() throws {
+            let userDefaults = try #require(UserDefaults(suiteName: "test-token-storage"))
             userDefaults.removePersistentDomain(forName: "test-token-storage")
 
             let storage = UserDefaultsTokenStorage(
@@ -72,8 +71,8 @@ struct NotificationsModuleTests {
         }
 
         @Test("UserDefaultsTokenStorage clears token")
-        func clearsToken() {
-            let userDefaults = UserDefaults(suiteName: "test-token-clear")!
+        func clearsToken() throws {
+            let userDefaults = try #require(UserDefaults(suiteName: "test-token-clear"))
             userDefaults.removePersistentDomain(forName: "test-token-clear")
 
             let storage = UserDefaultsTokenStorage(
@@ -89,8 +88,8 @@ struct NotificationsModuleTests {
         }
 
         @Test("UserDefaultsTokenStorage uses default key")
-        func usesDefaultKey() {
-            let userDefaults = UserDefaults(suiteName: "test-default-key")!
+        func usesDefaultKey() throws {
+            let userDefaults = try #require(UserDefaults(suiteName: "test-default-key"))
             userDefaults.removePersistentDomain(forName: "test-default-key")
 
             let storage = UserDefaultsTokenStorage(userDefaults: userDefaults)
@@ -871,6 +870,7 @@ struct NotificationsModuleTests {
         func hasExpectedSupportedActions() {
             let actions = NotificationsModule.supportedActions
             #expect(actions.contains("subscribe"))
+            #expect(actions.contains("requestPermission"))
             #expect(actions.contains("getToken"))
             #expect(actions.contains("getPermissionState"))
             #expect(actions.contains("setBadge"))
@@ -878,7 +878,7 @@ struct NotificationsModuleTests {
             #expect(actions.contains("cancel"))
             #expect(actions.contains("cancelAll"))
             #expect(actions.contains("getPending"))
-            #expect(actions.count == 8)
+            #expect(actions.count == 9)
         }
 
         @Test("Uses correct device token key")

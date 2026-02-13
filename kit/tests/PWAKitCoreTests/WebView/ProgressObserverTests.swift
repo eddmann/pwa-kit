@@ -1,9 +1,8 @@
 import Combine
 import Foundation
+@testable import PWAKitApp
 import Testing
 import WebKit
-
-@testable import PWAKitApp
 
 @Suite("ProgressObserver Tests")
 @MainActor
@@ -41,7 +40,7 @@ struct ProgressObserverTests {
     // MARK: - Reset
 
     @Test("Reset sets progress to zero and isLoading to true")
-    func resetSetsInitialState() async {
+    func resetSetsInitialState() {
         let observer = ProgressObserver()
 
         // Manually modify state (simulating usage)
@@ -192,7 +191,7 @@ struct ProgressObserverTests {
     }
 
     @Test("Reset cancels pending hide task")
-    func resetCancelsPendingHideTask() async throws {
+    func resetCancelsPendingHideTask() {
         let observer = ProgressObserver(hideDelay: 1.0)
 
         // Start in loading state
@@ -205,7 +204,7 @@ struct ProgressObserverTests {
     // MARK: - Edge Cases
 
     @Test("Handles rapid observe/stop cycles")
-    func handlesRapidObserveStopCycles() async throws {
+    func handlesRapidObserveStopCycles() {
         let observer = ProgressObserver()
         let configuration = WKWebViewConfiguration()
         let webView = WKWebView(frame: .zero, configuration: configuration)

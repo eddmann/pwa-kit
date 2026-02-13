@@ -1,7 +1,6 @@
 import Foundation
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 @Suite("ConfigurationValidator Tests")
 struct ConfigurationValidatorTests {
@@ -427,7 +426,7 @@ struct ConfigurationValidatorTests {
     // MARK: - Error Description Tests
 
     @Test("Error descriptions are localized")
-    func errorDescriptionsAreLocalized() {
+    func errorDescriptionsAreLocalized() throws {
         let errors: [ConfigurationValidationError] = [
             .invalidStartUrl("bad-url"),
             .startUrlNotHttps("http://example.com"),
@@ -439,7 +438,7 @@ struct ConfigurationValidatorTests {
         for error in errors {
             let description = error.errorDescription
             #expect(description != nil)
-            #expect(!description!.isEmpty)
+            #expect(try !(#require(description?.isEmpty)))
         }
     }
 

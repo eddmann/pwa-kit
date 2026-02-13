@@ -1,8 +1,7 @@
 import Foundation
 import LocalAuthentication
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 @Suite("BiometricsModule Tests")
 struct BiometricsModuleTests {

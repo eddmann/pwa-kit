@@ -135,6 +135,7 @@ The `features` object enables or disables individual bridge modules.
     "print": true,
     "clipboard": true,
     "cameraPermission": true,
+    "microphonePermission": true,
     "locationPermission": true
   }
 }
@@ -154,6 +155,7 @@ The `features` object enables or disables individual bridge modules.
 | `print`              | `true`  | AirPrint support                            |
 | `clipboard`          | `true`  | System clipboard access                     |
 | `cameraPermission`   | `true`  | Camera permission requests                  |
+| `microphonePermission` | `true` | Microphone permission requests             |
 | `locationPermission` | `true`  | Location permission requests                |
 
 ### Notes
@@ -175,6 +177,7 @@ The `appearance` object controls UI behavior and styling.
     "pullToRefresh": true,
     "adaptiveStyle": true,
     "statusBarStyle": "default",
+    "orientationLock": "any",
     "backgroundColor": "#FFFFFF",
     "themeColor": "#007AFF"
   }
@@ -189,6 +192,7 @@ The `appearance` object controls UI behavior and styling.
 | `pullToRefresh`   | `boolean` | `true`         | Enable pull-to-refresh gesture                |
 | `adaptiveStyle`   | `boolean` | `true`         | Match system theme to web background          |
 | `statusBarStyle`  | `string`  | `"default"`    | Status bar appearance                         |
+| `orientationLock` | `string`  | `"any"`        | Device orientation lock                       |
 | `backgroundColor` | `string`  | `null`         | App background color (hex, e.g., `"#FFFFFF"`) |
 | `themeColor`      | `string`  | `null`         | Theme/accent color (hex, e.g., `"#007AFF"`)   |
 
@@ -206,6 +210,14 @@ The `appearance` object controls UI behavior and styling.
 | `default`      | Automatic based on content         |
 | `lightContent` | White text (for dark backgrounds)  |
 | `darkContent`  | Black text (for light backgrounds) |
+
+### Orientation Lock Values
+
+| Value       | Description                   |
+| ----------- | ----------------------------- |
+| `any`       | Allow all orientations        |
+| `portrait`  | Lock to portrait orientation  |
+| `landscape` | Lock to landscape orientation |
 
 ### Adaptive Style
 
@@ -267,6 +279,7 @@ PWAKit uses native APNs exclusively. The device token is provided to your web ap
     "print": true,
     "clipboard": true,
     "cameraPermission": true,
+    "microphonePermission": true,
     "locationPermission": true
   },
   "appearance": {
@@ -274,6 +287,7 @@ PWAKit uses native APNs exclusively. The device token is provided to your web ap
     "pullToRefresh": true,
     "adaptiveStyle": true,
     "statusBarStyle": "default",
+    "orientationLock": "any",
     "backgroundColor": "#FFFFFF",
     "themeColor": "#007AFF"
   },
@@ -415,6 +429,7 @@ For tooling integration, here is the formal JSON Schema:
         "print": { "type": "boolean", "default": true },
         "clipboard": { "type": "boolean", "default": true },
         "cameraPermission": { "type": "boolean", "default": true },
+        "microphonePermission": { "type": "boolean", "default": true },
         "locationPermission": { "type": "boolean", "default": true }
       }
     },
@@ -432,6 +447,11 @@ For tooling integration, here is the formal JSON Schema:
           "type": "string",
           "enum": ["default", "lightContent", "darkContent"],
           "default": "default"
+        },
+        "orientationLock": {
+          "type": "string",
+          "enum": ["any", "portrait", "landscape"],
+          "default": "any"
         },
         "backgroundColor": {
           "type": "string",

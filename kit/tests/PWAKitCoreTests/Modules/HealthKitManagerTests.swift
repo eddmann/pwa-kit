@@ -1,8 +1,7 @@
 import Foundation
 import HealthKit
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 // MARK: - HealthKitManagerTests
 
@@ -11,14 +10,14 @@ struct HealthKitManagerTests {
     // MARK: - Initialization
 
     @Test("Can be initialized")
-    func canBeInitialized() async {
+    func canBeInitialized() {
         let manager = HealthKitManager()
         _ = manager // Suppress unused warning
         // Successfully created
     }
 
     @Test("Is an actor type")
-    func isActorType() async {
+    func isActorType() {
         let manager = HealthKitManager()
 
         // Verify we can check availability (nonisolated method)
@@ -26,7 +25,7 @@ struct HealthKitManagerTests {
     }
 
     @Test("Can be initialized with custom health store")
-    func canBeInitializedWithCustomHealthStore() async {
+    func canBeInitializedWithCustomHealthStore() {
         let store = HKHealthStore()
         let manager = HealthKitManager(healthStore: store)
         _ = manager // Suppress unused warning

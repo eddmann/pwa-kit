@@ -1,8 +1,7 @@
 import Combine
 import Foundation
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 @Suite("RetryHandler Tests")
 @MainActor
@@ -41,7 +40,7 @@ struct RetryHandlerTests {
     // MARK: - Cancelled Error Handling
 
     @Test("Ignores cancelled navigation errors")
-    func ignoresCancelledNavigationErrors() async {
+    func ignoresCancelledNavigationErrors() {
         let handler = RetryHandler(retryDelay: 0.1)
 
         // Create a cancelled error (code -999)

@@ -5,6 +5,7 @@ import type { PWAConfig } from '../config/schema.js';
 
 const REQUIRED_DESCRIPTIONS: Record<string, string | string[]> = {
   cameraPermission: 'NSCameraUsageDescription',
+  microphonePermission: 'NSMicrophoneUsageDescription',
   locationPermission: 'NSLocationWhenInUseUsageDescription',
   biometrics: 'NSFaceIDUsageDescription',
   healthkit: ['NSHealthShareUsageDescription', 'NSHealthUpdateUsageDescription'],

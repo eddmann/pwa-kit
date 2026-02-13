@@ -111,8 +111,7 @@ public final class DownloadHandler: NSObject {
                 let total = ByteCountFormatter.string(fromByteCount: totalBytes, countStyle: .file)
                 return "\(received) / \(total)"
             } else {
-                let received = ByteCountFormatter.string(fromByteCount: bytesReceived, countStyle: .file)
-                return received
+                return ByteCountFormatter.string(fromByteCount: bytesReceived, countStyle: .file)
             }
         }
     }

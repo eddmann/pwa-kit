@@ -147,6 +147,21 @@ public struct FeatureFlagChecker: Sendable {
     public var clipboard: Bool {
         features.clipboard
     }
+
+    /// Checks if the camera permission feature is enabled.
+    public var cameraPermission: Bool {
+        features.cameraPermission
+    }
+
+    /// Checks if the microphone permission feature is enabled.
+    public var microphonePermission: Bool {
+        features.microphonePermission
+    }
+
+    /// Checks if the location permission feature is enabled.
+    public var locationPermission: Bool {
+        features.locationPermission
+    }
 }
 
 // MARK: - Module Feature Flag Extension

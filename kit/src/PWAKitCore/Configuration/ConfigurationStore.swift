@@ -159,6 +159,21 @@ public actor ConfigurationStore {
         isFeatureEnabled(.clipboard)
     }
 
+    /// Checks if camera permission is enabled.
+    public var cameraPermissionEnabled: Bool {
+        isFeatureEnabled(.cameraPermission)
+    }
+
+    /// Checks if microphone permission is enabled.
+    public var microphonePermissionEnabled: Bool {
+        isFeatureEnabled(.microphonePermission)
+    }
+
+    /// Checks if location permission is enabled.
+    public var locationPermissionEnabled: Bool {
+        isFeatureEnabled(.locationPermission)
+    }
+
     // MARK: - Observation
 
     /// Adds an observer to be notified when configuration changes.
@@ -201,6 +216,9 @@ extension ConfigurationStore {
         case share
         case print
         case clipboard
+        case cameraPermission
+        case microphonePermission
+        case locationPermission
 
         /// The default value if configuration is not loaded.
         public var defaultValue: Bool {
@@ -211,7 +229,10 @@ extension ConfigurationStore {
                  .secureStorage,
                  .share,
                  .print,
-                 .clipboard:
+                 .clipboard,
+                 .cameraPermission,
+                 .microphonePermission,
+                 .locationPermission:
                 true
             case .healthkit,
                  .iap:
@@ -231,6 +252,9 @@ extension ConfigurationStore {
             case .share: features.share
             case .print: features.print
             case .clipboard: features.clipboard
+            case .cameraPermission: features.cameraPermission
+            case .microphonePermission: features.microphonePermission
+            case .locationPermission: features.locationPermission
             }
         }
     }

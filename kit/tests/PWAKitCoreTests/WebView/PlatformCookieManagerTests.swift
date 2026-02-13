@@ -1,8 +1,7 @@
 import Foundation
+@testable import PWAKitApp
 import Testing
 import WebKit
-
-@testable import PWAKitApp
 
 // MARK: - PlatformCookieManagerTests
 
@@ -11,9 +10,9 @@ struct PlatformCookieManagerTests {
     // MARK: - Cookie Creation
 
     @Test("Creates cookie with default settings")
-    func createsCookieWithDefaultSettings() {
+    func createsCookieWithDefaultSettings() throws {
         let manager = PlatformCookieManager(settings: .default)
-        let url = URL(string: "https://app.example.com/")!
+        let url = try #require(URL(string: "https://app.example.com/"))
 
         let cookie = manager.makeCookie(for: url)
 
@@ -25,14 +24,14 @@ struct PlatformCookieManagerTests {
     }
 
     @Test("Creates cookie with custom settings")
-    func createsCookieWithCustomSettings() {
+    func createsCookieWithCustomSettings() throws {
         let settings = PlatformCookieSettings(
             enabled: true,
             name: "my-platform",
             value: "ios-native"
         )
         let manager = PlatformCookieManager(settings: settings)
-        let url = URL(string: "https://test.example.com/path")!
+        let url = try #require(URL(string: "https://test.example.com/path"))
 
         let cookie = manager.makeCookie(for: url)
 
@@ -42,9 +41,9 @@ struct PlatformCookieManagerTests {
     }
 
     @Test("Returns nil when settings are disabled")
-    func returnsNilWhenSettingsDisabled() {
+    func returnsNilWhenSettingsDisabled() throws {
         let manager = PlatformCookieManager(settings: .disabled)
-        let url = URL(string: "https://app.example.com/")!
+        let url = try #require(URL(string: "https://app.example.com/"))
 
         let cookie = manager.makeCookie(for: url)
 
@@ -52,9 +51,9 @@ struct PlatformCookieManagerTests {
     }
 
     @Test("Returns nil for URL without host")
-    func returnsNilForURLWithoutHost() {
+    func returnsNilForURLWithoutHost() throws {
         let manager = PlatformCookieManager(settings: .default)
-        let url = URL(string: "about:blank")!
+        let url = try #require(URL(string: "about:blank"))
 
         let cookie = manager.makeCookie(for: url)
 
@@ -62,9 +61,9 @@ struct PlatformCookieManagerTests {
     }
 
     @Test("Creates non-secure cookie for HTTP URL")
-    func createsNonSecureCookieForHTTP() {
+    func createsNonSecureCookieForHTTP() throws {
         let manager = PlatformCookieManager(settings: .default)
-        let url = URL(string: "http://localhost:3000/")!
+        let url = try #require(URL(string: "http://localhost:3000/"))
 
         let cookie = manager.makeCookie(for: url)
 
@@ -75,9 +74,9 @@ struct PlatformCookieManagerTests {
     // MARK: - Cookie Expiration
 
     @Test("Cookie expires in approximately one year")
-    func cookieExpiresInOneYear() {
+    func cookieExpiresInOneYear() throws {
         let manager = PlatformCookieManager(settings: .default)
-        let url = URL(string: "https://app.example.com/")!
+        let url = try #require(URL(string: "https://app.example.com/"))
         let now = Date()
 
         let cookie = manager.makeCookie(for: url)
@@ -96,9 +95,9 @@ struct PlatformCookieManagerTests {
     }
 
     @Test("Respects custom expiration date")
-    func respectsCustomExpirationDate() {
+    func respectsCustomExpirationDate() throws {
         let manager = PlatformCookieManager(settings: .default)
-        let url = URL(string: "https://app.example.com/")!
+        let url = try #require(URL(string: "https://app.example.com/"))
         let customExpiration = Date().addingTimeInterval(60 * 60) // 1 hour from now
 
         let cookie = manager.makeCookie(for: url, expirationDate: customExpiration)
@@ -163,9 +162,9 @@ struct PlatformCookieManagerTests {
     // MARK: - Domain Matching
 
     @Test("Matches exact origin")
-    func matchesExactOrigin() {
+    func matchesExactOrigin() throws {
         let manager = PlatformCookieManager(settings: .default)
-        let url = URL(string: "https://app.example.com/page")!
+        let url = try #require(URL(string: "https://app.example.com/page"))
 
         let shouldSet = manager.shouldSetCookie(for: url, allowedOrigins: ["app.example.com"])
 
@@ -173,9 +172,9 @@ struct PlatformCookieManagerTests {
     }
 
     @Test("Matches wildcard origin")
-    func matchesWildcardOrigin() {
+    func matchesWildcardOrigin() throws {
         let manager = PlatformCookieManager(settings: .default)
-        let url = URL(string: "https://app.example.com/page")!
+        let url = try #require(URL(string: "https://app.example.com/page"))
 
         let shouldSet = manager.shouldSetCookie(for: url, allowedOrigins: ["*.example.com"])
 
@@ -183,9 +182,9 @@ struct PlatformCookieManagerTests {
     }
 
     @Test("Wildcard matches base domain")
-    func wildcardMatchesBaseDomain() {
+    func wildcardMatchesBaseDomain() throws {
         let manager = PlatformCookieManager(settings: .default)
-        let url = URL(string: "https://example.com/page")!
+        let url = try #require(URL(string: "https://example.com/page"))
 
         let shouldSet = manager.shouldSetCookie(for: url, allowedOrigins: ["*.example.com"])
 
@@ -193,9 +192,9 @@ struct PlatformCookieManagerTests {
     }
 
     @Test("Does not match different domain")
-    func doesNotMatchDifferentDomain() {
+    func doesNotMatchDifferentDomain() throws {
         let manager = PlatformCookieManager(settings: .default)
-        let url = URL(string: "https://other.com/page")!
+        let url = try #require(URL(string: "https://other.com/page"))
 
         let shouldSet = manager.shouldSetCookie(for: url, allowedOrigins: ["example.com", "*.example.com"])
 
@@ -203,9 +202,9 @@ struct PlatformCookieManagerTests {
     }
 
     @Test("Case insensitive matching")
-    func caseInsensitiveMatching() {
+    func caseInsensitiveMatching() throws {
         let manager = PlatformCookieManager(settings: .default)
-        let url = URL(string: "https://APP.Example.COM/page")!
+        let url = try #require(URL(string: "https://APP.Example.COM/page"))
 
         let shouldSet = manager.shouldSetCookie(for: url, allowedOrigins: ["app.example.com"])
 
@@ -213,9 +212,9 @@ struct PlatformCookieManagerTests {
     }
 
     @Test("Returns false when settings disabled")
-    func returnsFalseWhenSettingsDisabled() {
+    func returnsFalseWhenSettingsDisabled() throws {
         let manager = PlatformCookieManager(settings: .disabled)
-        let url = URL(string: "https://app.example.com/")!
+        let url = try #require(URL(string: "https://app.example.com/"))
 
         let shouldSet = manager.shouldSetCookie(for: url, allowedOrigins: ["app.example.com"])
 
@@ -223,9 +222,9 @@ struct PlatformCookieManagerTests {
     }
 
     @Test("Returns false for URL without host")
-    func returnsFalseForURLWithoutHostInMatching() {
+    func returnsFalseForURLWithoutHostInMatching() throws {
         let manager = PlatformCookieManager(settings: .default)
-        let url = URL(string: "about:blank")!
+        let url = try #require(URL(string: "about:blank"))
 
         let shouldSet = manager.shouldSetCookie(for: url, allowedOrigins: ["example.com"])
 
@@ -236,9 +235,9 @@ struct PlatformCookieManagerTests {
 
     @Test("Creates cookie script with default settings")
     @MainActor
-    func createsCookieScriptWithDefaultSettings() {
+    func createsCookieScriptWithDefaultSettings() throws {
         let manager = PlatformCookieManager(settings: .default)
-        let url = URL(string: "https://app.example.com/")!
+        let url = try #require(URL(string: "https://app.example.com/"))
 
         let script = manager.makeCookieScript(for: url)
 
@@ -253,9 +252,9 @@ struct PlatformCookieManagerTests {
 
     @Test("Cookie script omits Secure for HTTP")
     @MainActor
-    func cookieScriptOmitsSecureForHTTP() {
+    func cookieScriptOmitsSecureForHTTP() throws {
         let manager = PlatformCookieManager(settings: .default)
-        let url = URL(string: "http://localhost:3000/")!
+        let url = try #require(URL(string: "http://localhost:3000/"))
 
         let script = manager.makeCookieScript(for: url)
 
@@ -265,9 +264,9 @@ struct PlatformCookieManagerTests {
 
     @Test("Returns nil script when settings disabled")
     @MainActor
-    func returnsNilScriptWhenSettingsDisabled() {
+    func returnsNilScriptWhenSettingsDisabled() throws {
         let manager = PlatformCookieManager(settings: .disabled)
-        let url = URL(string: "https://app.example.com/")!
+        let url = try #require(URL(string: "https://app.example.com/"))
 
         let script = manager.makeCookieScript(for: url)
 
@@ -276,9 +275,9 @@ struct PlatformCookieManagerTests {
 
     @Test("Returns nil script for URL without host")
     @MainActor
-    func returnsNilScriptForURLWithoutHost() {
+    func returnsNilScriptForURLWithoutHost() throws {
         let manager = PlatformCookieManager(settings: .default)
-        let url = URL(string: "about:blank")!
+        let url = try #require(URL(string: "about:blank"))
 
         let script = manager.makeCookieScript(for: url)
 
@@ -318,9 +317,9 @@ struct PlatformCookieManagerTests {
 @Suite("PlatformCookieManager Integration Tests")
 struct PlatformCookieManagerIntegrationTests {
     @Test("Cookie has correct properties for web use")
-    func cookieHasCorrectPropertiesForWebUse() {
+    func cookieHasCorrectPropertiesForWebUse() throws {
         let manager = PlatformCookieManager(settings: .default)
-        let url = URL(string: "https://myapp.example.com/dashboard")!
+        let url = try #require(URL(string: "https://myapp.example.com/dashboard"))
 
         let cookie = manager.makeCookie(for: url)
 
@@ -338,9 +337,9 @@ struct PlatformCookieManagerIntegrationTests {
 
     @Test("Cookie script produces valid JavaScript")
     @MainActor
-    func cookieScriptProducesValidJavaScript() {
+    func cookieScriptProducesValidJavaScript() throws {
         let manager = PlatformCookieManager(settings: .default)
-        let url = URL(string: "https://app.example.com/")!
+        let url = try #require(URL(string: "https://app.example.com/"))
 
         let script = manager.makeCookieScript(for: url)
 

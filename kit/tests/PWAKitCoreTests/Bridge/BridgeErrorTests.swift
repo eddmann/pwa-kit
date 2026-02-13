@@ -1,7 +1,6 @@
 import Foundation
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 @Suite("BridgeError Tests")
 struct BridgeErrorTests {
@@ -70,7 +69,9 @@ struct BridgeErrorTests {
     @Test("Module error includes underlying error info")
     func moduleErrorIncludesUnderlying() {
         struct CustomError: Error, LocalizedError {
-            var errorDescription: String? { "Custom failure message" }
+            var errorDescription: String? {
+                "Custom failure message"
+            }
         }
 
         let error = BridgeError.moduleError(underlying: CustomError())

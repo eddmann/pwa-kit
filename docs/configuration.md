@@ -38,6 +38,7 @@ The primary configuration file located at `kit/src/PWAKit/Resources/pwa-config.j
     "print": true,
     "clipboard": true,
     "cameraPermission": true,
+    "microphonePermission": true,
     "locationPermission": true
   },
   "appearance": {
@@ -45,6 +46,7 @@ The primary configuration file located at `kit/src/PWAKit/Resources/pwa-config.j
     "pullToRefresh": true,
     "adaptiveStyle": true,
     "statusBarStyle": "default",
+    "orientationLock": "any",
     "backgroundColor": "#FFFFFF",
     "themeColor": "#007AFF"
   },
@@ -62,10 +64,10 @@ The primary configuration file located at `kit/src/PWAKit/Resources/pwa-config.j
 | `origins.auth`     | OAuth/login domains (show toolbar with Done button) | `WKAppBoundDomains` in Info.plist |
 | `origins.external` | Domains that open in SFSafariViewController         | N/A                               |
 
-**Important**: The `origins.allowed` and `origins.auth` arrays must be synced to `WKAppBoundDomains` in Info.plist. Run the sync script after changing these values:
+**Important**: The `origins.allowed` and `origins.auth` arrays must be synced to `WKAppBoundDomains` in Info.plist. Run the sync command after changing these values:
 
 ```bash
-./scripts/sync-config.sh
+make kit/sync
 ```
 
 ## Info.plist Requirements
@@ -219,21 +221,23 @@ For sharing data between app and extensions:
 | `print`              | AirPrint                     | None                                               |
 | `clipboard`          | System clipboard             | None                                               |
 | `cameraPermission`   | Camera permission requests   | `NSCameraUsageDescription`                         |
+| `microphonePermission` | Microphone permission requests | `NSMicrophoneUsageDescription`                 |
 | `locationPermission` | Location permission requests | `NSLocationWhenInUseUsageDescription`              |
 
 ## Syncing Configuration
 
-After modifying `pwa-config.json`, run the sync script to update Info.plist:
+After modifying `pwa-config.json`, run the sync command to update the Xcode project:
 
 ```bash
-./scripts/sync-config.sh
+make kit/sync
 ```
 
-This script:
+This command:
 
 1. Reads `origins.allowed` and `origins.auth` from pwa-config.json
 2. Updates `WKAppBoundDomains` in Info.plist
-3. Validates that required privacy descriptions exist for enabled features
+3. Syncs color assets and app icon
+4. Validates that required privacy descriptions exist for enabled features
 
 ### Manual Sync
 
@@ -247,7 +251,7 @@ If you prefer manual updates, ensure:
 
 ### "App-bound domain failure"
 
-The domain isn't in `WKAppBoundDomains`. Run `./scripts/sync-config.sh` or manually add it.
+The domain isn't in `WKAppBoundDomains`. Run `make kit/sync` or manually add it.
 
 ### "This app has crashed because it attempted to access privacy-sensitive data"
 

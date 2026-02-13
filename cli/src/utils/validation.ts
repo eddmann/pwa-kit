@@ -35,5 +35,8 @@ export const ALL_FEATURES = [
   'share',
   'print',
   'clipboard',
+  'cameraPermission',
+  'microphonePermission',
+  'locationPermission',
 ] as const;
 export type Feature = (typeof ALL_FEATURES)[number];

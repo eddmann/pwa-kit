@@ -1,9 +1,7 @@
 import Foundation
-import Testing
-
-import UIKit
-
 @testable import PWAKitApp
+import Testing
+import UIKit
 
 // MARK: - AppShortcutHandlerTests
 
@@ -15,9 +13,9 @@ struct AppShortcutHandlerTests {
     struct ShortcutTypeHandlingTests {
         @Test("Can handle configured shortcut types")
         @MainActor
-        func canHandleConfiguredTypes() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://app.example.com")!,
+        func canHandleConfiguredTypes() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://app.example.com")),
                 shortcutMappings: [
                     "com.example.dashboard": "/dashboard",
                     "com.example.settings": "/settings",
@@ -30,9 +28,9 @@ struct AppShortcutHandlerTests {
 
         @Test("Cannot handle unconfigured shortcut types")
         @MainActor
-        func cannotHandleUnconfiguredTypes() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://app.example.com")!,
+        func cannotHandleUnconfiguredTypes() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://app.example.com")),
                 shortcutMappings: [
                     "com.example.dashboard": "/dashboard",
                 ]
@@ -44,9 +42,9 @@ struct AppShortcutHandlerTests {
 
         @Test("Empty mappings handle nothing")
         @MainActor
-        func emptyMappingsHandleNothing() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://app.example.com")!
+        func emptyMappingsHandleNothing() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://app.example.com"))
             )
 
             #expect(!handler.canHandle(type: "com.example.anything"))
@@ -59,9 +57,9 @@ struct AppShortcutHandlerTests {
     struct URLGenerationTests {
         @Test("Generates URL from shortcut type")
         @MainActor
-        func generatesURLFromType() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://app.example.com")!,
+        func generatesURLFromType() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://app.example.com")),
                 shortcutMappings: [
                     "com.example.dashboard": "/dashboard",
                 ]
@@ -76,9 +74,9 @@ struct AppShortcutHandlerTests {
 
         @Test("Returns nil for unknown shortcut type")
         @MainActor
-        func returnsNilForUnknownType() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://app.example.com")!,
+        func returnsNilForUnknownType() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://app.example.com")),
                 shortcutMappings: [
                     "com.example.dashboard": "/dashboard",
                 ]
@@ -91,9 +89,9 @@ struct AppShortcutHandlerTests {
 
         @Test("Handles paths with nested components")
         @MainActor
-        func handlesNestedPaths() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://app.example.com")!,
+        func handlesNestedPaths() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://app.example.com")),
                 shortcutMappings: [
                     "com.example.userprofile": "/user/profile",
                     "com.example.appsettings": "/settings/app",
@@ -109,9 +107,9 @@ struct AppShortcutHandlerTests {
 
         @Test("Preserves base URL scheme")
         @MainActor
-        func preservesBaseURLScheme() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://secure.example.com")!,
+        func preservesBaseURLScheme() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://secure.example.com")),
                 shortcutMappings: [
                     "test": "/test",
                 ]
@@ -130,9 +128,9 @@ struct AppShortcutHandlerTests {
     struct ShortcutItemHandlingTests {
         @Test("Handles shortcut item with configured mapping")
         @MainActor
-        func handlesConfiguredShortcutItem() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://app.example.com")!,
+        func handlesConfiguredShortcutItem() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://app.example.com")),
                 shortcutMappings: [
                     "com.example.dashboard": "/dashboard",
                 ]
@@ -150,9 +148,9 @@ struct AppShortcutHandlerTests {
 
         @Test("Falls back to userInfo URL")
         @MainActor
-        func fallsBackToUserInfoURL() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://app.example.com")!
+        func fallsBackToUserInfoURL() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://app.example.com"))
             )
 
             let shortcutItem = UIApplicationShortcutItem(
@@ -170,9 +168,9 @@ struct AppShortcutHandlerTests {
 
         @Test("Falls back to userInfo path")
         @MainActor
-        func fallsBackToUserInfoPath() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://app.example.com")!
+        func fallsBackToUserInfoPath() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://app.example.com"))
             )
 
             let shortcutItem = UIApplicationShortcutItem(
@@ -190,9 +188,9 @@ struct AppShortcutHandlerTests {
 
         @Test("Configured mapping takes precedence over userInfo")
         @MainActor
-        func configuredMappingTakesPrecedence() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://app.example.com")!,
+        func configuredMappingTakesPrecedence() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://app.example.com")),
                 shortcutMappings: [
                     "com.example.dashboard": "/dashboard",
                 ]
@@ -213,9 +211,9 @@ struct AppShortcutHandlerTests {
 
         @Test("Returns nil for unhandled shortcut")
         @MainActor
-        func returnsNilForUnhandledShortcut() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://app.example.com")!
+        func returnsNilForUnhandledShortcut() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://app.example.com"))
             )
 
             let shortcutItem = UIApplicationShortcutItem(
@@ -230,9 +228,9 @@ struct AppShortcutHandlerTests {
 
         @Test("handleShortcut sets pending URL")
         @MainActor
-        func handleShortcutSetsPendingURL() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://app.example.com")!,
+        func handleShortcutSetsPendingURL() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://app.example.com")),
                 shortcutMappings: [
                     "com.example.dashboard": "/dashboard",
                 ]
@@ -252,9 +250,9 @@ struct AppShortcutHandlerTests {
 
         @Test("handleShortcut returns false for unhandled shortcut")
         @MainActor
-        func handleShortcutReturnsFalseForUnhandled() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://app.example.com")!
+        func handleShortcutReturnsFalseForUnhandled() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://app.example.com"))
             )
 
             let shortcutItem = UIApplicationShortcutItem(
@@ -275,12 +273,12 @@ struct AppShortcutHandlerTests {
     struct PendingURLTests {
         @Test("Setting and consuming pending URL")
         @MainActor
-        func setAndConsumePendingURL() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://app.example.com")!
+        func setAndConsumePendingURL() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://app.example.com"))
             )
 
-            let url = URL(string: "https://app.example.com/page")!
+            let url = try #require(URL(string: "https://app.example.com/page"))
             handler.setPendingURL(url)
 
             #expect(handler.hasPendingURL)
@@ -295,9 +293,9 @@ struct AppShortcutHandlerTests {
 
         @Test("Consuming returns nil when no pending URL")
         @MainActor
-        func consumeReturnsNilWhenEmpty() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://app.example.com")!
+        func consumeReturnsNilWhenEmpty() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://app.example.com"))
             )
 
             #expect(handler.consumePendingURL() == nil)
@@ -306,13 +304,13 @@ struct AppShortcutHandlerTests {
 
         @Test("Setting new URL replaces existing")
         @MainActor
-        func settingNewURLReplaces() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://app.example.com")!
+        func settingNewURLReplaces() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://app.example.com"))
             )
 
-            let firstURL = URL(string: "https://app.example.com/first")!
-            let secondURL = URL(string: "https://app.example.com/second")!
+            let firstURL = try #require(URL(string: "https://app.example.com/first"))
+            let secondURL = try #require(URL(string: "https://app.example.com/second"))
 
             handler.setPendingURL(firstURL)
             handler.setPendingURL(secondURL)
@@ -323,12 +321,12 @@ struct AppShortcutHandlerTests {
 
         @Test("Clearing pending URL")
         @MainActor
-        func clearPendingURL() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://app.example.com")!
+        func clearPendingURL() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://app.example.com"))
             )
 
-            let url = URL(string: "https://app.example.com/page")!
+            let url = try #require(URL(string: "https://app.example.com/page"))
             handler.setPendingURL(url)
 
             #expect(handler.hasPendingURL)
@@ -339,9 +337,9 @@ struct AppShortcutHandlerTests {
 
         @Test("Callback invoked when pending URL is set")
         @MainActor
-        func callbackInvokedOnSet() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://app.example.com")!
+        func callbackInvokedOnSet() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://app.example.com"))
             )
 
             var callbackURL: URL?
@@ -349,7 +347,7 @@ struct AppShortcutHandlerTests {
                 callbackURL = url
             }
 
-            let url = URL(string: "https://app.example.com/page")!
+            let url = try #require(URL(string: "https://app.example.com/page"))
             handler.setPendingURL(url)
 
             #expect(callbackURL == url)
@@ -417,8 +415,8 @@ struct AppShortcutHandlerTests {
     struct PropertiesTests {
         @Test("Properties return correct values")
         @MainActor
-        func propertiesReturnCorrectValues() {
-            let baseURL = URL(string: "https://test.example.com")!
+        func propertiesReturnCorrectValues() throws {
+            let baseURL = try #require(URL(string: "https://test.example.com"))
             let mappings = [
                 "type1": "/path1",
                 "type2": "/path2",
@@ -440,12 +438,12 @@ struct AppShortcutHandlerTests {
     struct EdgeCaseTests {
         @Test("Multiple consume calls return nil after first")
         @MainActor
-        func multipleConsumeCallsReturnNil() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://app.example.com")!
+        func multipleConsumeCallsReturnNil() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://app.example.com"))
             )
 
-            let url = URL(string: "https://app.example.com/page")!
+            let url = try #require(URL(string: "https://app.example.com/page"))
             handler.setPendingURL(url)
 
             _ = handler.consumePendingURL()
@@ -455,9 +453,9 @@ struct AppShortcutHandlerTests {
 
         @Test("Handles path without leading slash")
         @MainActor
-        func handlesPathWithoutLeadingSlash() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://app.example.com")!,
+        func handlesPathWithoutLeadingSlash() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://app.example.com")),
                 shortcutMappings: [
                     "test": "path/without/slash",
                 ]
@@ -470,9 +468,9 @@ struct AppShortcutHandlerTests {
 
         @Test("Handles base URL with trailing slash")
         @MainActor
-        func handlesBaseURLWithTrailingSlash() {
-            let handler = AppShortcutHandler(
-                baseURL: URL(string: "https://app.example.com/")!,
+        func handlesBaseURLWithTrailingSlash() throws {
+            let handler = try AppShortcutHandler(
+                baseURL: #require(URL(string: "https://app.example.com/")),
                 shortcutMappings: [
                     "test": "/dashboard",
                 ]

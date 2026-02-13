@@ -1,7 +1,6 @@
 import Foundation
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 @Suite("PlatformModule Tests")
 struct PlatformModuleTests {
@@ -46,12 +45,12 @@ struct PlatformModuleTests {
         // Verify platform field exists and is a string
         let platform = dict?["platform"]?.stringValue
         #expect(platform != nil)
-        #expect(!platform!.isEmpty)
+        #expect(try !(#require(platform?.isEmpty)))
 
         // Verify version field exists and is a string
         let version = dict?["version"]?.stringValue
         #expect(version != nil)
-        #expect(!version!.isEmpty)
+        #expect(try !(#require(version?.isEmpty)))
 
         // Verify isNative is true
         let isNative = dict?["isNative"]?.boolValue
@@ -68,7 +67,7 @@ struct PlatformModuleTests {
         // Verify deviceModel exists
         let deviceModel = dict?["deviceModel"]?.stringValue
         #expect(deviceModel != nil)
-        #expect(!deviceModel!.isEmpty)
+        #expect(try !(#require(deviceModel?.isEmpty)))
 
         // Verify deviceName exists
         let deviceName = dict?["deviceName"]?.stringValue

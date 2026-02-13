@@ -9,14 +9,14 @@ This document covers local development workflows, device testing, and debugging 
 The example app provides a kitchen sink demo of all PWAKit features:
 
 ```bash
-make example
+make example/serve
 ```
 
 This starts an HTTPS server at `https://localhost:8443` with a self-signed certificate.
 
 ### Running in Simulator
 
-1. Open Xcode: `make open`
+1. Open Xcode: `make kit/open`
 2. Select a simulator from the scheme dropdown
 3. Press Cmd+R to build and run
 
@@ -24,7 +24,7 @@ This starts an HTTPS server at `https://localhost:8443` with a self-signed certi
 
 ```bash
 # Open Xcode
-make open
+make kit/open
 
 # Press Cmd+U to run all tests
 # Or use Product > Test menu
@@ -96,31 +96,26 @@ And add the domain to `Info.plist` under `WKAppBoundDomains`:
 ### Building the SDK
 
 ```bash
-cd sdk
-npm install
-npm run build
+make sdk/deps
+make sdk/build
 ```
 
 ### Watching for Changes
 
 ```bash
-cd sdk
-npm run dev
+cd sdk && npm run dev
 ```
 
 ### Running SDK Tests
 
 ```bash
-cd sdk
-npm test
-npm run test:watch  # Watch mode
+make sdk/test
 ```
 
 ### Type Checking
 
 ```bash
-cd sdk
-npm run typecheck
+make sdk/typecheck
 ```
 
 ## Code Quality
@@ -128,21 +123,21 @@ npm run typecheck
 ### Linting
 
 ```bash
-make lint           # Check for issues
-make lint-fix       # Auto-fix issues
+make kit/lint       # Check for issues
+make kit/lint/fix   # Auto-fix issues
 ```
 
 ### Formatting
 
 ```bash
-make format         # Format all Swift code
-make format-check   # Check formatting without changes
+make kit/fmt        # Format all Swift code
+make kit/fmt/check  # Check formatting without changes
 ```
 
 ### Full Check
 
 ```bash
-make check          # Run format-check + lint
+make kit/can-release  # Run format check + lint + build + test
 ```
 
 ## Debugging
@@ -218,12 +213,12 @@ pwa-kit/
 3. Update `docs/config-schema.md`
 4. Update `docs/configuration.md`
 
-### Syncing Configuration to Info.plist
+### Syncing Configuration
 
-After changing `pwa-config.json`, sync the domains:
+After changing `pwa-config.json`, sync the configuration:
 
 ```bash
-./scripts/sync-config.sh
+make kit/sync
 ```
 
-This updates `WKAppBoundDomains` in Info.plist to match your origins configuration.
+This updates `WKAppBoundDomains` in Info.plist, color assets, and app icon to match your configuration.

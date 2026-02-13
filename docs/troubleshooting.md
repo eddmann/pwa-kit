@@ -36,7 +36,7 @@ This document covers common issues and their solutions when developing with PWAK
 
 | Issue                                                                        | Cause                           | Solution                                                    |
 | ---------------------------------------------------------------------------- | ------------------------------- | ----------------------------------------------------------- |
-| "App-bound domain failure"                                                   | Domain not in WKAppBoundDomains | Run `./scripts/sync-config.sh` or manually add domain       |
+| "App-bound domain failure"                                                   | Domain not in WKAppBoundDomains | Run `make kit/sync` or manually add domain                  |
 | "This app has crashed because it attempted to access privacy-sensitive data" | Missing privacy description     | Add the appropriate `NS*UsageDescription` key to Info.plist |
 | "Invalid configuration"                                                      | Malformed JSON                  | Validate with `python3 -m json.tool`                        |
 | Origins not working                                                          | Wildcard mismatch               | Check pattern syntax (e.g., `*.example.com`)                |
@@ -74,17 +74,14 @@ This document covers common issues and their solutions when developing with PWAK
 ### Clean Build
 
 ```bash
-# Clean all build artifacts
-make clean
-
-# Also clean Xcode's derived data
-rm -rf ~/Library/Developer/Xcode/DerivedData/PWAKitApp-*
+# Clean Xcode's derived data
+make kit/clean
 ```
 
-### Check Prerequisites
+### Install Prerequisites
 
 ```bash
-./scripts/check-prerequisites.sh
+make kit/deps
 ```
 
 ### Verify Configuration

@@ -1,7 +1,6 @@
 import Foundation
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 @Suite("BridgeResponse Tests")
 struct BridgeResponseTests {
@@ -17,7 +16,7 @@ struct BridgeResponseTests {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys]
         let data = try encoder.encode(response)
-        let json = String(data: data, encoding: .utf8)!
+        let json = try #require(String(data: data, encoding: .utf8))
 
         #expect(json.contains("\"id\":\"test-123\""))
         #expect(json.contains("\"success\":true"))
@@ -30,7 +29,7 @@ struct BridgeResponseTests {
         let response = BridgeResponse.success(id: "test-456")
 
         let data = try JSONEncoder().encode(response)
-        let json = String(data: data, encoding: .utf8)!
+        let json = try #require(String(data: data, encoding: .utf8))
 
         #expect(json.contains("\"success\":true"))
         #expect(!json.contains("\"data\""))
@@ -68,7 +67,7 @@ struct BridgeResponseTests {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys]
         let data = try encoder.encode(response)
-        let json = String(data: data, encoding: .utf8)!
+        let json = try #require(String(data: data, encoding: .utf8))
 
         #expect(json.contains("\"id\":\"test-789\""))
         #expect(json.contains("\"success\":false"))

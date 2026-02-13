@@ -1,7 +1,6 @@
 import Foundation
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 // MARK: - MockModule
 
@@ -39,7 +38,10 @@ struct AnotherMockModule: PWAModule {
 
 /// A mock module with a configurable name for testing duplicates.
 struct NamedMockModule: PWAModule {
-    static var moduleName: String { "configurable" }
+    static var moduleName: String {
+        "configurable"
+    }
+
     static let supportedActions = ["do"]
 
     let identifier: String
@@ -98,14 +100,14 @@ struct ModuleRegistryTests {
     // MARK: - Retrieval Tests
 
     @Test("Retrieves registered module by name")
-    func retrievesModule() async {
+    func retrievesModule() async throws {
         let registry = ModuleRegistry()
         await registry.register(MockModule())
 
         let module = await registry.module(named: "mock")
 
         #expect(module != nil)
-        #expect(type(of: module!).moduleName == "mock")
+        #expect(try type(of: #require(module)).moduleName == "mock")
     }
 
     @Test("Returns nil for unregistered module")

@@ -1,7 +1,6 @@
 import Foundation
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 // MARK: - BridgeMessageTests
 
@@ -93,7 +92,7 @@ struct BridgeMessageTests {
         )
 
         let data = try JSONEncoder().encode(message)
-        let json = String(data: data, encoding: .utf8)!
+        let json = try #require(String(data: data, encoding: .utf8))
 
         #expect(!json.contains("payload"))
     }
@@ -395,7 +394,7 @@ struct AnyCodableTests {
     }
 
     @Test("Int to double conversion")
-    func intToDoubleConversion() throws {
+    func intToDoubleConversion() {
         let value: AnyCodable = 42
         #expect(value.doubleValue == 42.0)
     }

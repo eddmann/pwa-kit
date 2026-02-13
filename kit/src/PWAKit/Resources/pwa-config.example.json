@@ -21,6 +21,7 @@
     "print": true,
     "clipboard": true,
     "cameraPermission": true,
+    "microphonePermission": true,
     "locationPermission": true
   },
   "appearance": {

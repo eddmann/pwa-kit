@@ -1,8 +1,7 @@
 import Foundation
+@testable import PWAKitApp
 import Testing
 import UIKit
-
-@testable import PWAKitApp
 
 // MARK: - PrintModuleTests
 

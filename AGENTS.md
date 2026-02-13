@@ -7,11 +7,9 @@ PWAKit wraps Progressive Web Apps in native iOS shells with JavaScript bridge ac
 ## Setup
 
 ```bash
-# Install tools (if missing)
-brew install swiftformat swiftlint
-
-# Install CLI dependencies
-cd cli && npm install && cd ..
+# Install dependencies
+make kit/deps
+make cli/deps
 
 # Configure PWA (interactive)
 make kit/setup
@@ -27,7 +25,7 @@ make kit/open
 SDK setup (optional):
 
 ```bash
-cd sdk && npm install
+make sdk/deps
 ```
 
 ## Common Commands

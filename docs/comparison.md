@@ -51,7 +51,7 @@ Unlike frameworks that generate native code or require you to learn new language
 | **Platforms**         | iOS only (focused)        | iOS, Android, Web             |
 | **Native Code**       | Zero required             | Sometimes needed for plugins  |
 | **Configuration**     | JSON only                 | JSON + native project files   |
-| **Plugin System**     | 13 built-in modules       | Large community ecosystem     |
+| **Plugin System**     | 15 built-in modules       | Large community ecosystem     |
 | **Project Structure** | Xcode project             | Xcode project + CocoaPods/SPM |
 | **Swift Version**     | Swift 6 with actors       | Varies by plugin              |
 
@@ -59,7 +59,7 @@ Unlike frameworks that generate native code or require you to learn new language
 
 - You only need iOS (no Android requirement)
 - You want zero native code or native project management
-- The 13 built-in modules cover your needs
+- The 15 built-in modules cover your needs
 - You prefer a focused, single-purpose tool
 
 ### When to Choose Capacitor
@@ -205,7 +205,7 @@ PWABuilder generates an Xcode project that wraps your PWA in WKWebView - concept
 
 | Aspect             | PWAKit                                  | PWABuilder iOS             |
 | ------------------ | --------------------------------------- | -------------------------- |
-| **Native Modules** | 13 built-in (haptics, biometrics, etc.) | Basic (fewer capabilities) |
+| **Native Modules** | 15 built-in (haptics, biometrics, etc.) | Basic (fewer capabilities) |
 | **TypeScript SDK** | Yes, fully typed                        | Limited                    |
 | **Configuration**  | JSON-based, flexible                    | Generated from manifest    |
 | **Maintenance**    | Actively developed                      | Generated output           |
@@ -261,7 +261,7 @@ When wrapped with PWAKit, your PWA keeps all its advantages:
 Do you have an existing PWA or web app?
 ├── Yes → Do you need Android support?
 │         ├── Yes → Consider Capacitor
-│         └── No → Do PWAKit's 13 modules cover your needs?
+│         └── No → Do PWAKit's 15 modules cover your needs?
 │                  ├── Yes → Use PWAKit
 │                  └── No → Consider Capacitor (more plugins)
 │

@@ -1,7 +1,6 @@
 import Foundation
-import Testing
-
 @testable import PWAKitApp
+import Testing
 
 // MARK: - WebViewConfigurationTests
 
@@ -10,9 +9,9 @@ struct WebViewConfigurationTests {
     // MARK: - Basic Initialization
 
     @Test("Initializes with required parameters")
-    func initializesWithRequiredParameters() {
-        let config = WebViewConfiguration(
-            startURL: URL(string: "https://example.com/")!,
+    func initializesWithRequiredParameters() throws {
+        let config = try WebViewConfiguration(
+            startURL: #require(URL(string: "https://example.com/")),
             allowedOrigins: ["example.com"]
         )
 
@@ -26,15 +25,15 @@ struct WebViewConfigurationTests {
     }
 
     @Test("Initializes with all parameters")
-    func initializesWithAllParameters() {
+    func initializesWithAllParameters() throws {
         let cookieSettings = PlatformCookieSettings(
             enabled: true,
             name: "custom-cookie",
             value: "custom-value"
         )
 
-        let config = WebViewConfiguration(
-            startURL: URL(string: "https://app.example.com/start")!,
+        let config = try WebViewConfiguration(
+            startURL: #require(URL(string: "https://app.example.com/start")),
             allowedOrigins: ["app.example.com", "*.example.com"],
             authOrigins: ["accounts.google.com", "auth0.com"],
             platformCookieSettings: cookieSettings,
@@ -111,9 +110,9 @@ struct WebViewConfigurationTests {
     // MARK: - Equatable
 
     @Test("Equals when all properties match")
-    func equalsWhenAllPropertiesMatch() {
-        let config1 = WebViewConfiguration(
-            startURL: URL(string: "https://example.com/")!,
+    func equalsWhenAllPropertiesMatch() throws {
+        let config1 = try WebViewConfiguration(
+            startURL: #require(URL(string: "https://example.com/")),
             allowedOrigins: ["example.com"],
             authOrigins: ["auth.com"],
             platformCookieSettings: .default,
@@ -122,8 +121,8 @@ struct WebViewConfigurationTests {
             adaptiveUIStyle: true
         )
 
-        let config2 = WebViewConfiguration(
-            startURL: URL(string: "https://example.com/")!,
+        let config2 = try WebViewConfiguration(
+            startURL: #require(URL(string: "https://example.com/")),
             allowedOrigins: ["example.com"],
             authOrigins: ["auth.com"],
             platformCookieSettings: .default,
@@ -136,14 +135,14 @@ struct WebViewConfigurationTests {
     }
 
     @Test("Not equal when properties differ")
-    func notEqualWhenPropertiesDiffer() {
-        let config1 = WebViewConfiguration(
-            startURL: URL(string: "https://example1.com/")!,
+    func notEqualWhenPropertiesDiffer() throws {
+        let config1 = try WebViewConfiguration(
+            startURL: #require(URL(string: "https://example1.com/")),
             allowedOrigins: ["example1.com"]
         )
 
-        let config2 = WebViewConfiguration(
-            startURL: URL(string: "https://example2.com/")!,
+        let config2 = try WebViewConfiguration(
+            startURL: #require(URL(string: "https://example2.com/")),
             allowedOrigins: ["example2.com"]
         )
 
