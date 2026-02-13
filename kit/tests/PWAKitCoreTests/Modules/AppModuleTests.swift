@@ -55,6 +55,10 @@ struct AppModuleTests {
         let build = dict?["build"]?.stringValue
         #expect(build != nil)
         #expect(try !(#require(build?.isEmpty)))
+
+        // Verify pwaKitVersion exists and matches framework version
+        let pwaKitVersion = dict?["pwaKitVersion"]?.stringValue
+        #expect(pwaKitVersion == PWAKitCore.version)
     }
 
     @Test("getVersion returns consistent values on multiple calls")

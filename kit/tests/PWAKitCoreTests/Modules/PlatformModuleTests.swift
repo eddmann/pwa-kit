@@ -72,6 +72,10 @@ struct PlatformModuleTests {
         // Verify deviceName exists
         let deviceName = dict?["deviceName"]?.stringValue
         #expect(deviceName != nil)
+
+        // Verify pwaKitVersion exists and matches framework version
+        let pwaKitVersion = dict?["pwaKitVersion"]?.stringValue
+        #expect(pwaKitVersion == PWAKitCore.version)
     }
 
     @Test("Returns consistent structure on multiple calls")

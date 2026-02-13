@@ -92,6 +92,15 @@ sdk/typecheck: ## Type check SDK
 sdk/clean: ## Remove SDK dist
 	@rm -rf sdk/dist
 
+##@ Release
+
+version: ## Set version across all packages (usage: make version V=0.2.0)
+	@if [ -z "$(V)" ]; then echo "Usage: make version V=x.y.z"; exit 1; fi
+	@sed -i '' 's/public static let version = ".*"/public static let version = "$(V)"/' kit/src/PWAKitCore/PWAKitCore.swift
+	@cd sdk && npm version "$(V)" --no-git-tag-version --allow-same-version
+	@cd cli && npm version "$(V)" --no-git-tag-version --allow-same-version
+	@echo "Version set to $(V)"
+
 ##@ Example
 
 example/deps: ## Install example dependencies

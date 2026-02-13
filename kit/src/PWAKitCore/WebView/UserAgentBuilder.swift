@@ -12,13 +12,14 @@ import UIKit
 ///
 /// The generated user agent follows this pattern:
 /// ```
-/// Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) PWAKit/1.0.0
-/// Model/iPhone15,2
+/// Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) PWAKit/0.1.0
+/// AppVersion/1.0.0 Model/iPhone15,2
 /// ```
 ///
 /// Components:
 /// - Base Safari user agent prefix for compatibility
-/// - `PWAKit/{version}` - Identifies the PWAKit shell and app version
+/// - `PWAKit/{version}` - Identifies the PWAKit shell and framework version
+/// - `AppVersion/{version}` - The app's bundle version
 /// - `Model/{identifier}` - Device hardware model identifier
 ///
 /// ## Example
@@ -34,11 +35,9 @@ public enum UserAgentBuilder {
     /// Builds a custom user agent string.
     ///
     /// - Parameters:
-    ///   - appVersion: Optional app version override. If nil, uses Bundle version.
     ///   - additionalComponents: Additional components to append to the user agent.
     /// - Returns: A complete user agent string.
     public static func buildUserAgent(
-        appVersion: String? = nil,
         additionalComponents: [String] = []
     ) -> String {
         var components: [String] = []
@@ -46,9 +45,11 @@ public enum UserAgentBuilder {
         // Base Safari user agent
         components.append(baseSafariUserAgent())
 
-        // PWAKit identifier with version
-        let version = appVersion ?? bundleVersion()
-        components.append("\(shellIdentifier)/\(version)")
+        // PWAKit identifier with framework version
+        components.append("\(shellIdentifier)/\(PWAKitCore.version)")
+
+        // App version from bundle
+        components.append("AppVersion/\(bundleVersion())")
 
         // Device model
         components.append("Model/\(deviceModel())")
@@ -161,6 +162,26 @@ extension UserAgentBuilder {
     public static func extractShellVersion(from userAgent: String) -> String? {
         // Pattern: PWAKit/1.0.0
         let pattern = "\(shellIdentifier)/([\\d.]+)"
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: []),
+              let match = regex.firstMatch(
+                  in: userAgent,
+                  options: [],
+                  range: NSRange(userAgent.startIndex..., in: userAgent)
+              ),
+              let versionRange = Range(match.range(at: 1), in: userAgent) else
+        {
+            return nil
+        }
+        return String(userAgent[versionRange])
+    }
+
+    /// Extracts the app version from a user agent string.
+    ///
+    /// - Parameter userAgent: The user agent string to parse.
+    /// - Returns: The app version string if found, otherwise `nil`.
+    public static func extractAppVersion(from userAgent: String) -> String? {
+        // Pattern: AppVersion/1.0.0
+        let pattern = "AppVersion/([\\d.]+)"
         guard let regex = try? NSRegularExpression(pattern: pattern, options: []),
               let match = regex.firstMatch(
                   in: userAgent,

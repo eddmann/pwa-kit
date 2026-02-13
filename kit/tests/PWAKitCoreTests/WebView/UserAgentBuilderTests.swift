@@ -16,13 +16,6 @@ struct UserAgentBuilderTests {
         #expect(userAgent.contains("Model/"))
     }
 
-    @Test("Builds user agent with custom app version")
-    func buildsUserAgentWithCustomAppVersion() {
-        let userAgent = UserAgentBuilder.buildUserAgent(appVersion: "2.5.0")
-
-        #expect(userAgent.contains("PWAKit/2.5.0"))
-    }
-
     @Test("Builds user agent with additional components")
     func buildsUserAgentWithAdditionalComponents() {
         let userAgent = UserAgentBuilder.buildUserAgent(additionalComponents: ["CustomApp/1.0", "Feature/test"])
@@ -118,7 +111,8 @@ struct UserAgentBuilderTests {
 
     @Test("Detects PWAKit in user agent")
     func detectsPWAKitInUserAgent() {
-        let userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) PWAKit/1.0.0 Model/iPhone15,2"
+        let userAgent =
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) PWAKit/0.1.0 AppVersion/1.0.0 Model/iPhone15,2"
 
         #expect(UserAgentBuilder.isPWAKit(userAgent) == true)
     }
@@ -132,11 +126,12 @@ struct UserAgentBuilderTests {
 
     @Test("Extracts shell version from user agent")
     func extractsShellVersionFromUserAgent() {
-        let userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) PWAKit/2.5.3 Model/iPhone15,2"
+        let userAgent =
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) PWAKit/0.1.0 AppVersion/2.5.3 Model/iPhone15,2"
 
         let version = UserAgentBuilder.extractShellVersion(from: userAgent)
 
-        #expect(version == "2.5.3")
+        #expect(version == "0.1.0")
     }
 
     @Test("Returns nil for missing shell version")
@@ -150,7 +145,8 @@ struct UserAgentBuilderTests {
 
     @Test("Extracts device model from user agent")
     func extractsDeviceModelFromUserAgent() {
-        let userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) PWAKit/1.0.0 Model/iPhone15,2"
+        let userAgent =
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) PWAKit/0.1.0 AppVersion/1.0.0 Model/iPhone15,2"
 
         let model = UserAgentBuilder.extractDeviceModel(from: userAgent)
 
@@ -159,7 +155,7 @@ struct UserAgentBuilderTests {
 
     @Test("Returns nil for missing device model")
     func returnsNilForMissingDeviceModel() {
-        let userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) PWAKit/1.0.0"
+        let userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) PWAKit/0.1.0 AppVersion/1.0.0"
 
         let model = UserAgentBuilder.extractDeviceModel(from: userAgent)
 
@@ -170,17 +166,20 @@ struct UserAgentBuilderTests {
 
     @Test("User agent matches expected format")
     func userAgentMatchesExpectedFormat() {
-        let userAgent = UserAgentBuilder.buildUserAgent(appVersion: "1.0.0")
+        let userAgent = UserAgentBuilder.buildUserAgent()
 
         // Verify the format:
         // Mozilla/5.0 (Device; CPU ... like Mac OS X) AppleWebKit/... (KHTML, like Gecko) PWAKit/version
-        // Model/identifier
+        // AppVersion/version Model/identifier
 
         // Check it starts with Mozilla
         #expect(userAgent.hasPrefix("Mozilla/5.0"))
 
-        // Check PWAKit is present with version
-        #expect(userAgent.contains("PWAKit/1.0.0"))
+        // Check PWAKit is present with framework version
+        #expect(userAgent.contains("PWAKit/\(PWAKitCore.version)"))
+
+        // Check AppVersion is present
+        #expect(userAgent.contains("AppVersion/"))
 
         // Check Model is present
         #expect(userAgent.contains("Model/"))
@@ -188,23 +187,49 @@ struct UserAgentBuilderTests {
         // Check overall structure - PWAKit comes after the base Safari UA
         let baseEnd = userAgent.range(of: "(KHTML, like Gecko)")
         let shellStart = userAgent.range(of: "PWAKit/")
+        let appVersionStart = userAgent.range(of: "AppVersion/")
+        let modelStart = userAgent.range(of: "Model/")
 
         #expect(baseEnd != nil)
         #expect(shellStart != nil)
+        #expect(appVersionStart != nil)
+        #expect(modelStart != nil)
 
-        if let baseEnd, let shellStart {
+        if let baseEnd, let shellStart, let appVersionStart, let modelStart {
             #expect(baseEnd.upperBound < shellStart.lowerBound)
+            #expect(shellStart.upperBound < appVersionStart.lowerBound)
+            #expect(appVersionStart.upperBound < modelStart.lowerBound)
         }
     }
 
     @Test("Built user agent can be parsed")
     func builtUserAgentCanBeParsed() {
-        let userAgent = UserAgentBuilder.buildUserAgent(appVersion: "3.2.1")
+        let userAgent = UserAgentBuilder.buildUserAgent()
 
         #expect(UserAgentBuilder.isPWAKit(userAgent) == true)
-        #expect(UserAgentBuilder.extractShellVersion(from: userAgent) == "3.2.1")
+        #expect(UserAgentBuilder.extractShellVersion(from: userAgent) == PWAKitCore.version)
+        #expect(UserAgentBuilder.extractAppVersion(from: userAgent) == UserAgentBuilder.bundleVersion())
 
         let model = UserAgentBuilder.extractDeviceModel(from: userAgent)
         #expect(model == UserAgentBuilder.deviceModel())
+    }
+
+    @Test("Extracts app version from user agent")
+    func extractsAppVersionFromUserAgent() {
+        let userAgent =
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) PWAKit/0.1.0 AppVersion/2.5.3 Model/iPhone15,2"
+
+        let appVersion = UserAgentBuilder.extractAppVersion(from: userAgent)
+
+        #expect(appVersion == "2.5.3")
+    }
+
+    @Test("Returns nil for missing app version")
+    func returnsNilForMissingAppVersion() {
+        let userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) PWAKit/0.1.0"
+
+        let appVersion = UserAgentBuilder.extractAppVersion(from: userAgent)
+
+        #expect(appVersion == nil)
     }
 }

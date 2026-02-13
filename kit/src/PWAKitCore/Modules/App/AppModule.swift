@@ -109,6 +109,7 @@ public struct AppModule: PWAModule {
         return AnyCodable([
             "version": AnyCodable(version),
             "build": AnyCodable(build),
+            "pwaKitVersion": AnyCodable(PWAKitCore.version),
         ])
     }
 

@@ -22,6 +22,8 @@ export interface PlatformInfo {
   buildNumber: string;
   /** Device model (e.g., 'iPhone15,2') */
   deviceModel: string;
+  /** PWAKit framework version (e.g., '0.1.0') */
+  pwaKitVersion: string;
 }
 
 /**

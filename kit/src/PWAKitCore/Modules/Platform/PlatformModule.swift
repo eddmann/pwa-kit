@@ -18,6 +18,7 @@ import UIKit
 ///   - `appBuild`: The app's build number from the bundle
 ///   - `deviceModel`: The device model identifier
 ///   - `deviceName`: The user-assigned device name (if available)
+///   - `pwaKitVersion`: The PWAKit framework version
 ///
 /// ## Example
 ///
@@ -96,6 +97,7 @@ public struct PlatformModule: PWAModule {
             "appBuild": AnyCodable(appBuild),
             "deviceModel": AnyCodable(deviceModel),
             "deviceName": AnyCodable(deviceName),
+            "pwaKitVersion": AnyCodable(PWAKitCore.version),
         ])
     }
 }

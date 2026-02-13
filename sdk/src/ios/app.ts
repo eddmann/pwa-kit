@@ -16,6 +16,8 @@ export interface AppVersion {
   version: string;
   /** Build number (e.g., '42') */
   build: string;
+  /** PWAKit framework version (e.g., '0.1.0') */
+  pwaKitVersion: string;
 }
 
 /**
