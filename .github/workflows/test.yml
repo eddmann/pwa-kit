@@ -22,6 +22,9 @@ jobs:
       - name: Install dependencies
         run: make kit/deps
 
+      - name: Use example config
+        run: cp kit/src/PWAKit/Resources/pwa-config.example.json kit/src/PWAKit/Resources/pwa-config.json
+
       - name: Show Xcode version
         run: xcodebuild -version
 
