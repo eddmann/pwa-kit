@@ -208,20 +208,20 @@ For sharing data between app and extensions:
 
 ## Feature Flags Reference
 
-| Flag                 | Description                  | Requires                                           |
-| -------------------- | ---------------------------- | -------------------------------------------------- |
-| `notifications`      | Push notification support    | `aps-environment` entitlement, `UIBackgroundModes` |
-| `haptics`            | Haptic feedback              | None                                               |
-| `biometrics`         | Face ID / Touch ID           | `NSFaceIDUsageDescription`                         |
-| `secureStorage`      | Keychain storage             | None                                               |
-| `healthkit`          | HealthKit data access        | HealthKit entitlement, usage descriptions          |
-| `iap`                | In-App Purchases             | StoreKit capability                                |
-| `share`              | Share sheet                  | None                                               |
-| `print`              | AirPrint                     | None                                               |
-| `clipboard`          | System clipboard             | None                                               |
-| `cameraPermission`   | Camera permission requests   | `NSCameraUsageDescription`                         |
-| `microphonePermission` | Microphone permission requests | `NSMicrophoneUsageDescription`                 |
-| `locationPermission` | Location permission requests | `NSLocationWhenInUseUsageDescription`              |
+| Flag                   | Description                    | Requires                                           |
+| ---------------------- | ------------------------------ | -------------------------------------------------- |
+| `notifications`        | Push notification support      | `aps-environment` entitlement, `UIBackgroundModes` |
+| `haptics`              | Haptic feedback                | None                                               |
+| `biometrics`           | Face ID / Touch ID             | `NSFaceIDUsageDescription`                         |
+| `secureStorage`        | Keychain storage               | None                                               |
+| `healthkit`            | HealthKit data access          | HealthKit entitlement, usage descriptions          |
+| `iap`                  | In-App Purchases               | StoreKit capability                                |
+| `share`                | Share sheet                    | None                                               |
+| `print`                | AirPrint                       | None                                               |
+| `clipboard`            | System clipboard               | None                                               |
+| `cameraPermission`     | Camera permission requests     | `NSCameraUsageDescription`                         |
+| `microphonePermission` | Microphone permission requests | `NSMicrophoneUsageDescription`                     |
+| `locationPermission`   | Location permission requests   | `NSLocationWhenInUseUsageDescription`              |
 
 ## Syncing Configuration
 

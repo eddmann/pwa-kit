@@ -143,20 +143,20 @@ The `features` object enables or disables individual bridge modules.
 
 ### Available Features
 
-| Feature              | Default | Description                                 |
-| -------------------- | ------- | ------------------------------------------- |
-| `notifications`      | `true`  | Push notification support (APNs)            |
-| `haptics`            | `true`  | Haptic feedback (UIImpactFeedbackGenerator) |
-| `biometrics`         | `true`  | Face ID / Touch ID authentication           |
-| `secureStorage`      | `true`  | Keychain-based secure storage               |
-| `healthkit`          | `false` | HealthKit data access                       |
-| `iap`                | `false` | In-app purchases (StoreKit 2)               |
-| `share`              | `true`  | Native share sheet                          |
-| `print`              | `true`  | AirPrint support                            |
-| `clipboard`          | `true`  | System clipboard access                     |
-| `cameraPermission`   | `true`  | Camera permission requests                  |
-| `microphonePermission` | `true` | Microphone permission requests             |
-| `locationPermission` | `true`  | Location permission requests                |
+| Feature                | Default | Description                                 |
+| ---------------------- | ------- | ------------------------------------------- |
+| `notifications`        | `true`  | Push notification support (APNs)            |
+| `haptics`              | `true`  | Haptic feedback (UIImpactFeedbackGenerator) |
+| `biometrics`           | `true`  | Face ID / Touch ID authentication           |
+| `secureStorage`        | `true`  | Keychain-based secure storage               |
+| `healthkit`            | `false` | HealthKit data access                       |
+| `iap`                  | `false` | In-app purchases (StoreKit 2)               |
+| `share`                | `true`  | Native share sheet                          |
+| `print`                | `true`  | AirPrint support                            |
+| `clipboard`            | `true`  | System clipboard access                     |
+| `cameraPermission`     | `true`  | Camera permission requests                  |
+| `microphonePermission` | `true`  | Microphone permission requests              |
+| `locationPermission`   | `true`  | Location permission requests                |
 
 ### Notes
 
@@ -203,11 +203,11 @@ The `appearance` object controls UI behavior and styling.
 
 ### Status Bar Styles
 
-| Style      | Description                                                      |
-| ---------- | ---------------------------------------------------------------- |
+| Style      | Description                                                          |
+| ---------- | -------------------------------------------------------------------- |
 | `adaptive` | Observes WebView background color, switches light/dark automatically |
-| `light`    | Forces light appearance (dark status bar text)                   |
-| `dark`     | Forces dark appearance (light status bar text)                   |
+| `light`    | Forces light appearance (dark status bar text)                       |
+| `dark`     | Forces dark appearance (light status bar text)                       |
 
 ### Orientation Lock Values
 
