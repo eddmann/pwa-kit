@@ -513,10 +513,15 @@ extension DownloadHandler {
     /// - Parameter blobURLString: The blob URL string.
     /// - Returns: JavaScript code string.
     private static func blobDownloadJavaScript(for blobURLString: String) -> String {
-        """
+        let escaped = blobURLString
+            .replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "'", with: "\\'")
+            .replacingOccurrences(of: "\n", with: "\\n")
+            .replacingOccurrences(of: "\r", with: "\\r")
+        return """
         (async function() {
             try {
-                const response = await fetch('\(blobURLString)');
+                const response = await fetch('\(escaped)');
                 const blob = await response.blob();
                 return new Promise((resolve, reject) => {
                     const reader = new FileReader();
