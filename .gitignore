@@ -103,13 +103,11 @@ logs/
 # Node.js
 sdk/node_modules/
 sdk/dist/
-sdk/package-lock.json
 
 # MARK: - CLI
 
 cli/node_modules/
 cli/dist/
-cli/package-lock.json
 
 # MARK: - Example
 
