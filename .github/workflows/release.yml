@@ -1,8 +1,7 @@
 name: Release
 
 on:
-  push:
-    tags: ['v*']
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -19,6 +18,35 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Extract version from changelog
+        id: version
+        run: |
+          VERSION=$(sed -n 's/^## \[\([^]]*\)\].*/\1/p' CHANGELOG.md | head -1)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Extract changelog
+        id: changelog
+        run: |
+          CONTENT=$(awk '
+            /^## \[/ {
+              if (found) exit
+              found=1
+              next
+            }
+            found { print }
+          ' CHANGELOG.md)
+
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          echo "$CONTENT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Update version
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          sed -i 's/public static let version = ".*"/public static let version = "'"$VERSION"'"/' kit/src/PWAKitCore/PWAKitCore.swift
+          cd sdk && npm version "$VERSION" --no-git-tag-version --allow-same-version
+          cd ../cli && npm version "$VERSION" --no-git-tag-version --allow-same-version
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -56,5 +84,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: v${{ steps.version.outputs.version }}
+          body: ${{ steps.changelog.outputs.content }}
           files: pwakit-template.tar.gz
-          generate_release_notes: true

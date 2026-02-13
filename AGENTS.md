@@ -20,7 +20,6 @@ Run `make` to see all targets.
 | CLI tests    | `make cli/test`                                |
 | Sync config  | `make kit/sync`                                |
 | All CI gates | `make can-release`                             |
-| Set version  | `make version V=0.2.0`                         |
 
 `kit/build` and `kit/test` default to iPhone 16 Simulator. Override with `DESTINATION`:
 
