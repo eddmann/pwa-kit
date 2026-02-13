@@ -43,7 +43,7 @@ The primary configuration file located at `kit/src/PWAKit/Resources/pwa-config.j
   },
   "appearance": {
     "displayMode": "standalone",
-    "pullToRefresh": true,
+    "pullToRefresh": false,
     "adaptiveStyle": true,
     "statusBarStyle": "default",
     "orientationLock": "any",

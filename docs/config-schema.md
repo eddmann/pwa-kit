@@ -174,7 +174,7 @@ The `appearance` object controls UI behavior and styling.
 {
   "appearance": {
     "displayMode": "standalone",
-    "pullToRefresh": true,
+    "pullToRefresh": false,
     "adaptiveStyle": true,
     "statusBarStyle": "default",
     "orientationLock": "any",
@@ -189,7 +189,7 @@ The `appearance` object controls UI behavior and styling.
 | Field             | Type      | Default        | Description                                   |
 | ----------------- | --------- | -------------- | --------------------------------------------- |
 | `displayMode`     | `string`  | `"standalone"` | How the app displays content                  |
-| `pullToRefresh`   | `boolean` | `true`         | Enable pull-to-refresh gesture                |
+| `pullToRefresh`   | `boolean` | `false`        | Enable pull-to-refresh gesture                |
 | `adaptiveStyle`   | `boolean` | `true`         | Match system theme to web background          |
 | `statusBarStyle`  | `string`  | `"default"`    | Status bar appearance                         |
 | `orientationLock` | `string`  | `"any"`        | Device orientation lock                       |
@@ -284,7 +284,7 @@ PWAKit uses native APNs exclusively. The device token is provided to your web ap
   },
   "appearance": {
     "displayMode": "standalone",
-    "pullToRefresh": true,
+    "pullToRefresh": false,
     "adaptiveStyle": true,
     "statusBarStyle": "default",
     "orientationLock": "any",
@@ -441,7 +441,7 @@ For tooling integration, here is the formal JSON Schema:
           "enum": ["standalone", "fullscreen"],
           "default": "standalone"
         },
-        "pullToRefresh": { "type": "boolean", "default": true },
+        "pullToRefresh": { "type": "boolean", "default": false },
         "adaptiveStyle": { "type": "boolean", "default": true },
         "statusBarStyle": {
           "type": "string",

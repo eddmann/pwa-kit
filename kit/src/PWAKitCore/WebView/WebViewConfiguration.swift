@@ -73,7 +73,7 @@ public struct PlatformCookieSettings: Codable, Sendable, Equatable {
 ///     allowedOrigins: ["app.example.com", "*.example.com"],
 ///     authOrigins: ["accounts.google.com"],
 ///     displayMode: .standalone,
-///     pullToRefresh: true
+///     pullToRefresh: false
 /// )
 /// ```
 public struct WebViewConfiguration: Sendable, Equatable {
@@ -121,7 +121,7 @@ public struct WebViewConfiguration: Sendable, Equatable {
     ///   - authOrigins: Origins that show the "Done" toolbar. Defaults to empty.
     ///   - platformCookieSettings: Cookie settings. Defaults to `.default`.
     ///   - displayMode: Display mode. Defaults to `.standalone`.
-    ///   - pullToRefresh: Enable pull-to-refresh. Defaults to `true`.
+    ///   - pullToRefresh: Enable pull-to-refresh. Defaults to `false`.
     ///   - adaptiveUIStyle: Enable adaptive UI style. Defaults to `true`.
     public init(
         startURL: URL,
@@ -129,7 +129,7 @@ public struct WebViewConfiguration: Sendable, Equatable {
         authOrigins: [String] = [],
         platformCookieSettings: PlatformCookieSettings = .default,
         displayMode: DisplayMode = .standalone,
-        pullToRefresh: Bool = true,
+        pullToRefresh: Bool = false,
         adaptiveUIStyle: Bool = true
     ) {
         self.startURL = startURL

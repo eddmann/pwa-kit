@@ -20,7 +20,7 @@ struct WebViewConfigurationTests {
         #expect(config.authOrigins == [])
         #expect(config.platformCookieSettings == .default)
         #expect(config.displayMode == .standalone)
-        #expect(config.pullToRefresh == true)
+        #expect(config.pullToRefresh == false)
         #expect(config.adaptiveUIStyle == true)
     }
 

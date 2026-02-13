@@ -128,7 +128,7 @@ struct PWAConfigurationTests {
 
         // Default values for appearance
         #expect(config.appearance.displayMode == .standalone)
-        #expect(config.appearance.pullToRefresh == true)
+        #expect(config.appearance.pullToRefresh == false)
         #expect(config.appearance.adaptiveStyle == true)
         #expect(config.appearance.statusBarStyle == .default)
 
@@ -193,7 +193,7 @@ struct PWAConfigurationTests {
 
         #expect(config.appearance.displayMode == .fullscreen)
         #expect(config.appearance.statusBarStyle == .lightContent)
-        #expect(config.appearance.pullToRefresh == true)
+        #expect(config.appearance.pullToRefresh == false)
         #expect(config.appearance.adaptiveStyle == true)
     }
 
@@ -219,7 +219,7 @@ struct PWAConfigurationTests {
         let appearance = AppearanceConfiguration.default
 
         #expect(appearance.displayMode == .standalone)
-        #expect(appearance.pullToRefresh == true)
+        #expect(appearance.pullToRefresh == false)
         #expect(appearance.adaptiveStyle == true)
         #expect(appearance.statusBarStyle == .default)
     }

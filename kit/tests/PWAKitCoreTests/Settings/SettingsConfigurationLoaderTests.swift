@@ -58,7 +58,7 @@ struct SettingsConfigurationLoaderTests {
         #expect(config.features.notifications == true)
         #expect(config.features.haptics == true)
         #expect(config.appearance.displayMode == .standalone)
-        #expect(config.appearance.pullToRefresh == true)
+        #expect(config.appearance.pullToRefresh == false)
         #expect(config.notifications.provider == .apns)
     }
 

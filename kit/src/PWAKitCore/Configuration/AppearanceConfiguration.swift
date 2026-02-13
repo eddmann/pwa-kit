@@ -83,7 +83,7 @@ public struct AppearanceConfiguration: Codable, Sendable, Equatable {
     ///
     /// - Parameters:
     ///   - displayMode: Display mode for content. Defaults to `.standalone`.
-    ///   - pullToRefresh: Enable pull-to-refresh. Defaults to `true`.
+    ///   - pullToRefresh: Enable pull-to-refresh. Defaults to `false`.
     ///   - adaptiveStyle: Match system theme to web. Defaults to `true`.
     ///   - statusBarStyle: Status bar style. Defaults to `.default`.
     ///   - orientationLock: Orientation lock. Defaults to `.any`.
@@ -91,7 +91,7 @@ public struct AppearanceConfiguration: Codable, Sendable, Equatable {
     ///   - themeColor: Theme/accent color hex string. Defaults to `nil` (system color).
     public init(
         displayMode: DisplayMode = .standalone,
-        pullToRefresh: Bool = true,
+        pullToRefresh: Bool = false,
         adaptiveStyle: Bool = true,
         statusBarStyle: StatusBarStyle = .default,
         orientationLock: OrientationLock = .any,
@@ -125,7 +125,7 @@ public struct AppearanceConfiguration: Codable, Sendable, Equatable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.displayMode = try container.decodeIfPresent(DisplayMode.self, forKey: .displayMode) ?? .standalone
-        self.pullToRefresh = try container.decodeIfPresent(Bool.self, forKey: .pullToRefresh) ?? true
+        self.pullToRefresh = try container.decodeIfPresent(Bool.self, forKey: .pullToRefresh) ?? false
         self.adaptiveStyle = try container.decodeIfPresent(Bool.self, forKey: .adaptiveStyle) ?? true
         self.statusBarStyle = try container.decodeIfPresent(StatusBarStyle.self, forKey: .statusBarStyle) ?? .default
         self.orientationLock = try container.decodeIfPresent(OrientationLock.self, forKey: .orientationLock) ?? .any

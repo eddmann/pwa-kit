@@ -26,7 +26,7 @@
   },
   "appearance": {
     "displayMode": "standalone",
-    "pullToRefresh": true,
+    "pullToRefresh": false,
     "adaptiveStyle": true,
     "statusBarStyle": "default",
     "orientationLock": "any",
