@@ -22,13 +22,13 @@ export type ManifestFetcher = (url: string) => Promise<ManifestValues | null>;
 
 export async function runWizard(getManifest?: ManifestFetcher): Promise<WizardResult | null> {
   console.log();
-  console.log(logger.bold('+---------------------------------------------------------------+'));
-  console.log(logger.bold('|                                                               |'));
+  console.log(logger.bold('+-------------------------------------------------------------+'));
+  console.log(logger.bold('|                                                             |'));
   console.log(logger.bold(`|              ${logger.cyan('PWAKit - Interactive Setup Wizard')}              |`));
-  console.log(logger.bold('|                                                               |'));
-  console.log(logger.bold('|   This wizard will help you configure your PWA wrapper app.   |'));
-  console.log(logger.bold('|                                                               |'));
-  console.log(logger.bold('+---------------------------------------------------------------+'));
+  console.log(logger.bold('|                                                             |'));
+  console.log(logger.bold('|  This wizard will help you configure your PWA wrapper app.  |'));
+  console.log(logger.bold('|                                                             |'));
+  console.log(logger.bold('+-------------------------------------------------------------+'));
   console.log();
 
   // Step 1: Start URL
