@@ -21,7 +21,7 @@ struct WebViewConfigurationTests {
         #expect(config.platformCookieSettings == .default)
         #expect(config.displayMode == .standalone)
         #expect(config.pullToRefresh == false)
-        #expect(config.adaptiveUIStyle == true)
+        #expect(config.statusBarStyle == .adaptive)
     }
 
     @Test("Initializes with all parameters")
@@ -39,7 +39,7 @@ struct WebViewConfigurationTests {
             platformCookieSettings: cookieSettings,
             displayMode: .fullscreen,
             pullToRefresh: false,
-            adaptiveUIStyle: false
+            statusBarStyle: .dark
         )
 
         #expect(config.startURL.absoluteString == "https://app.example.com/start")
@@ -48,7 +48,7 @@ struct WebViewConfigurationTests {
         #expect(config.platformCookieSettings == cookieSettings)
         #expect(config.displayMode == .fullscreen)
         #expect(config.pullToRefresh == false)
-        #expect(config.adaptiveUIStyle == false)
+        #expect(config.statusBarStyle == .dark)
     }
 
     // MARK: - Factory Method from PWAConfiguration
@@ -71,8 +71,7 @@ struct WebViewConfigurationTests {
             appearance: AppearanceConfiguration(
                 displayMode: .fullscreen,
                 pullToRefresh: false,
-                adaptiveStyle: true,
-                statusBarStyle: .lightContent
+                statusBarStyle: .light
             ),
             notifications: .default
         )
@@ -84,7 +83,7 @@ struct WebViewConfigurationTests {
         #expect(webViewConfig.authOrigins == ["auth.example.com"])
         #expect(webViewConfig.displayMode == .fullscreen)
         #expect(webViewConfig.pullToRefresh == false)
-        #expect(webViewConfig.adaptiveUIStyle == true)
+        #expect(webViewConfig.statusBarStyle == .light)
         #expect(webViewConfig.platformCookieSettings == .default)
     }
 
@@ -118,7 +117,7 @@ struct WebViewConfigurationTests {
             platformCookieSettings: .default,
             displayMode: .standalone,
             pullToRefresh: true,
-            adaptiveUIStyle: true
+            statusBarStyle: .adaptive
         )
 
         let config2 = try WebViewConfiguration(
@@ -128,7 +127,7 @@ struct WebViewConfigurationTests {
             platformCookieSettings: .default,
             displayMode: .standalone,
             pullToRefresh: true,
-            adaptiveUIStyle: true
+            statusBarStyle: .adaptive
         )
 
         #expect(config1 == config2)

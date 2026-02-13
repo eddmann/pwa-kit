@@ -45,12 +45,12 @@ struct PlatformModuleTests {
         // Verify platform field exists and is a string
         let platform = dict?["platform"]?.stringValue
         #expect(platform != nil)
-        #expect(try !(#require(platform?.isEmpty)))
+        #expect(try !#require(platform?.isEmpty))
 
         // Verify version field exists and is a string
         let version = dict?["version"]?.stringValue
         #expect(version != nil)
-        #expect(try !(#require(version?.isEmpty)))
+        #expect(try !#require(version?.isEmpty))
 
         // Verify isNative is true
         let isNative = dict?["isNative"]?.boolValue
@@ -67,7 +67,7 @@ struct PlatformModuleTests {
         // Verify deviceModel exists
         let deviceModel = dict?["deviceModel"]?.stringValue
         #expect(deviceModel != nil)
-        #expect(try !(#require(deviceModel?.isEmpty)))
+        #expect(try !#require(deviceModel?.isEmpty))
 
         // Verify deviceName exists
         let deviceName = dict?["deviceName"]?.stringValue

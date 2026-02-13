@@ -16,7 +16,6 @@ export interface PWAConfig {
   appearance: {
     displayMode: DisplayMode;
     pullToRefresh: boolean;
-    adaptiveStyle: boolean;
     statusBarStyle: string;
     orientationLock: Orientation;
     backgroundColor: string;

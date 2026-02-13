@@ -175,8 +175,7 @@ The `appearance` object controls UI behavior and styling.
   "appearance": {
     "displayMode": "standalone",
     "pullToRefresh": false,
-    "adaptiveStyle": true,
-    "statusBarStyle": "default",
+    "statusBarStyle": "adaptive",
     "orientationLock": "any",
     "backgroundColor": "#FFFFFF",
     "themeColor": "#007AFF"
@@ -190,8 +189,7 @@ The `appearance` object controls UI behavior and styling.
 | ----------------- | --------- | -------------- | --------------------------------------------- |
 | `displayMode`     | `string`  | `"standalone"` | How the app displays content                  |
 | `pullToRefresh`   | `boolean` | `false`        | Enable pull-to-refresh gesture                |
-| `adaptiveStyle`   | `boolean` | `true`         | Match system theme to web background          |
-| `statusBarStyle`  | `string`  | `"default"`    | Status bar appearance                         |
+| `statusBarStyle`  | `string`  | `"adaptive"`   | Status bar appearance                         |
 | `orientationLock` | `string`  | `"any"`        | Device orientation lock                       |
 | `backgroundColor` | `string`  | `null`         | App background color (hex, e.g., `"#FFFFFF"`) |
 | `themeColor`      | `string`  | `null`         | Theme/accent color (hex, e.g., `"#007AFF"`)   |
@@ -205,11 +203,11 @@ The `appearance` object controls UI behavior and styling.
 
 ### Status Bar Styles
 
-| Style          | Description                        |
-| -------------- | ---------------------------------- |
-| `default`      | Automatic based on content         |
-| `lightContent` | White text (for dark backgrounds)  |
-| `darkContent`  | Black text (for light backgrounds) |
+| Style      | Description                                                      |
+| ---------- | ---------------------------------------------------------------- |
+| `adaptive` | Observes WebView background color, switches light/dark automatically |
+| `light`    | Forces light appearance (dark status bar text)                   |
+| `dark`     | Forces dark appearance (light status bar text)                   |
 
 ### Orientation Lock Values
 
@@ -218,10 +216,6 @@ The `appearance` object controls UI behavior and styling.
 | `any`       | Allow all orientations        |
 | `portrait`  | Lock to portrait orientation  |
 | `landscape` | Lock to landscape orientation |
-
-### Adaptive Style
-
-When `adaptiveStyle` is enabled, the app observes the WebView's `underPageBackgroundColor` and automatically sets the system appearance (light/dark mode) to match. This creates a seamless visual experience.
 
 ---
 
@@ -285,8 +279,7 @@ PWAKit uses native APNs exclusively. The device token is provided to your web ap
   "appearance": {
     "displayMode": "standalone",
     "pullToRefresh": false,
-    "adaptiveStyle": true,
-    "statusBarStyle": "default",
+    "statusBarStyle": "adaptive",
     "orientationLock": "any",
     "backgroundColor": "#FFFFFF",
     "themeColor": "#007AFF"
@@ -442,11 +435,10 @@ For tooling integration, here is the formal JSON Schema:
           "default": "standalone"
         },
         "pullToRefresh": { "type": "boolean", "default": false },
-        "adaptiveStyle": { "type": "boolean", "default": true },
         "statusBarStyle": {
           "type": "string",
-          "enum": ["default", "lightContent", "darkContent"],
-          "default": "default"
+          "enum": ["adaptive", "light", "dark"],
+          "default": "adaptive"
         },
         "orientationLock": {
           "type": "string",

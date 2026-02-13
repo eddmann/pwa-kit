@@ -52,8 +52,7 @@ export function generateConfig(opts: GenerateConfigOptions): PWAConfig {
     appearance: {
       displayMode: opts.displayMode,
       pullToRefresh: false,
-      adaptiveStyle: true,
-      statusBarStyle: 'default',
+      statusBarStyle: 'adaptive',
       orientationLock: opts.orientation,
       backgroundColor: opts.backgroundColor,
       themeColor: opts.themeColor,

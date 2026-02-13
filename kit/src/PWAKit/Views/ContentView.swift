@@ -77,17 +77,17 @@ struct ContentView: View {
     /// Resolved color scheme from statusBarStyle configuration.
     ///
     /// Maps the configured status bar style to a SwiftUI color scheme:
-    /// - `default`: `nil` (system decides)
-    /// - `lightContent`: `.dark` (dark scheme produces white status bar text)
-    /// - `darkContent`: `.light` (light scheme produces dark status bar text)
+    /// - `adaptive`: `nil` (AdaptiveStyleObserver handles it via window style)
+    /// - `light`: `.light` (forces light appearance with dark status bar text)
+    /// - `dark`: `.dark` (forces dark appearance with light status bar text)
     private var statusBarColorScheme: ColorScheme? {
-        switch appState.configuration?.appearance.statusBarStyle ?? .default {
-        case .default:
+        switch appState.configuration?.appearance.statusBarStyle ?? .adaptive {
+        case .adaptive:
             nil
-        case .lightContent:
-            .dark
-        case .darkContent:
+        case .light:
             .light
+        case .dark:
+            .dark
         }
     }
 

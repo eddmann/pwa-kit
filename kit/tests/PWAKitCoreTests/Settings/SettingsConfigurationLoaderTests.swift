@@ -240,7 +240,7 @@ struct SettingsConfigurationLoaderTests {
           "appearance": {
             "displayMode": "standalone",
             "pullToRefresh": true,
-            "adaptiveStyle": false
+            "statusBarStyle": "dark"
           }
         }
         """
@@ -255,7 +255,7 @@ struct SettingsConfigurationLoaderTests {
         #expect(webViewConfig.authOrigins == ["accounts.google.com"])
         #expect(webViewConfig.displayMode == .standalone)
         #expect(webViewConfig.pullToRefresh == true)
-        #expect(webViewConfig.adaptiveUIStyle == false)
+        #expect(webViewConfig.statusBarStyle == .dark)
     }
 
     // MARK: - Origins Parsing Tests

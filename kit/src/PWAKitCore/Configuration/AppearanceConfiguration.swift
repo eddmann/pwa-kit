@@ -15,14 +15,14 @@ public enum DisplayMode: String, Codable, Sendable {
 
 /// Status bar appearance style.
 public enum StatusBarStyle: String, Codable, Sendable {
-    /// Automatic based on content.
-    case `default`
+    /// Adapts to web content background color automatically.
+    case adaptive
 
-    /// White text (for dark backgrounds).
-    case lightContent
+    /// Forces light appearance (dark status bar text).
+    case light
 
-    /// Black text (for light backgrounds).
-    case darkContent
+    /// Forces dark appearance (light status bar text).
+    case dark
 }
 
 // MARK: - OrientationLock
@@ -51,12 +51,6 @@ public struct AppearanceConfiguration: Codable, Sendable, Equatable {
     /// Enable pull-to-refresh gesture.
     public let pullToRefresh: Bool
 
-    /// Match system theme to web background color.
-    ///
-    /// When enabled, observes the WebView's `underPageBackgroundColor`
-    /// and automatically sets the system appearance (light/dark mode) to match.
-    public let adaptiveStyle: Bool
-
     /// Status bar appearance.
     public let statusBarStyle: StatusBarStyle
 
@@ -84,23 +78,20 @@ public struct AppearanceConfiguration: Codable, Sendable, Equatable {
     /// - Parameters:
     ///   - displayMode: Display mode for content. Defaults to `.standalone`.
     ///   - pullToRefresh: Enable pull-to-refresh. Defaults to `false`.
-    ///   - adaptiveStyle: Match system theme to web. Defaults to `true`.
-    ///   - statusBarStyle: Status bar style. Defaults to `.default`.
+    ///   - statusBarStyle: Status bar style. Defaults to `.adaptive`.
     ///   - orientationLock: Orientation lock. Defaults to `.any`.
     ///   - backgroundColor: Background color hex string. Defaults to `nil` (system color).
     ///   - themeColor: Theme/accent color hex string. Defaults to `nil` (system color).
     public init(
         displayMode: DisplayMode = .standalone,
         pullToRefresh: Bool = false,
-        adaptiveStyle: Bool = true,
-        statusBarStyle: StatusBarStyle = .default,
+        statusBarStyle: StatusBarStyle = .adaptive,
         orientationLock: OrientationLock = .any,
         backgroundColor: String? = nil,
         themeColor: String? = nil
     ) {
         self.displayMode = displayMode
         self.pullToRefresh = pullToRefresh
-        self.adaptiveStyle = adaptiveStyle
         self.statusBarStyle = statusBarStyle
         self.orientationLock = orientationLock
         self.backgroundColor = backgroundColor
@@ -115,7 +106,6 @@ public struct AppearanceConfiguration: Codable, Sendable, Equatable {
     private enum CodingKeys: String, CodingKey {
         case displayMode
         case pullToRefresh
-        case adaptiveStyle
         case statusBarStyle
         case orientationLock
         case backgroundColor
@@ -126,8 +116,7 @@ public struct AppearanceConfiguration: Codable, Sendable, Equatable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.displayMode = try container.decodeIfPresent(DisplayMode.self, forKey: .displayMode) ?? .standalone
         self.pullToRefresh = try container.decodeIfPresent(Bool.self, forKey: .pullToRefresh) ?? false
-        self.adaptiveStyle = try container.decodeIfPresent(Bool.self, forKey: .adaptiveStyle) ?? true
-        self.statusBarStyle = try container.decodeIfPresent(StatusBarStyle.self, forKey: .statusBarStyle) ?? .default
+        self.statusBarStyle = try container.decodeIfPresent(StatusBarStyle.self, forKey: .statusBarStyle) ?? .adaptive
         self.orientationLock = try container.decodeIfPresent(OrientationLock.self, forKey: .orientationLock) ?? .any
         self.backgroundColor = try container.decodeIfPresent(String.self, forKey: .backgroundColor)
         self.themeColor = try container.decodeIfPresent(String.self, forKey: .themeColor)

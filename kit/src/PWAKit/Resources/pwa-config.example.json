@@ -27,8 +27,7 @@
   "appearance": {
     "displayMode": "standalone",
     "pullToRefresh": false,
-    "adaptiveStyle": true,
-    "statusBarStyle": "default",
+    "statusBarStyle": "adaptive",
     "orientationLock": "any",
     "backgroundColor": "#FFFFFF",
     "themeColor": "#007AFF"

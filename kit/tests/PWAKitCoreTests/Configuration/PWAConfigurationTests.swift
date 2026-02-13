@@ -35,8 +35,7 @@ struct PWAConfigurationTests {
           "appearance": {
             "displayMode": "standalone",
             "pullToRefresh": true,
-            "adaptiveStyle": true,
-            "statusBarStyle": "default"
+            "statusBarStyle": "adaptive"
           },
           "notifications": {
             "provider": "apns"
@@ -129,8 +128,7 @@ struct PWAConfigurationTests {
         // Default values for appearance
         #expect(config.appearance.displayMode == .standalone)
         #expect(config.appearance.pullToRefresh == false)
-        #expect(config.appearance.adaptiveStyle == true)
-        #expect(config.appearance.statusBarStyle == .default)
+        #expect(config.appearance.statusBarStyle == .adaptive)
 
         // Default values for notifications
         #expect(config.notifications.provider == .apns)
@@ -183,7 +181,7 @@ struct PWAConfigurationTests {
           },
           "appearance": {
             "displayMode": "fullscreen",
-            "statusBarStyle": "lightContent"
+            "statusBarStyle": "light"
           }
         }
         """
@@ -192,9 +190,8 @@ struct PWAConfigurationTests {
         let config = try JSONDecoder().decode(PWAConfiguration.self, from: data)
 
         #expect(config.appearance.displayMode == .fullscreen)
-        #expect(config.appearance.statusBarStyle == .lightContent)
+        #expect(config.appearance.statusBarStyle == .light)
         #expect(config.appearance.pullToRefresh == false)
-        #expect(config.appearance.adaptiveStyle == true)
     }
 
     // MARK: - Default Static Properties
@@ -220,8 +217,7 @@ struct PWAConfigurationTests {
 
         #expect(appearance.displayMode == .standalone)
         #expect(appearance.pullToRefresh == false)
-        #expect(appearance.adaptiveStyle == true)
-        #expect(appearance.statusBarStyle == .default)
+        #expect(appearance.statusBarStyle == .adaptive)
     }
 
     @Test("NotificationsConfiguration.default has correct values")
@@ -246,7 +242,7 @@ struct PWAConfigurationTests {
 
     @Test("StatusBarStyle encodes and decodes correctly")
     func statusBarStyleEncoding() throws {
-        let styles: [StatusBarStyle] = [.default, .lightContent, .darkContent]
+        let styles: [StatusBarStyle] = [.adaptive, .light, .dark]
 
         for style in styles {
             let data = try JSONEncoder().encode(style)
@@ -296,8 +292,7 @@ struct PWAConfigurationTests {
             appearance: AppearanceConfiguration(
                 displayMode: .fullscreen,
                 pullToRefresh: false,
-                adaptiveStyle: false,
-                statusBarStyle: .darkContent
+                statusBarStyle: .dark
             ),
             notifications: NotificationsConfiguration(
                 provider: .apns

@@ -49,12 +49,12 @@ struct AppModuleTests {
         // Verify version field exists and is a string
         let version = dict?["version"]?.stringValue
         #expect(version != nil)
-        #expect(try !(#require(version?.isEmpty)))
+        #expect(try !#require(version?.isEmpty))
 
         // Verify build field exists and is a string
         let build = dict?["build"]?.stringValue
         #expect(build != nil)
-        #expect(try !(#require(build?.isEmpty)))
+        #expect(try !#require(build?.isEmpty))
 
         // Verify pwaKitVersion exists and matches framework version
         let pwaKitVersion = dict?["pwaKitVersion"]?.stringValue

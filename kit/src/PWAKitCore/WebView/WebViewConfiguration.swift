@@ -107,11 +107,13 @@ public struct WebViewConfiguration: Sendable, Equatable {
     /// This is disabled on macCatalyst.
     public let pullToRefresh: Bool
 
-    /// Whether to adapt the system UI style based on web content.
+    /// Status bar appearance style.
     ///
-    /// When enabled, the app observes the WebView's background color
-    /// and automatically sets the system appearance (light/dark) to match.
-    public let adaptiveUIStyle: Bool
+    /// Controls the status bar behavior:
+    /// - `.adaptive`: Observes WebView background color and adapts automatically.
+    /// - `.light`: Forces light appearance (dark status bar text).
+    /// - `.dark`: Forces dark appearance (light status bar text).
+    public let statusBarStyle: StatusBarStyle
 
     /// Creates a new WebView configuration.
     ///
@@ -122,7 +124,7 @@ public struct WebViewConfiguration: Sendable, Equatable {
     ///   - platformCookieSettings: Cookie settings. Defaults to `.default`.
     ///   - displayMode: Display mode. Defaults to `.standalone`.
     ///   - pullToRefresh: Enable pull-to-refresh. Defaults to `false`.
-    ///   - adaptiveUIStyle: Enable adaptive UI style. Defaults to `true`.
+    ///   - statusBarStyle: Status bar style. Defaults to `.adaptive`.
     public init(
         startURL: URL,
         allowedOrigins: [String],
@@ -130,7 +132,7 @@ public struct WebViewConfiguration: Sendable, Equatable {
         platformCookieSettings: PlatformCookieSettings = .default,
         displayMode: DisplayMode = .standalone,
         pullToRefresh: Bool = false,
-        adaptiveUIStyle: Bool = true
+        statusBarStyle: StatusBarStyle = .adaptive
     ) {
         self.startURL = startURL
         self.allowedOrigins = allowedOrigins
@@ -138,7 +140,7 @@ public struct WebViewConfiguration: Sendable, Equatable {
         self.platformCookieSettings = platformCookieSettings
         self.displayMode = displayMode
         self.pullToRefresh = pullToRefresh
-        self.adaptiveUIStyle = adaptiveUIStyle
+        self.statusBarStyle = statusBarStyle
     }
 }
 
@@ -165,7 +167,7 @@ extension WebViewConfiguration {
             platformCookieSettings: .default,
             displayMode: pwaConfig.appearance.displayMode,
             pullToRefresh: pwaConfig.appearance.pullToRefresh,
-            adaptiveUIStyle: pwaConfig.appearance.adaptiveStyle
+            statusBarStyle: pwaConfig.appearance.statusBarStyle
         )
     }
 }

@@ -161,6 +161,9 @@ public struct WebViewContainer: UIViewRepresentable {
         // Set up pull-to-refresh if enabled
         coordinator.setupPullToRefresh(on: webView)
 
+        // Set up adaptive style observation if enabled
+        coordinator.setupAdaptiveStyle(on: webView)
+
         // Notify that the web view was created
         onWebViewCreated?(webView)
 
@@ -191,6 +194,9 @@ public struct WebViewContainer: UIViewRepresentable {
 
         // Remove pull-to-refresh handler
         coordinator.removePullToRefresh()
+
+        // Remove adaptive style observer
+        coordinator.removeAdaptiveStyle()
     }
 
     // MARK: - Private Helpers
@@ -230,6 +236,9 @@ extension WebViewContainer {
         /// Pull-to-refresh handler.
         var pullToRefreshHandler: PullToRefreshHandler?
 
+        /// Adaptive style observer for automatic light/dark mode switching.
+        var adaptiveStyleObserver: AdaptiveStyleObserver?
+
         /// Callback when navigation starts.
         private let onNavigationStarted: (() -> Void)?
 
@@ -247,6 +256,9 @@ extension WebViewContainer {
 
         /// Whether pull-to-refresh is enabled.
         private let pullToRefreshEnabled: Bool
+
+        /// The status bar style for this configuration.
+        private let statusBarStyle: StatusBarStyle
 
         /// Creates a new coordinator.
         ///
@@ -293,12 +305,18 @@ extension WebViewContainer {
             self.onProgressChanged = onProgressChanged
             self.onURLChanged = onURLChanged
             self.pullToRefreshEnabled = configuration.pullToRefresh
+            self.statusBarStyle = configuration.statusBarStyle
 
             super.init()
 
             // Create pull-to-refresh handler if enabled
             if pullToRefreshEnabled {
                 pullToRefreshHandler = PullToRefreshHandler(isEnabled: true)
+            }
+
+            // Create adaptive style observer if adaptive mode is enabled
+            if statusBarStyle == .adaptive {
+                adaptiveStyleObserver = AdaptiveStyleObserver()
             }
         }
 
@@ -347,6 +365,24 @@ extension WebViewContainer {
         func removePullToRefresh() {
             pullToRefreshHandler?.detach()
             pullToRefreshHandler = nil
+        }
+
+        /// Sets up adaptive style observation on the web view.
+        ///
+        /// - Parameter webView: The web view to observe for background color changes.
+        func setupAdaptiveStyle(on webView: WKWebView) {
+            guard let observer = adaptiveStyleObserver else { return }
+            // Dispatch async to allow the webView to be added to a window first
+            DispatchQueue.main.async { [weak webView] in
+                guard let webView, let window = webView.window else { return }
+                observer.observe(webView: webView, window: window)
+            }
+        }
+
+        /// Removes adaptive style observation.
+        func removeAdaptiveStyle() {
+            adaptiveStyleObserver?.stopObserving()
+            adaptiveStyleObserver = nil
         }
 
         // MARK: - WKNavigationDelegate
