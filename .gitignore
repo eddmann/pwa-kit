@@ -114,3 +114,8 @@ cli/dist/
 example/node_modules/
 example/dist/
 example/pwakit.js
+
+# MARK: - Release artifacts
+
+*.tar.gz
+*.tgz

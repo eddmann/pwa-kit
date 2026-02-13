@@ -9,6 +9,23 @@ DESTINATION ?= platform=iOS Simulator,name=iPhone 15
 help:
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_\-\/]+:.*?##/ { printf "  \033[36m%-25s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
+##@ Global
+
+deps: kit/deps cli/deps sdk/deps ## Install all dependencies
+
+can-release: kit/can-release cli/can-release sdk/can-release ## Run all CI gates
+
+clean: kit/clean cli/clean sdk/clean ## Clean all build artifacts
+
+version: ## Set version across all packages (usage: make version V=0.2.0)
+	@if [ -z "$(V)" ]; then echo "Usage: make version V=x.y.z"; exit 1; fi
+	@sed -i '' 's/public static let version = ".*"/public static let version = "$(V)"/' kit/src/PWAKitCore/PWAKitCore.swift
+	@cd sdk && npm version "$(V)" --no-git-tag-version --allow-same-version
+	@cd cli && npm version "$(V)" --no-git-tag-version --allow-same-version
+	@echo "Version set to $(V)"
+
+pack: kit/pack cli/pack sdk/pack ## Pack all release artifacts
+
 ##@ Kit (iOS)
 
 kit/deps: ## Install Kit dependencies (SwiftFormat, SwiftLint)
@@ -54,6 +71,16 @@ kit/fmt/check: ## Check Swift formatting
 kit/clean: ## Clean Xcode derived data
 	@rm -rf ~/Library/Developer/Xcode/DerivedData/PWAKitApp-*
 
+kit/pack: ## Pack Kit as release template tarball
+	$(eval VERSION := $(shell sed -n 's/.*public static let version = "\(.*\)"/\1/p' kit/src/PWAKitCore/PWAKitCore.swift))
+	@tar -czf pwakit-template-$(VERSION).tar.gz \
+		kit/PWAKitApp.xcodeproj/ \
+		kit/src/PWAKit/ \
+		kit/src/PWAKitCore/ \
+		--exclude='kit/src/PWAKit/Resources/pwa-config.json' \
+		--exclude='kit/src/PWAKit/Resources/AppIcon-source.png'
+	@echo "Created pwakit-template-$(VERSION).tar.gz"
+
 ##@ CLI
 
 cli/deps: ## Install CLI dependencies
@@ -72,6 +99,9 @@ cli/typecheck: ## Type check CLI
 
 cli/clean: ## Remove CLI dist
 	@rm -rf cli/dist
+
+cli/pack: cli/build ## Pack CLI as installable tarball
+	@cd cli && npm pack
 
 ##@ SDK
 
@@ -92,14 +122,8 @@ sdk/typecheck: ## Type check SDK
 sdk/clean: ## Remove SDK dist
 	@rm -rf sdk/dist
 
-##@ Release
-
-version: ## Set version across all packages (usage: make version V=0.2.0)
-	@if [ -z "$(V)" ]; then echo "Usage: make version V=x.y.z"; exit 1; fi
-	@sed -i '' 's/public static let version = ".*"/public static let version = "$(V)"/' kit/src/PWAKitCore/PWAKitCore.swift
-	@cd sdk && npm version "$(V)" --no-git-tag-version --allow-same-version
-	@cd cli && npm version "$(V)" --no-git-tag-version --allow-same-version
-	@echo "Version set to $(V)"
+sdk/pack: sdk/build ## Pack SDK as installable tarball
+	@cd sdk && npm pack
 
 ##@ Example
 
