@@ -28,7 +28,8 @@ jobs:
             kit/PWAKitApp.xcodeproj/ \
             kit/src/PWAKit/ \
             kit/src/PWAKitCore/ \
-            --exclude='kit/src/PWAKit/Resources/pwa-config.json'
+            --exclude='kit/src/PWAKit/Resources/pwa-config.json' \
+            --exclude='kit/src/PWAKit/Resources/AppIcon-source.png'
 
       - name: Build CLI
         run: make cli/deps cli/build
