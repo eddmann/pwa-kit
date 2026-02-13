@@ -78,9 +78,21 @@ PWAKit uses a JSON configuration file at `kit/src/PWAKit/Resources/pwa-config.js
 
 See [docs/configuration.md](docs/configuration.md) for feature flags, Info.plist setup, and entitlements. See [docs/config-schema.md](docs/config-schema.md) for the complete schema reference.
 
-## JavaScript SDK
+## Installation
 
-Install the SDK in your web app:
+Packages are published to [GitHub Packages](https://github.com/eddmann?tab=packages). Configure npm to use the GitHub registry for the `@eddmann` scope:
+
+```bash
+echo "@eddmann:registry=https://npm.pkg.github.com" >> .npmrc
+```
+
+### CLI
+
+```bash
+npx @eddmann/pwa-kit init
+```
+
+### JavaScript SDK
 
 ```bash
 npm install @eddmann/pwa-kit-sdk

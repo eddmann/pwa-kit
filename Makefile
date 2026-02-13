@@ -100,6 +100,9 @@ cli/typecheck: ## Type check CLI
 cli/clean: ## Remove CLI dist
 	@rm -rf cli/dist
 
+cli/link: cli/build ## Link CLI globally for local dev
+	@cd cli && npm link
+
 cli/pack: cli/build ## Pack CLI as installable tarball
 	@cd cli && npm pack
 
