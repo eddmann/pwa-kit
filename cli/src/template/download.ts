@@ -60,7 +60,7 @@ export async function downloadTemplate(
     try {
       const buffer = Buffer.from(await archiveResponse.arrayBuffer());
       fs.writeFileSync(tempArchive, buffer);
-      execFileSync('tar', ['-xzf', tempArchive, '-C', targetDir], { stdio: 'pipe' });
+      execFileSync('tar', ['-xzf', tempArchive, '--strip-components=1', '-C', targetDir], { stdio: 'pipe' });
       logger.success(`Template extracted to: ${targetDir}`);
       return true;
     } finally {
