@@ -80,19 +80,13 @@ See [docs/configuration.md](docs/configuration.md) for feature flags, Info.plist
 
 ## Installation
 
-Packages are published to [GitHub Packages](https://github.com/eddmann?tab=packages). Configure npm to use the GitHub registry for the `@eddmann` scope:
-
-```bash
-echo "@eddmann:registry=https://npm.pkg.github.com" >> .npmrc
-```
-
-### CLI
+### CLI [![npm](https://img.shields.io/npm/v/@pwa-kit/cli)](https://www.npmjs.com/package/@pwa-kit/cli)
 
 ```bash
 npx @pwa-kit/cli init
 ```
 
-### JavaScript SDK
+### JavaScript SDK [![npm](https://img.shields.io/npm/v/@pwa-kit/sdk)](https://www.npmjs.com/package/@pwa-kit/sdk)
 
 ```bash
 npm install @pwa-kit/sdk

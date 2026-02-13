@@ -1,4 +1,4 @@
-# @pwa-kit/sdk
+# @pwa-kit/sdk [![npm](https://img.shields.io/npm/v/@pwa-kit/sdk)](https://www.npmjs.com/package/@pwa-kit/sdk)
 
 TypeScript SDK for communicating with the PWAKit native iOS bridge. Provides Web API-aligned interfaces for native capabilities like push notifications, badges, haptics, biometrics, HealthKit, StoreKit, and more.
 

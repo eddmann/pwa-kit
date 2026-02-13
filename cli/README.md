@@ -1,4 +1,4 @@
-# @pwa-kit/cli
+# @pwa-kit/cli [![npm](https://img.shields.io/npm/v/@pwa-kit/cli)](https://www.npmjs.com/package/@pwa-kit/cli)
 
 CLI for creating and configuring PWAKit iOS apps. Generates `pwa-config.json` from a PWA's web manifest and syncs it to the Xcode project (bundle ID, icons, colors, orientations, entitlements).
 
