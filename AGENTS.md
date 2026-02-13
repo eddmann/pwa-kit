@@ -22,7 +22,7 @@ Run `make` to see all targets.
 | All CI gates | `make can-release`                             |
 | Set version  | `make version V=0.2.0`                         |
 
-`kit/build` and `kit/test` default to iPhone 15 Simulator. Override with `DESTINATION`:
+`kit/build` and `kit/test` default to iPhone 16 Simulator. Override with `DESTINATION`:
 
 ```bash
 make kit/build DESTINATION="platform=iOS Simulator,name=iPhone 16 Pro"

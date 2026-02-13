@@ -212,7 +212,9 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             handlersInitialized = true
         } catch {
             // Log error but don't crash - deep linking will be unavailable
-            print("[SceneDelegate] Failed to initialize handlers: \(error)")
+            #if DEBUG
+                print("[SceneDelegate] Failed to initialize handlers: \(error)")
+            #endif
         }
     }
 
@@ -238,7 +240,9 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
 
         // URL not handled - could be logged for debugging
-        print("[SceneDelegate] Unhandled URL: \(url)")
+        #if DEBUG
+            print("[SceneDelegate] Unhandled URL: \(url)")
+        #endif
     }
 
     /// Handles a user activity (typically from universal links).
@@ -252,7 +256,9 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
 
         // Activity not handled - could be from other sources
-        print("[SceneDelegate] Unhandled user activity: \(userActivity.activityType)")
+        #if DEBUG
+            print("[SceneDelegate] Unhandled user activity: \(userActivity.activityType)")
+        #endif
     }
 
     /// Handles an app shortcut.
