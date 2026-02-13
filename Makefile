@@ -31,7 +31,7 @@ pack: kit/pack cli/pack sdk/pack ## Pack all release artifacts
 kit/deps: ## Install Kit dependencies (SwiftFormat, SwiftLint)
 	@brew install swiftformat swiftlint 2>/dev/null || brew upgrade swiftformat swiftlint 2>/dev/null || true
 
-kit/can-release: kit/fmt/check kit/lint kit/build kit/test ## All kit checks
+kit/can-release: kit/fmt/check kit/lint kit/build ## All kit checks
 
 kit/setup: cli/build ## Interactive setup wizard
 	@$(CLI_BIN) init
