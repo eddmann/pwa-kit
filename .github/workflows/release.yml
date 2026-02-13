@@ -5,7 +5,7 @@ on:
 
 permissions:
   contents: write
-  packages: write
+  id-token: write
 
 jobs:
   test:
@@ -68,18 +68,14 @@ jobs:
 
       - name: Publish CLI
         working-directory: cli
-        run: npm publish --ignore-scripts
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance --access public --ignore-scripts
 
       - name: Build SDK
         run: make sdk/deps sdk/build
 
       - name: Publish SDK
         working-directory: sdk
-        run: npm publish --ignore-scripts
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance --access public --ignore-scripts
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
