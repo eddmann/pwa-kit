@@ -11,6 +11,11 @@ export function detectProject(startDir: string): string | null {
   const root = path.parse(dir).root;
 
   while (dir !== root) {
+    if (!fs.existsSync(dir)) {
+      dir = path.dirname(dir);
+      continue;
+    }
+
     if (fs.existsSync(path.join(dir, 'PWAKitApp.xcodeproj'))) {
       return dir;
     }
