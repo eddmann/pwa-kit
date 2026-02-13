@@ -18,7 +18,9 @@ export interface WizardResult {
   features: Feature[];
 }
 
-export async function runWizard(manifestValues: ManifestValues | null): Promise<WizardResult | null> {
+export type ManifestFetcher = (url: string) => Promise<ManifestValues | null>;
+
+export async function runWizard(getManifest?: ManifestFetcher): Promise<WizardResult | null> {
   console.log();
   console.log(logger.bold('+---------------------------------------------------------------+'));
   console.log(logger.bold('|                                                               |'));
@@ -46,6 +48,12 @@ export async function runWizard(manifestValues: ManifestValues | null): Promise<
   logger.success(`Start URL: ${startUrl}`);
   logger.info(`Detected domain: ${domain}`);
   console.log();
+
+  // Fetch manifest for pre-filling subsequent steps
+  let manifestValues: ManifestValues | null = null;
+  if (getManifest) {
+    manifestValues = await getManifest(startUrl);
+  }
 
   // Step 2: App Name
   console.log(logger.bold('Step 2 of 5: App Name'));

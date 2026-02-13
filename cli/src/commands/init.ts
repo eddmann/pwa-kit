@@ -18,8 +18,8 @@ import {
 import { projectPaths } from '../utils/paths.js';
 import { detectProject } from '../template/detect.js';
 import { downloadTemplate } from '../template/download.js';
-import { fetchManifest } from '../manifest/fetch.js';
-import { parseManifestValues, pickBestIcon } from '../manifest/parse.js';
+import { fetchManifest, type FetchManifestResult } from '../manifest/fetch.js';
+import { parseManifestValues, pickBestIcon, type ManifestValues } from '../manifest/parse.js';
 import { downloadIcon } from '../manifest/icon.js';
 import { generateConfig, writeConfig } from '../config/generate.js';
 import { runSync } from '../sync/index.js';
@@ -87,24 +87,26 @@ export const initCommand = new Command('init')
     let displayMode: DisplayMode;
 
     if (isInteractive) {
-      // Fetch manifest first for pre-filling
-      let manifestResult: Awaited<ReturnType<typeof fetchManifest>> = null;
-      // We'll fetch after getting the URL in the wizard — but we need a two-pass approach:
-      // First get URL from wizard step 1, then fetch manifest, then continue wizard.
-      // For simplicity, run the full wizard first, then fetch manifest.
+      // Cache manifest result for icon/color use after the wizard
+      const cached: { result: FetchManifestResult | null; values: ManifestValues | null } = {
+        result: null,
+        values: null,
+      };
 
-      const wizardResult = await runWizard(null);
+      const wizardResult = await runWizard(async (url) => {
+        logger.info('Checking for web manifest...');
+        cached.result = await fetchManifest(url);
+        cached.values = cached.result ? parseManifestValues(cached.result.manifest) : null;
+        return cached.values;
+      });
       if (!wizardResult) {
         logger.info('Setup cancelled.');
         process.exit(0);
       }
 
       startUrl = wizardResult.startUrl;
-
-      // Fetch manifest for colors/orientation/display/icon
-      logger.info('Checking for web manifest...');
-      manifestResult = await fetchManifest(startUrl);
-      const manifestValues = manifestResult ? parseManifestValues(manifestResult.manifest) : null;
+      const manifestResult = cached.result;
+      const manifestValues = cached.values;
 
       if (manifestValues) {
         if (manifestValues.name) logger.info(`Manifest name: ${manifestValues.name}`);
