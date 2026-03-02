@@ -134,6 +134,7 @@ public struct WebViewContainer: UIViewRepresentable {
            let rootViewController = windowScene.windows.first?.rootViewController
         {
             coordinator.messageHandler.viewController = rootViewController
+            coordinator.dialogHandler.viewController = rootViewController
         }
 
         // Configure user agent
