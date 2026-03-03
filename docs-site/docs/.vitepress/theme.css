@@ -1,0 +1,14 @@
+:root {
+  --vp-c-brand-1: #f15a24;
+  --vp-c-brand-2: #d64f20;
+  --vp-c-brand-3: #b8441b;
+  --vp-home-hero-name-color: #f15a24;
+  --vp-home-hero-image-background-image: radial-gradient(circle at 30% 30%, #ffd7c8 0%, #ffffff 65%);
+  --vp-font-family-base: "DM Sans", "Avenir Next", "Segoe UI", sans-serif;
+  --vp-font-family-mono: "JetBrains Mono", "Menlo", monospace;
+}
+
+.VPHero .image-src {
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(241, 90, 36, 0.25);
+}

@@ -114,6 +114,15 @@ cli/dist/
 example/node_modules/
 example/dist/
 example/pwakit.js
+example/.wrangler/
+example/bun.lockb
+
+# MARK: - Docs site
+
+docs-site/node_modules/
+docs-site/docs/.vitepress/dist/
+docs-site/docs/.vitepress/cache/
+docs-site/bun.lockb
 
 # MARK: - Release artifacts
 

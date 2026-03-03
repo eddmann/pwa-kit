@@ -147,13 +147,29 @@ Run `make help` to see all available commands. Key commands:
 make kit/setup      # Run interactive setup wizard
 make kit/open       # Open Xcode project (Cmd+R to run, Cmd+U to test)
 make example/serve  # Run kitchen sink demo server
+make docs/dev       # Run user-facing docs site locally
 make kit/lint       # Run SwiftLint
 make kit/fmt        # Format code with SwiftFormat
 ```
 
 For device testing, debugging, and deployment, see [docs/development.md](docs/development.md).
 
-## Documentation
+## User Docs Site
+
+PWAKit includes a user-facing static docs site in `docs-site/`.
+
+```bash
+make docs/deps
+make docs/dev
+```
+
+Build static output:
+
+```bash
+make docs/build
+```
+
+## Engineering Docs
 
 | Document                                     | Description                                                  |
 | -------------------------------------------- | ------------------------------------------------------------ |

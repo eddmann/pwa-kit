@@ -121,6 +121,20 @@ sdk/clean: ## Remove SDK dist
 sdk/pack: sdk/build ## Pack SDK as installable tarball
 	@cd sdk && npm pack
 
+##@ Docs Site
+
+docs/deps: ## Install docs site dependencies
+	@cd docs-site && bun install
+
+docs/dev: ## Run docs site locally
+	@cd docs-site && bun run dev
+
+docs/build: ## Build docs site static output
+	@cd docs-site && bun run build
+
+docs/preview: docs/build ## Preview built docs site
+	@cd docs-site && bun run preview
+
 ##@ Example
 
 example/deps: ## Install example dependencies

@@ -13,7 +13,7 @@ npm install @pwa-kit/sdk
 For direct browser usage without a bundler:
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/eddmann/pwa-kit@main/sdk/dist/index.global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@pwa-kit/sdk@latest/dist/index.global.js"></script>
 <script>
   const { push, badging, haptics, ios, isNative } = PWAKit;
 
