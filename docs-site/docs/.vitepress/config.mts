@@ -4,6 +4,7 @@ export default defineConfig({
   lang: 'en-US',
   title: 'PWAKit',
   description: 'Wrap your Progressive Web App in a native iOS shell with a typed JavaScript bridge.',
+  base: '/pwa-kit/',
   cleanUrls: true,
   lastUpdated: true,
   themeConfig: {

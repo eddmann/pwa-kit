@@ -34,13 +34,18 @@ Yes. Native features are additive; your web app can still run in a standard brow
 
 Use `SecureStorageModule` (Keychain-backed) rather than embedding keys in source.
 
-## How should I run setup and sync commands?
+## How should I run setup commands?
 
 Use the CLI directly:
 
 ```bash
-mkdir my-pwa-ios
-cd my-pwa-ios
-npx @pwa-kit/cli init
-npx @pwa-kit/cli sync
+npx @pwa-kit/cli init my-pwa-ios
+```
+
+`init` already runs sync automatically.
+
+Run `sync` later only after manual edits to `pwa-config.json`:
+
+```bash
+cd my-pwa-ios && npx @pwa-kit/cli sync
 ```

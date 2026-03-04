@@ -11,15 +11,19 @@ Recommended (no global install):
 
 ```bash
 npx @pwa-kit/cli init my-pwa-ios
-cd my-pwa-ios && npx @pwa-kit/cli sync
 ```
 
 Optional global install:
 
 ```bash
 npm install -g @pwa-kit/cli
-pwa-kit init
-pwa-kit sync
+pwa-kit init my-pwa-ios
+```
+
+Run `sync` after manual edits to `pwa-config.json`:
+
+```bash
+cd my-pwa-ios && npx @pwa-kit/cli sync
 ```
 
 ## No-clone workflow

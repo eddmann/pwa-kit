@@ -13,9 +13,10 @@ This page describes the standard workflow for shipping updates to your wrapped P
 ## Configuration change flow
 
 ```bash
-npx @pwa-kit/cli init . --force   # optional: re-run setup in current project
 npx @pwa-kit/cli sync
 ```
+
+If you re-run setup with `npx @pwa-kit/cli init . --force`, sync is already included.
 
 Then in Xcode:
 
