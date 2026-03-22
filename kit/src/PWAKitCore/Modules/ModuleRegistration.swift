@@ -162,6 +162,20 @@ public enum ModuleRegistration {
             count += 1
         }
 
+        // LiveActivityModule is registered conditionally based on feature flag
+        if features.liveActivity {
+            if #available(iOS 16.1, *) {
+                await dispatcher.register(LiveActivityModule())
+                count += 1
+            }
+        }
+
+        // WidgetModule is registered conditionally based on feature flag
+        if features.widgets {
+            await dispatcher.register(WidgetModule())
+            count += 1
+        }
+
         return count
     }
 
@@ -282,6 +296,20 @@ public enum ModuleRegistration {
             count += 1
         }
 
+        // LiveActivityModule is registered conditionally based on feature flag
+        if features.liveActivity {
+            if #available(iOS 16.1, *) {
+                await registry.register(LiveActivityModule())
+                count += 1
+            }
+        }
+
+        // WidgetModule is registered conditionally based on feature flag
+        if features.widgets {
+            await registry.register(WidgetModule())
+            count += 1
+        }
+
         return count
     }
 
@@ -370,6 +398,18 @@ public enum ModuleRegistration {
         // LocationPermissionModule is registered conditionally based on feature flag
         if features.locationPermission {
             names.append(LocationPermissionModule.moduleName)
+        }
+
+        // LiveActivityModule is registered conditionally based on feature flag
+        if features.liveActivity {
+            if #available(iOS 16.1, *) {
+                names.append(LiveActivityModule.moduleName)
+            }
+        }
+
+        // WidgetModule is registered conditionally based on feature flag
+        if features.widgets {
+            names.append(WidgetModule.moduleName)
         }
 
         return names

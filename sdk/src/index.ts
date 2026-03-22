@@ -181,6 +181,25 @@ export type {
   PendingNotification,
 } from './ios/notifications';
 
+export type {
+  LiveActivityOptions,
+  LiveActivityStartOptions,
+  LiveActivityStartResult,
+  LiveActivityUpdateResult,
+  LiveActivityEndOptions,
+  LiveActivityEndResult,
+  LiveActivityState,
+  LiveActivityEnabledResult,
+} from './ios/liveActivity';
+
+export type {
+  WidgetData,
+  WidgetUpdateResult,
+  WidgetRemoveResult,
+  WidgetReloadResult,
+  WidgetKindsResult,
+} from './ios/widget';
+
 // =============================================================================
 // Detection Utilities
 // =============================================================================

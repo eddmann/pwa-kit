@@ -46,6 +46,16 @@ public struct FeaturesConfiguration: Codable, Sendable, Equatable {
     /// Enable location permission management.
     public let locationPermission: Bool
 
+    /// Enable Dynamic Island and Live Activity support (ActivityKit).
+    ///
+    /// Disabled by default as it requires iOS 16.1+ and a Widget Extension target.
+    public let liveActivity: Bool
+
+    /// Enable Lock Screen and Home Screen widget support (WidgetKit).
+    ///
+    /// Disabled by default as it requires a Widget Extension target.
+    public let widgets: Bool
+
     /// Creates a new features configuration with all values specified.
     ///
     /// - Parameters:
@@ -61,6 +71,8 @@ public struct FeaturesConfiguration: Codable, Sendable, Equatable {
     ///   - cameraPermission: Enable camera permission. Defaults to `true`.
     ///   - microphonePermission: Enable microphone permission. Defaults to `true`.
     ///   - locationPermission: Enable location permission. Defaults to `true`.
+    ///   - liveActivity: Enable Dynamic Island / Live Activities. Defaults to `false`.
+    ///   - widgets: Enable Lock Screen / Home Screen widgets. Defaults to `false`.
     public init(
         notifications: Bool = true,
         haptics: Bool = true,
@@ -73,7 +85,9 @@ public struct FeaturesConfiguration: Codable, Sendable, Equatable {
         clipboard: Bool = true,
         cameraPermission: Bool = true,
         microphonePermission: Bool = true,
-        locationPermission: Bool = true
+        locationPermission: Bool = true,
+        liveActivity: Bool = false,
+        widgets: Bool = false
     ) {
         self.notifications = notifications
         self.haptics = haptics
@@ -87,6 +101,8 @@ public struct FeaturesConfiguration: Codable, Sendable, Equatable {
         self.cameraPermission = cameraPermission
         self.microphonePermission = microphonePermission
         self.locationPermission = locationPermission
+        self.liveActivity = liveActivity
+        self.widgets = widgets
     }
 
     /// Default configuration with standard feature flags.
@@ -107,6 +123,8 @@ public struct FeaturesConfiguration: Codable, Sendable, Equatable {
         case cameraPermission
         case microphonePermission
         case locationPermission
+        case liveActivity
+        case widgets
     }
 
     public init(from decoder: Decoder) throws {
@@ -123,5 +141,7 @@ public struct FeaturesConfiguration: Codable, Sendable, Equatable {
         self.cameraPermission = try container.decodeIfPresent(Bool.self, forKey: .cameraPermission) ?? true
         self.microphonePermission = try container.decodeIfPresent(Bool.self, forKey: .microphonePermission) ?? true
         self.locationPermission = try container.decodeIfPresent(Bool.self, forKey: .locationPermission) ?? true
+        self.liveActivity = try container.decodeIfPresent(Bool.self, forKey: .liveActivity) ?? false
+        self.widgets = try container.decodeIfPresent(Bool.self, forKey: .widgets) ?? false
     }
 }

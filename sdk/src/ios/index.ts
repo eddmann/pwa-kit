@@ -80,3 +80,24 @@ export type {
   NotificationOptions,
   PendingNotification,
 } from './notifications';
+
+export { liveActivity } from './liveActivity';
+export type {
+  LiveActivityOptions,
+  LiveActivityStartOptions,
+  LiveActivityStartResult,
+  LiveActivityUpdateResult,
+  LiveActivityEndOptions,
+  LiveActivityEndResult,
+  LiveActivityState,
+  LiveActivityEnabledResult,
+} from './liveActivity';
+
+export { widget } from './widget';
+export type {
+  WidgetData,
+  WidgetUpdateResult,
+  WidgetRemoveResult,
+  WidgetReloadResult,
+  WidgetKindsResult,
+} from './widget';
