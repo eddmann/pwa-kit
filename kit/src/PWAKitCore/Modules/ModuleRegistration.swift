@@ -176,6 +176,12 @@ public enum ModuleRegistration {
             count += 1
         }
 
+        // BackgroundRefreshModule is registered conditionally based on feature flag
+        if features.backgroundRefresh {
+            await dispatcher.register(BackgroundRefreshModule())
+            count += 1
+        }
+
         return count
     }
 
@@ -310,6 +316,12 @@ public enum ModuleRegistration {
             count += 1
         }
 
+        // BackgroundRefreshModule is registered conditionally based on feature flag
+        if features.backgroundRefresh {
+            await registry.register(BackgroundRefreshModule())
+            count += 1
+        }
+
         return count
     }
 
@@ -410,6 +422,11 @@ public enum ModuleRegistration {
         // WidgetModule is registered conditionally based on feature flag
         if features.widgets {
             names.append(WidgetModule.moduleName)
+        }
+
+        // BackgroundRefreshModule is registered conditionally based on feature flag
+        if features.backgroundRefresh {
+            names.append(BackgroundRefreshModule.moduleName)
         }
 
         return names

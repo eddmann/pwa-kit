@@ -76,6 +76,18 @@ export interface LiveActivityStartResult {
   id?: string;
   /** Reason the activity could not be started */
   reason?: string;
+  /** ActivityKit push token for server-side updates (iOS 16.2+) */
+  pushToken?: string;
+}
+
+/**
+ * Result from getting the ActivityKit push token.
+ */
+export interface LiveActivityPushTokenResult {
+  /** The push token as a hex string, or null if not available */
+  token: string | null;
+  /** Reason the token is unavailable */
+  reason?: string;
 }
 
 /**
@@ -201,5 +213,36 @@ export const liveActivity = {
    */
   async areActivitiesEnabled(): Promise<LiveActivityEnabledResult> {
     return bridge.call<LiveActivityEnabledResult>('liveActivity', 'areActivitiesEnabled');
+  },
+
+  /**
+   * Gets the ActivityKit push token for server-side background updates.
+   *
+   * After starting a Live Activity, call this to get the push token that your
+   * server needs to send updates to Apple's push service (api.push.apple.com).
+   * This enables the Dynamic Island to update without waking the app.
+   *
+   * Requires iOS 16.2+. Returns null on older versions.
+   *
+   * @returns The push token or null if unavailable
+   *
+   * @example
+   * ```typescript
+   * const { started, pushToken } = await ios.liveActivity.start({
+   *   title: 'Order #1234',
+   *   subtitle: 'Preparing'
+   * });
+   *
+   * // Token may not be available immediately after start
+   * if (!pushToken) {
+   *   const { token } = await ios.liveActivity.getPushToken();
+   *   if (token) {
+   *     await sendTokenToServer(token);
+   *   }
+   * }
+   * ```
+   */
+  async getPushToken(): Promise<LiveActivityPushTokenResult> {
+    return bridge.call<LiveActivityPushTokenResult>('liveActivity', 'getPushToken');
   },
 };

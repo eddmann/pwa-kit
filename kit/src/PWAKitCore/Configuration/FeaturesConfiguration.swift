@@ -56,6 +56,16 @@ public struct FeaturesConfiguration: Codable, Sendable, Equatable {
     /// Disabled by default as it requires a Widget Extension target.
     public let widgets: Bool
 
+    /// Enable background refresh for keeping widget data up to date.
+    ///
+    /// When enabled, registers a `BGAppRefreshTask` that periodically fetches
+    /// data from a configured URL and updates widgets. Requires `fetch` in
+    /// `UIBackgroundModes` and `com.pwakit.widget-refresh` in
+    /// `BGTaskSchedulerPermittedIdentifiers` in Info.plist.
+    ///
+    /// Disabled by default.
+    public let backgroundRefresh: Bool
+
     /// Creates a new features configuration with all values specified.
     ///
     /// - Parameters:
@@ -73,6 +83,7 @@ public struct FeaturesConfiguration: Codable, Sendable, Equatable {
     ///   - locationPermission: Enable location permission. Defaults to `true`.
     ///   - liveActivity: Enable Dynamic Island / Live Activities. Defaults to `false`.
     ///   - widgets: Enable Lock Screen / Home Screen widgets. Defaults to `false`.
+    ///   - backgroundRefresh: Enable background refresh for widgets. Defaults to `false`.
     public init(
         notifications: Bool = true,
         haptics: Bool = true,
@@ -87,7 +98,8 @@ public struct FeaturesConfiguration: Codable, Sendable, Equatable {
         microphonePermission: Bool = true,
         locationPermission: Bool = true,
         liveActivity: Bool = false,
-        widgets: Bool = false
+        widgets: Bool = false,
+        backgroundRefresh: Bool = false
     ) {
         self.notifications = notifications
         self.haptics = haptics
@@ -103,6 +115,7 @@ public struct FeaturesConfiguration: Codable, Sendable, Equatable {
         self.locationPermission = locationPermission
         self.liveActivity = liveActivity
         self.widgets = widgets
+        self.backgroundRefresh = backgroundRefresh
     }
 
     /// Default configuration with standard feature flags.
@@ -125,6 +138,7 @@ public struct FeaturesConfiguration: Codable, Sendable, Equatable {
         case locationPermission
         case liveActivity
         case widgets
+        case backgroundRefresh
     }
 
     public init(from decoder: Decoder) throws {
@@ -143,5 +157,6 @@ public struct FeaturesConfiguration: Codable, Sendable, Equatable {
         self.locationPermission = try container.decodeIfPresent(Bool.self, forKey: .locationPermission) ?? true
         self.liveActivity = try container.decodeIfPresent(Bool.self, forKey: .liveActivity) ?? false
         self.widgets = try container.decodeIfPresent(Bool.self, forKey: .widgets) ?? false
+        self.backgroundRefresh = try container.decodeIfPresent(Bool.self, forKey: .backgroundRefresh) ?? false
     }
 }

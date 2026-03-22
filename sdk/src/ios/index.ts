@@ -91,6 +91,7 @@ export type {
   LiveActivityEndResult,
   LiveActivityState,
   LiveActivityEnabledResult,
+  LiveActivityPushTokenResult,
 } from './liveActivity';
 
 export { widget } from './widget';
@@ -101,3 +102,11 @@ export type {
   WidgetReloadResult,
   WidgetKindsResult,
 } from './widget';
+
+export { backgroundRefresh } from './backgroundRefresh';
+export type {
+  BackgroundRefreshConfigResult,
+  BackgroundRefreshRemoveResult,
+  BackgroundRefreshStatus,
+  BackgroundRefreshScheduleResult,
+} from './backgroundRefresh';

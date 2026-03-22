@@ -190,6 +190,7 @@ export type {
   LiveActivityEndResult,
   LiveActivityState,
   LiveActivityEnabledResult,
+  LiveActivityPushTokenResult,
 } from './ios/liveActivity';
 
 export type {
@@ -199,6 +200,13 @@ export type {
   WidgetReloadResult,
   WidgetKindsResult,
 } from './ios/widget';
+
+export type {
+  BackgroundRefreshConfigResult,
+  BackgroundRefreshRemoveResult,
+  BackgroundRefreshStatus,
+  BackgroundRefreshScheduleResult,
+} from './ios/backgroundRefresh';
 
 // =============================================================================
 // Detection Utilities

@@ -279,4 +279,41 @@ public enum AppGroupStorage {
     public static func removeActivityData() {
         sharedDefaults?.removeObject(forKey: activityDataKey)
     }
+
+    // MARK: - Background Refresh
+
+    private static let refreshUrlKey = "pwakit.backgroundRefresh.url"
+    private static let lastRefreshKey = "pwakit.backgroundRefresh.lastRefresh"
+
+    /// Saves the URL to fetch during background refresh.
+    ///
+    /// - Parameter url: The URL string to fetch for widget/activity data updates.
+    public static func saveRefreshUrl(_ url: String) {
+        sharedDefaults?.set(url, forKey: refreshUrlKey)
+    }
+
+    /// Loads the background refresh URL.
+    ///
+    /// - Returns: The stored refresh URL, or nil if not configured.
+    public static func loadRefreshUrl() -> String? {
+        sharedDefaults?.string(forKey: refreshUrlKey)
+    }
+
+    /// Removes the background refresh URL.
+    public static func removeRefreshUrl() {
+        sharedDefaults?.removeObject(forKey: refreshUrlKey)
+    }
+
+    /// Records the timestamp of the last successful background refresh.
+    public static func recordRefresh() {
+        sharedDefaults?.set(Date().timeIntervalSince1970, forKey: lastRefreshKey)
+    }
+
+    /// Returns the timestamp of the last successful background refresh.
+    ///
+    /// - Returns: The timestamp as seconds since epoch, or nil if never refreshed.
+    public static func lastRefreshTimestamp() -> Double? {
+        let value = sharedDefaults?.double(forKey: lastRefreshKey)
+        return value == 0 ? nil : value
+    }
 }

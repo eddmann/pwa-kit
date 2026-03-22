@@ -16,12 +16,15 @@ struct LiveActivityModuleTests {
 
     @Test("Supports expected actions")
     func supportsExpectedActions() {
-        #expect(LiveActivityModule.supportedActions == ["start", "update", "end", "getState", "areActivitiesEnabled"])
+        #expect(LiveActivityModule.supportedActions == [
+            "start", "update", "end", "getState", "areActivitiesEnabled", "getPushToken",
+        ])
         #expect(LiveActivityModule.supports(action: "start"))
         #expect(LiveActivityModule.supports(action: "update"))
         #expect(LiveActivityModule.supports(action: "end"))
         #expect(LiveActivityModule.supports(action: "getState"))
         #expect(LiveActivityModule.supports(action: "areActivitiesEnabled"))
+        #expect(LiveActivityModule.supports(action: "getPushToken"))
     }
 
     @Test("Does not support unknown actions")
@@ -275,6 +278,7 @@ struct LiveActivityModuleTests {
         try module.validateAction("end")
         try module.validateAction("getState")
         try module.validateAction("areActivitiesEnabled")
+        try module.validateAction("getPushToken")
     }
 
     // MARK: - SharedActivityData Struct
@@ -322,5 +326,25 @@ struct LiveActivityModuleTests {
 
         #expect(data1 == data2)
         #expect(data1 != data3)
+    }
+
+    // MARK: - getPushToken
+
+    @Test("getPushToken returns a result")
+    @MainActor
+    func getPushTokenReturnsResult() async throws {
+        let module = LiveActivityModule()
+        let context = ModuleContext()
+
+        let result = try await module.handle(
+            action: "getPushToken",
+            payload: nil,
+            context: context
+        )
+
+        let dict = result?.dictionaryValue
+        #expect(dict != nil)
+        // Token key should always be present (may be null)
+        #expect(dict?["token"] != nil)
     }
 }

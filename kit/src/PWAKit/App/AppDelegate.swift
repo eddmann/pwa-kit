@@ -1,6 +1,8 @@
+import ActivityKit
 import UIKit
 import UserNotifications
 import WebKit
+import WidgetKit
 
 // MARK: - Notification Names
 
@@ -113,6 +115,18 @@ final class AppDelegate: NSObject, UIApplicationDelegate, WebViewProvider {
             Task { @MainActor in
                 await self?.eventDispatcher.handlePageLoaded()
             }
+        }
+
+        // Register background tasks for widget refresh
+        BackgroundTaskHandler.registerTasks()
+
+        // Configure App Group storage from bundled config
+        if let url = Bundle.main.url(forResource: "pwa-config", withExtension: "json"),
+           let data = try? Data(contentsOf: url),
+           let config = try? JSONDecoder().decode(PWAConfiguration.self, from: data),
+           let appGroupId = config.app.appGroupId
+        {
+            AppGroupStorage.configure(appGroupId: appGroupId)
         }
 
         #if DEBUG
@@ -247,6 +261,111 @@ final class AppDelegate: NSObject, UIApplicationDelegate, WebViewProvider {
         #if DEBUG
             print("[AppDelegate] Failed to register for remote notifications: \(error.localizedDescription)")
         #endif
+    }
+
+    // MARK: - Silent Push Notifications
+
+    /// Called when a silent push notification is received (`content-available: 1`).
+    ///
+    /// This enables background updates for widgets and Live Activities. The server
+    /// sends a push with `content-available: 1` and custom payload keys:
+    ///
+    /// - `pwakit.widget`: Widget data to update (kind, title, value, etc.)
+    /// - `pwakit.liveActivity`: Live Activity data to update (title, subtitle, progress, etc.)
+    ///
+    /// ## Example Push Payload
+    ///
+    /// ```json
+    /// {
+    ///   "aps": { "content-available": 1 },
+    ///   "pwakit.widget": {
+    ///     "kind": "status",
+    ///     "title": "Steps",
+    ///     "value": "9,200"
+    ///   },
+    ///   "pwakit.liveActivity": {
+    ///     "title": "Order #1234",
+    ///     "subtitle": "Delivered!",
+    ///     "progress": 1.0
+    ///   }
+    /// }
+    /// ```
+    ///
+    /// ## Requirements
+    ///
+    /// - `UIBackgroundModes` must include `remote-notification` in Info.plist
+    func application(
+        _: UIApplication,
+        didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+        fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
+    ) {
+        #if DEBUG
+            print("[AppDelegate] Received silent push notification")
+        #endif
+
+        Task { @MainActor in
+            var didUpdate = false
+
+            // Handle widget data update
+            if let widgetPayload = userInfo["pwakit.widget"] as? [String: Any],
+               let kind = widgetPayload["kind"] as? String,
+               let title = widgetPayload["title"] as? String
+            {
+                let widgetData = SharedWidgetData(
+                    kind: kind,
+                    title: title,
+                    value: widgetPayload["value"] as? String,
+                    subtitle: widgetPayload["subtitle"] as? String,
+                    icon: widgetPayload["icon"] as? String,
+                    tint: widgetPayload["tint"] as? String,
+                    url: widgetPayload["url"] as? String
+                )
+
+                AppGroupStorage.saveWidgetData(widgetData)
+                WidgetCenter.shared.reloadTimelines(ofKind: kind)
+                didUpdate = true
+
+                #if DEBUG
+                    print("[AppDelegate] Updated widget '\(kind)' from silent push")
+                #endif
+            }
+
+            // Handle live activity data update
+            if #available(iOS 16.1, *),
+               let activityPayload = userInfo["pwakit.liveActivity"] as? [String: Any],
+               let title = activityPayload["title"] as? String
+            {
+                var fields: [String: String]?
+                if let fieldsDict = activityPayload["fields"] as? [String: String] {
+                    fields = fieldsDict
+                }
+
+                let activityData = SharedActivityData(
+                    title: title,
+                    subtitle: activityPayload["subtitle"] as? String,
+                    progress: activityPayload["progress"] as? Double,
+                    icon: activityPayload["icon"] as? String,
+                    tint: activityPayload["tint"] as? String,
+                    fields: fields
+                )
+
+                let state = PWAKitActivityAttributes.ContentState(data: activityData)
+                for activity in Activity<PWAKitActivityAttributes>.activities {
+                    await activity.update(
+                        ActivityContent(state: state, staleDate: nil)
+                    )
+                }
+
+                AppGroupStorage.saveActivityData(activityData)
+                didUpdate = true
+
+                #if DEBUG
+                    print("[AppDelegate] Updated live activity from silent push")
+                #endif
+            }
+
+            completionHandler(didUpdate ? .newData : .noData)
+        }
     }
 }
 
